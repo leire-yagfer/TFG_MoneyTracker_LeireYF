@@ -1,0 +1,11 @@
+
+txt que almacena atajos para copiar y pegar
+
+context.watch<ThemeProvider>().palette()['fixedBlack']!
+MediaQuery.of(context).textScaler.scale(18)
+MediaQuery.of(context).size.width * 0.01
+MediaQuery.of(context).size.height * 0.01
+    import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+AppLocalizations.of(context)!.
+SizedBox(height: MediaQuery.of(context).size.height * 0.008),
+    EdgeInsets
