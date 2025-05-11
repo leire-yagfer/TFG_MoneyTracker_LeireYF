@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/model/models/divisa.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:proyecto2eva_budget/model/services/apicambiodivisa.dart';
-import 'package:proyecto2eva_budget/view/loginsignup/mixinloginregisterlogout.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/currency.dart';
+import 'package:tfg_monetracker_leireyafer/util/changecurrencyapi.dart';
+import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 //Clase que define la distribución de la app
 class ConfigurationPage extends StatefulWidget {
@@ -65,19 +65,19 @@ class _ConfigurationPageState extends State<ConfigurationPage>
               ],
             ),
             //DropDown para cambiar la divisa
-            DropdownButton<Divisa>(
+            DropdownButton<Currency>(
               value: ajustesProvider.divisaEnUso, //divisa actual
-              onChanged: (Divisa? nuevaDivisa) {
+              onChanged: (Currency? nuevaDivisa) {
                 if (nuevaDivisa != null) {
                   ajustesProvider
                       .cambiarDivisa(nuevaDivisa); //Cambiar la divisa
                 }
               },
               items: List.generate(APIUtils.allDivisas.length, (index) {
-                return DropdownMenuItem<Divisa>(
+                return DropdownMenuItem<Currency>(
                   value: APIUtils.allDivisas[index], //Divisa actual
                   child: Text(
-                    "${APIUtils.allDivisas[index].nombre_divisa} (${APIUtils.allDivisas[index].simbolo_divisa})", //Nombre de la divisa
+                    "${APIUtils.allDivisas[index].currencyName} (${APIUtils.allDivisas[index].currencySymbol})", //Nombre de la divisa
                     style: const TextStyle(fontSize: 16),
                   ),
                 );

@@ -5,16 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/main.dart';
-import 'package:proyecto2eva_budget/model/models/dao/categoriadao.dart';
-import 'package:proyecto2eva_budget/model/models/usuario.dart';
-import 'package:proyecto2eva_budget/model/services/firebaseauth.dart';
-import 'package:proyecto2eva_budget/reusable/reusablemainbutton.dart';
-import 'package:proyecto2eva_budget/reusable/reusablerowloginregister.dart';
-import 'package:proyecto2eva_budget/view/home.dart';
-import 'package:proyecto2eva_budget/view/loginsignup/mixinloginregisterlogout.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/main.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusableTxtFormFieldLoginRegister.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablerowloginregister.dart';
+import 'package:tfg_monetracker_leireyafer/util/firebaseauthentication.dart';
+import 'package:tfg_monetracker_leireyafer/view/appbottomnavigationbar.dart';
+import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 //clase que implementa el dopDownButton de selección de país, ya que es de tipo stateful
 class SignupDialog extends StatefulWidget {
@@ -31,9 +32,6 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
   final _emailKey = GlobalKey<FormFieldState>();
   final _passwordKey = GlobalKey<FormFieldState>();
   final _repeatedPasswordKey = GlobalKey<FormFieldState>();
-
-  bool _isPasswordVisible =
-      false; // Variable para controlar la visibilidad de la contraseña
 
   String? _errorMessage;
 
@@ -62,15 +60,10 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    key: _emailKey,
+                  ReusableTxtFormFieldLoginRegister(
                     controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.email,
-                      hintText: AppLocalizations.of(context)!.email,
-                      border: const OutlineInputBorder(),
-                    ),
+                    labelText: AppLocalizations.of(context)!.email,
+                    hintText: AppLocalizations.of(context)!.emailhint,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(context)!.invalidemail;
@@ -84,8 +77,26 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                       return null;
                     },
                   ),
+
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  TextFormField(
+
+                  //EL KEY LO USO PARA VALIDAR EL CAMPO Y QUE SEAN IGUALES LAS CONSTRASEÑAS --> MIRAR CÓMO HACER PARA QUE NO DE ERROR EN EL REUSABLE
+                  ReusableTxtFormFieldLoginRegister(
+                    key: _passwordKey,
+                    controller: _passwordController,
+                    labelText: AppLocalizations.of(context)!.passwordr,
+                    hintText: AppLocalizations.of(context)!.passwordhintr,
+                    obscureText: true, // empieza oculto
+                    passwordIcon: true, // muestra el icono para ver/ocultar
+                    validator: (value) {
+                      if (value == null || value.isEmpty || value.length < 6) {
+                        return AppLocalizations.of(context)!.newpassworderror;
+                      }
+                      return null;
+                    },
+                  ),
+
+                  /*TextFormField(
                     key: _passwordKey,
                     obscureText: !_isPasswordVisible,
                     controller: _passwordController,
@@ -120,9 +131,27 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                     onChanged: (value) {
                       _passwordKey.currentState!.validate();
                     },
-                  ),
+                  ),*/
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  TextFormField(
+                  ReusableTxtFormFieldLoginRegister(
+                    key: _repeatedPasswordKey,
+                    controller: _repeatedpasswordController,
+                    labelText: AppLocalizations.of(context)!.repeatpassword,
+                    hintText: AppLocalizations.of(context)!.repeatpasswordhint,
+                    obscureText: true,
+                    passwordIcon: true,
+                    validator: (value) {
+                      if (value == null ||
+                          value.isEmpty ||
+                          value != _passwordController.text) {
+                        return AppLocalizations.of(context)!
+                            .nocoincidencedpasswords;
+                      }
+                      return null;
+                    },
+                  ),
+
+                  /*TextFormField(
                     key: _repeatedPasswordKey,
                     obscureText: !_isPasswordVisible,
                     controller: _repeatedpasswordController,
@@ -159,7 +188,7 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                     onChanged: (value) {
                       _repeatedPasswordKey.currentState!.validate();
                     },
-                  ),
+                  ),*/
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
@@ -175,7 +204,7 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),
-                  ReusableMainButton(
+                  ReusableButton(
                       onClick: () async {
                         await _register();
                         if (_errorMessage == null) {
@@ -183,7 +212,7 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MyHomePage()));
+                                  builder: (context) => MainApp()));
                         } else {
                           showDialog(
                             context: context,
@@ -249,8 +278,8 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
             'email': _emailController.text.trim(),
           });
           context.read<ProviderAjustes>().inicioSesion(
-              Usuario(id: uid, correoUsuario: _emailController.text.trim()));
-          await CategoriaDao().insertarCategoriasRegistro(uid);
+              UserModel(userId: uid, userEmail: _emailController.text.trim()));
+          await CategoryDao().insertarCategoriasRegistro(uid);
         } catch (firestoreError) {
           Logger().e(firestoreError);
           // Continue with registration even if Firestore fails

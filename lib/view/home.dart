@@ -3,18 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/model/models/dao/categoriadao.dart';
-import 'package:proyecto2eva_budget/model/models/dao/transaccionesdao.dart';
-import 'package:proyecto2eva_budget/model/models/categoria.dart';
-import 'package:proyecto2eva_budget/model/models/transaccion.dart';
-import 'package:proyecto2eva_budget/reusable/reusablemainbutton.dart';
-import 'package:proyecto2eva_budget/reusable/reusabletxtformfield.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusabletxtformfield.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 ///Clase que se muestra al iniciar la app y que incluye la inserción de nuevos ingresos o gastos
-class Principal extends StatelessWidget {
-  const Principal({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class Principal extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             //Botón para agregar un ingreso
-            ReusableMainButton(
+            ReusableButton(
                 onClick: () {
                   _showOverlay(
                       context,
@@ -40,7 +40,7 @@ class Principal extends StatelessWidget {
                 buttonWidth: 0.6),
             SizedBox(height: MediaQuery.of(context).size.height * 0.04),
             //Botón para agregar un gasto
-            ReusableMainButton(
+            ReusableButton(
                 onClick: () {
                   _showOverlay(
                       context,
@@ -67,11 +67,11 @@ class Principal extends StatelessWidget {
     final TextEditingController _dateController = TextEditingController();
     final TextEditingController _descripcionController =
         TextEditingController();
-    List<Categoria> categorias =
+    List<Category> categorias =
         []; //Lista de categorías -> se cargará con las categorías de ingreso o gasto según lo que se haya elegido
-    Categoria? selectedCategoria; //Categoría seleccionada
+    Category? selectedCategoria; //Categoría seleccionada
 
-    categorias = await CategoriaDao().obtenerCategoriasPorTipo(
+    categorias = await CategoryDao().getCategoriesByType(
         context.read<ProviderAjustes>().usuario!,
         color !=
             Provider.of<ThemeProvider>(context, listen: false).palette()[
@@ -117,7 +117,7 @@ class Principal extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         //Campo para el título de la transacción
-                        ReusableTxtFormField(
+                        ReusableTxtFormFieldNewTransaction(
                           controller: _tituloController,
                           labelText: AppLocalizations.of(context)!.title,
                           hintText: AppLocalizations.of(context)!.titleHint,
@@ -133,11 +133,11 @@ class Principal extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         //Campo para la cantidad de la transacción
-                        ReusableTxtFormField(
+                        ReusableTxtFormFieldNewTransaction(
                           controller: _cantidadController,
                           keyboardType: TextInputType.number, //solo números
                           labelText: AppLocalizations.of(context)!.quantity,
-                          hintText: "${AppLocalizations.of(context)!.quantityHint} (${context.read<ProviderAjustes>().divisaEnUso.simbolo_divisa})",
+                          hintText: "${AppLocalizations.of(context)!.quantityHint} (${context.read<ProviderAjustes>().divisaEnUso.currencySymbol})",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return AppLocalizations.of(context)!
@@ -158,7 +158,7 @@ class Principal extends StatelessWidget {
                         StatefulBuilder(
                           builder:
                               (BuildContext context, StateSetter setState) {
-                            return DropdownButtonFormField<Categoria>(
+                            return DropdownButtonFormField<Category>(
                               decoration: InputDecoration(
                                 labelText:
                                     AppLocalizations.of(context)!.categories,
@@ -169,17 +169,17 @@ class Principal extends StatelessWidget {
                                 border: OutlineInputBorder(),
                               ),
                               value: selectedCategoria,
-                              onChanged: (Categoria? newValue) {
+                              onChanged: (Category? newValue) {
                                 setState(() {
                                   selectedCategoria =
                                       newValue; //Actualizar categoría seleccionada
                                 });
                               },
-                              items: categorias.map((Categoria categoria) {
-                                return DropdownMenuItem<Categoria>(
+                              items: categorias.map((Category categoria) {
+                                return DropdownMenuItem<Category>(
                                   value: categoria,
                                   child: Text(categoria
-                                      .nombre), //Nombre de la categoría
+                                      .categoryName), //Nombre de la categoría
                                 );
                               }).toList(),
                               validator: (value) {
@@ -197,7 +197,7 @@ class Principal extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         // Selector de fecha para la transacción
-                        ReusableTxtFormField(
+                        ReusableTxtFormFieldNewTransaction(
                           controller: _dateController,
                           labelText: AppLocalizations.of(context)!.date,
                           hintText: AppLocalizations.of(context)!.dateHint,
@@ -231,7 +231,7 @@ class Principal extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         // Campo para la descripción de la transacción
-                        ReusableTxtFormField(
+                        ReusableTxtFormFieldNewTransaction(
                           controller: _descripcionController,
                           labelText: AppLocalizations.of(context)!.description,
                           hintText:
@@ -242,7 +242,7 @@ class Principal extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         //Botón para agregar la transacción
-                        ReusableMainButton(
+                        ReusableButton(
                             onClick: () async {
                               if (_formKey.currentState!.validate()) {
                                 //Si el formulario es válido, proceder con la transacción
@@ -256,19 +256,19 @@ class Principal extends StatelessWidget {
 
                                 //Crear la transacción
                                 //no paso el ID porque es autoincremental en el propio FireBase
-                                Transaccion transaccion = Transaccion(
-                                    id: "",
-                                    tituloTransaccion: titulo,
-                                    fecha: DateTime.parse(fecha),
-                                    categoria: selectedCategoria!,
-                                    importe: cantidad,
-                                    divisa: context
+                                TransactionModel transaccion = TransactionModel(
+                                    transactionId: "",
+                                    transactionTittle: titulo,
+                                    transactionDate: DateTime.parse(fecha),
+                                    transactionCategory: selectedCategoria!,
+                                    transactionImport: cantidad,
+                                    transactionCurrency: context
                                         .read<ProviderAjustes>()
                                         .divisaEnUso,
-                                    descripcion: descripcion);
+                                    transactionDescription: descripcion);
 
                                 //Insertar transacción en la base de datos
-                                await TransaccionDao().insertarTransaccion(
+                                await TransactionDao().insertTransaction(
                                     context.read<ProviderAjustes>().usuario!,
                                     transaccion);
                                 await context

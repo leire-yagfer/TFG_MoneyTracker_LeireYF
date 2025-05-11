@@ -2,28 +2,26 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/model/models/crud/transaccionescrud.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
-import 'package:sqflite/sqflite.dart';
-import '../model/models/transaccion.dart';
-import '../model/models/dao/categoriadao.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 ///Clase que muestra todos los movimientos/transacciones que se han almacenado en la base de datos
-class Movimientos extends StatefulWidget {
-  const Movimientos({super.key});
+class TransactionsPage extends StatefulWidget {
+  const TransactionsPage({super.key});
 
   @override
-  _MovimientosState createState() => _MovimientosState();
+  _TransactionsPageState createState() => _TransactionsPageState();
 }
 
-class _MovimientosState extends State<Movimientos> {
-  TransaccionCRUD transaccionCRUD = TransaccionCRUD();
-  CategoriaDao categoriaDao = CategoriaDao();
-  late Database db;
-  List<Transaccion> transacciones = []; //creo la lista de transacciones que va a albergar aquellas que sean del usuario logeado
+class _TransactionsPageState extends State<TransactionsPage> {
+  TransactionDao transactionDao = TransactionDao();
+  CategoryDao categoriaDao = CategoryDao();
+  List<TransactionModel> transacciones = []; //creo la lista de transacciones que va a albergar aquellas que sean del usuario logeado
   @override
   void initState() {
     super.initState();
@@ -33,7 +31,7 @@ class _MovimientosState extends State<Movimientos> {
   bool _isLoading = true;
   ///Eliminar una transacción
   Future<void> _eliminarTransaccion(int index) async {
-    await transaccionCRUD.eliminarTransaccion(
+    await transactionDao.deleteTransaction(
         context.read<ProviderAjustes>().usuario!,
         context.read<ProviderAjustes>().listaTransacciones[index]);
     context.read<ProviderAjustes>().listaTransacciones.removeAt(index);
@@ -66,10 +64,10 @@ class _MovimientosState extends State<Movimientos> {
           : ListView.builder(
               itemCount: transacciones.length,
               itemBuilder: (context, index) {
-                Transaccion transaccion = transacciones[index];
+                TransactionModel transaccion = transacciones[index];
                 Color fechaEImporteColor;
                 Icon icono;
-                if (transaccion.categoria.esingreso) {
+                if (transaccion.transactionCategory.categoryIsIncome) {
                   //si es ingreso
                   fechaEImporteColor = context
                       .watch<ThemeProvider>()
@@ -86,15 +84,15 @@ class _MovimientosState extends State<Movimientos> {
                   margin: EdgeInsets.symmetric(
                       vertical: MediaQuery.of(context).size.height * 0.012,
                       horizontal: MediaQuery.of(context).size.width * 0.015),
-                  color: transaccion.categoria
-                      .colorCategoria, //Color de fondo de la tarjeta según categoría
+                  color: transaccion.transactionCategory
+                      .categoryColor, //Color de fondo de la tarjeta según categoría
                   child: ListTile(
                     //onTap: () => _mostrarDetalleEditable(transaccion, index),
                     contentPadding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.01),
                     leading: icono, //Flecha hacia arriba o hacia abajo
                     title: Text(
-                      transaccion.tituloTransaccion,
+                      transaccion.transactionTittle,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: context
@@ -106,14 +104,14 @@ class _MovimientosState extends State<Movimientos> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${AppLocalizations.of(context)!.date}: ${_formatearFecha(transaccion.fecha)}",
+                          "${AppLocalizations.of(context)!.date}: ${_formatearFecha(transaccion.transactionDate)}",
                           style: TextStyle(
                               color: context
                                   .watch<ThemeProvider>()
                                   .palette()['fixedBlack']!),
                         ),
                         Text(
-                          "${AppLocalizations.of(context)!.category}: ${transaccion.categoria}",
+                          "${AppLocalizations.of(context)!.category}: ${transaccion.transactionCategory}",
                           style: TextStyle(
                               color: context
                                   .watch<ThemeProvider>()
@@ -125,7 +123,7 @@ class _MovimientosState extends State<Movimientos> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '${transaccion.importe.toStringAsFixed(2)} ${context.watch<ProviderAjustes>().divisaEnUso.simbolo_divisa}', //Importe con símbolo de la divisa en uso
+                          '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ProviderAjustes>().divisaEnUso.currencySymbol}', //Importe con símbolo de la divisa en uso
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize:
@@ -160,7 +158,7 @@ class _MovimientosState extends State<Movimientos> {
     setState(() {
       _isLoading = true;
     });
-    var aux = await transaccionCRUD.obtenerTransaccionesPorFecha(context.read<ProviderAjustes>().usuario!);
+    var aux = await transactionDao.getTransactionsByDate(context.read<ProviderAjustes>().usuario!);
     setState(() {
       transacciones = aux;
     });

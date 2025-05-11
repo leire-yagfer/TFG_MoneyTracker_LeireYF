@@ -1,79 +1,79 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:proyecto2eva_budget/model/models/categoria.dart';
-import 'package:proyecto2eva_budget/model/models/usuario.dart';
-import 'package:proyecto2eva_budget/model/services/firebasedb.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
+import 'package:tfg_monetracker_leireyafer/util/firebasedb.dart';
 
 ///Clase que gestiona las categorías en la base de datos
-class CategoriaDao {
+class CategoryDao {
   CollectionReference data = Firebasedb.data;
 
   ///Obtener todas las categorías
-  Future<List<Categoria>> obtenerCategorias(Usuario usuario) async {
-    //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
-    var userdoc = await data.doc(usuario.id).get();
+  Future<List<Category>> getCategories(UserModel usuario) async {
+    //1. sacar el docuemnto del user --> de un usuario en concreto pq se lo paso por parametro
+    var userdoc = await data.doc(usuario.userId).get();
 
     //2. coger categ asignadas a ese usuario
-    var categoriasCollection =
+    var userCategories =
         await userdoc.reference.collection("categories").get();
 
     //3. guardar todos los datos
-    List<Categoria> categoriasUser = [];
+    List<Category> userCategoriesList = [];
 
-    for (var categoria in categoriasCollection.docs) {
+    for (var c in userCategories.docs) {
       //saco los datos de categoria
-      var datosCategoria = categoria.data();
-      var nombreCategoria = categoria.id;
-      categoriasUser.add(Categoria(
-          nombre: nombreCategoria,
-          icono: datosCategoria["icon"],
-          esingreso: datosCategoria["isincome"],
-          colorCategoria: Color.fromARGB(255, datosCategoria["cr"],
-              datosCategoria["cg"], datosCategoria["cb"])));
+      var categoryData = c.data();
+      var categoryName = c.id;
+      userCategoriesList.add(Category(
+          categoryName: categoryName,
+          categoryIcon: categoryData["icon"],
+          categoryIsIncome: categoryData["isincome"],
+          categoryColor: Color.fromARGB(255, categoryData["cr"],
+              categoryData["cg"], categoryData["cb"])));
     }
-    return categoriasUser;
+    return userCategoriesList;
   }
 
   ///Obtener categoría por tipo
-  Future<List<Categoria>> obtenerCategoriasPorTipo(
-      Usuario usuario, bool tipo) async {
+  Future<List<Category>> getCategoriesByType(
+      UserModel u, bool type) async {
     //cojo todas las categorias
-    List<Categoria> categoriasUser = await obtenerCategorias(usuario);
+    List<Category> userCategories = await getCategories(u);
 
     //me quedo con aquellas que tengan la booleana en el mismo párametro que "tipo"
-    categoriasUser.retainWhere((elemento) => elemento.esingreso == tipo);
-    return categoriasUser;
+    userCategories.retainWhere((uc) => uc.categoryIsIncome == type);
+    return userCategories;
   }
 
   ///Insertar categoría
-  Future<void> insertarCategoria(Usuario usuario, Categoria categoria) async {
+  Future<void> insertarCategoria(UserModel u, Category c) async {
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
-    var userdoc = await data.doc(usuario.id).get();
+    var userdoc = await data.doc(u.userId).get();
 
     //2. guardar los datos de la categoria
-    await userdoc.reference.collection("categories").doc(categoria.nombre).set({
-      "icon": categoria.icono,
-      "isincome": categoria.esingreso,
-      "cr": categoria.colorCategoria.red,
-      "cg": categoria.colorCategoria.green,
-      "cb": categoria.colorCategoria.blue
+    await userdoc.reference.collection("categories").doc(c.categoryName).set({
+      "icon": c.categoryIcon,
+      "isincome": c.categoryIsIncome,
+      "cr": c.categoryColor.red,
+      "cg": c.categoryColor.green,
+      "cb": c.categoryColor.blue
     });
   }
 
   ///Eliminar categoría
-  Future<void> eliminarCategoria(Usuario usuario, Categoria categoria) async {
+  Future<void> eliminarCategoria(UserModel usuario, Category categoria) async {
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
-    var userdoc = await data.doc(usuario.id).get();
+    var userdoc = await data.doc(usuario.userId).get();
 
     //2. eliminar la categoria
     await userdoc.reference
         .collection("categories")
-        .doc(categoria.nombre)
+        .doc(categoria.categoryName)
         .delete();
   }
 
   ///Insertar varias categorías de primeras al registrarse un usuario
-  Future<void> insertarCategoriasRegistro(String uid) async {
+  Future<void> insertarCategoriasRegistro(String uid) async { //le paso el uid del usuario proporcionaod por firebase que se genera al registrarse
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
     var userdoc = await data.doc(uid).get();
 

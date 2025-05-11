@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 //clase reutilizable para los botones de inicio de sesión y registro, al igual que para los de agregar ingreso/gasto
-class ReusableMainButton extends StatelessWidget {
+class ReusableButton extends StatelessWidget {
   final VoidCallback onClick;
   String?
       textButton; //porque si está cargando quiero que salga el icono de cargando
@@ -15,7 +15,7 @@ class ReusableMainButton extends StatelessWidget {
   double buttonWidth;
   Widget? child;
 
-  ReusableMainButton(
+  ReusableButton(
       {super.key,
       required this.onClick,
       this.textButton,

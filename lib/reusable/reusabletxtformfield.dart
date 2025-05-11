@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-class ReusableTxtFormField extends StatelessWidget {
+//Clase que crea un TextFormField reutilizable para el formulario de nueva transacción
+class ReusableTxtFormFieldNewTransaction extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final String hintText;
@@ -11,7 +12,7 @@ class ReusableTxtFormField extends StatelessWidget {
   final VoidCallback? onTap; //especial para la selección de fecha
   final String? Function(String?)? validator; //función para validar el campo
 
-  const ReusableTxtFormField({
+  const ReusableTxtFormFieldNewTransaction({
     required this.controller,
     required this.labelText,
     required this.hintText,
@@ -31,7 +32,9 @@ class ReusableTxtFormField extends StatelessWidget {
         hintText: hintText,
         filled: true,
         fillColor: context.watch<ThemeProvider>().palette()['fixedLightGrey']!,
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
       readOnly: readOnly,
       onTap: onTap,

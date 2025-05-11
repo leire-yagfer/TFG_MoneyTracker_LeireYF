@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:proyecto2eva_budget/reusable/reusablemainbutton.dart';
-import 'package:proyecto2eva_budget/view/loginsignup/mixinloginregisterlogout.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
+import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
 
 class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({super.key});
@@ -21,7 +21,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>
       child: Column(
         children: [
           SizedBox(height: MediaQuery.of(context).size.height * 0.3),
-          ReusableMainButton(
+          ReusableButton(
               onClick: () {
                 showLoginDialog(context);
               },
@@ -31,7 +31,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>
               buttonHeight: 0.1,
               buttonWidth: 0.6),
           SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-          ReusableMainButton(
+          ReusableButton(
               onClick: () {
                 showRegisterDialog(context);
               },

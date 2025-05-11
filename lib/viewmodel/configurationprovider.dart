@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto2eva_budget/model/models/crud/transaccionescrud.dart';
-import 'package:proyecto2eva_budget/model/models/divisa.dart';
-import 'package:proyecto2eva_budget/model/models/transaccion.dart';
-import 'package:proyecto2eva_budget/model/models/usuario.dart';
-import 'package:proyecto2eva_budget/model/services/apicambiodivisa.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/currency.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
+import 'package:tfg_monetracker_leireyafer/util/changecurrencyapi.dart';
 
 ///Clase que gestiona el estado global de la app
 class ProviderAjustes extends ChangeNotifier {
   bool _modoOscuro = false;
   Locale _idioma = Locale('es');
-  Divisa _codigoDivisaEnUso = APIUtils.getFromList('EUR')!;
+  Currency _codigoDivisaEnUso = APIUtils.getFromList('EUR')!;
   //lista de transacciones
-  List<Transaccion> listaTransacciones = [];
+  List<TransactionModel> listaTransacciones = [];
 
   ///Cargar las preferencias guardadas al iniciar la app
-  ProviderAjustes(Usuario? usuario) {
+  ProviderAjustes(UserModel? usuario) {
     this.usuario = usuario;
     _cargarPreferencias();
   }
@@ -27,10 +27,10 @@ class ProviderAjustes extends ChangeNotifier {
   Locale get idioma => _idioma;
 
   //Obetener la divisa en la que se está trabajando
-  Divisa get divisaEnUso => _codigoDivisaEnUso;
+  Currency get divisaEnUso => _codigoDivisaEnUso;
 
   //Obtener el usuario
-  Usuario? usuario; //? pq puede ser nulo (puede que no esté registrado)
+  UserModel? usuario; //? pq puede ser nulo (puede que no esté registrado)
 
   ///Cambiar el modo oscuro y guardar la preferencia
   Future<void> cambiarModoOscuro(bool valor) async {
@@ -49,12 +49,12 @@ class ProviderAjustes extends ChangeNotifier {
   }
 
   ///Cambiar la divisa y guardar la preferencia
-  Future<void> cambiarDivisa(Divisa nuevoCodigoDivisa) async {
+  Future<void> cambiarDivisa(Currency nuevoCodigoDivisa) async {
     _codigoDivisaEnUso = nuevoCodigoDivisa;
     await cargarTransacciones(); //Recargar las transacciones con la nueva divisa
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('divisaEnUso', nuevoCodigoDivisa.codigo_divisa);
+    await prefs.setString('divisaEnUso', nuevoCodigoDivisa.currencyCode);
   }
 
   ///Cargar las preferencias guardadas en el dispositivo
@@ -72,22 +72,22 @@ class ProviderAjustes extends ChangeNotifier {
   ///Cargar las transacciones desde la base de datos, ordenadas por fecha
   Future<void> cargarTransacciones() async {
     listaTransacciones =
-        await TransaccionCRUD().obtenerTransaccionesPorFecha(usuario!);
-    listaTransacciones.sort((a, b) => -a.fecha.compareTo(b.fecha));
+        await TransactionDao().getTransactionsByDate(usuario!);
+    listaTransacciones.sort((a, b) => -a.transactionDate.compareTo(b.transactionDate));
 
     //Cambiar cada importe en función de la divisa que se esté usando --> en esta clase para que sea accesible y recargable desde todo el contexto (la app)
     for (var element in listaTransacciones) {
-      if (element.divisa != divisaEnUso) {
+      if (element.transactionCurrency != divisaEnUso) {
         Map<String, double> cambios =
-            await APIUtils.get_changes(element.divisa.codigo_divisa);
-        element.importe = element.importe * cambios[divisaEnUso.codigo_divisa]!;
+            await APIUtils.getChangesBasedOnCurrencyCode(element.transactionCurrency.currencyCode);
+        element.transactionImport = element.transactionImport * cambios[divisaEnUso.currencyCode]!;
       }
     }
     notifyListeners();
   }
 
   ///Iniciar sesión
-  void inicioSesion(Usuario u) {
+  void inicioSesion(UserModel u) {
     this.usuario = u;
     notifyListeners();
   }

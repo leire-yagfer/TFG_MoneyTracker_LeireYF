@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:proyecto2eva_budget/view/loginsignup/logindialog.dart';
-import 'package:proyecto2eva_budget/view/loginsignup/loginregister.dart';
-import 'package:proyecto2eva_budget/view/loginsignup/signupdialog.dart';
+import 'package:tfg_monetracker_leireyafer/view/loginregister/logindialog.dart';
+import 'package:tfg_monetracker_leireyafer/view/loginregister/loginregister.dart';
+import 'package:tfg_monetracker_leireyafer/view/loginregister/registerdialog.dart';
 
 mixin LoginLogoutDialog {
   //función para iniciar sesión

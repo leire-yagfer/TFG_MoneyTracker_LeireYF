@@ -1,76 +1,149 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:proyecto2eva_budget/model/models/categoria.dart';
-import 'package:proyecto2eva_budget/model/models/transaccion.dart';
-import 'package:proyecto2eva_budget/model/models/usuario.dart';
-import 'package:proyecto2eva_budget/model/services/firebasedb.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
+import 'package:tfg_monetracker_leireyafer/util/firebasedb.dart';
 
 ///Clase que gestiona transacciones en la base de datos
-class TransaccionDao {
+class TransactionDao {
   CollectionReference data = Firebasedb.data;
 
   ///Método para insertar una transacción
-  Future<void> insertarTransaccion(Usuario u, Transaccion t) async {
+  Future<void> insertTransaction(UserModel u, TransactionModel t) async {
     //sacar el usuario pasado por param
-    var userRef = await data.doc(u.id);
+    var userRef = await data.doc(u.userId);
 
     //recojo la categoría que tiene asignada la transacción t pasada por parametro --> si no hay la crea
-    var categoryRef = userRef.collection("categories").doc(t.categoria.nombre);
+    var categoryRef = userRef.collection("categories").doc(t.transactionCategory.categoryName);
 
-    //añadiendo la transaccion a la colección de transacciones, de la categoría a la que pertence, del usuario
+    //añado la transaccion a la colección de transacciones, de la categoría a la que pertence, del usuario
     await categoryRef.collection("transactions").add(
         t.toMap()); //el id no se pasa porque se autogenera solo en firebase
   }
 
+  ///Obtener las transacciones ordenadas por fecha de un usuario
+  Future<List<TransactionModel>> getTransactionsByDate(UserModel u) async {
+    List<TransactionModel> allTransacciones = [];
+    var userdata = await Firebasedb.data.doc(u.userId).get(); //obtengo el usuario
+
+    var userCategories = await userdata.reference
+        .collection('categories')
+        .get(); //obtengo las categorias de ese usuario
+
+    //obtengo las transacciones de cada categoria ordenadas por fecha
+    for (var c in userCategories.docs) {
+      var transactionsInCategory = await c.reference
+          .collection('transactions')
+          .orderBy('datetime',
+              descending:
+                  true) //ordena por fecha, de más reciente a más antiguo
+          .get();
+
+      for (var t in transactionsInCategory.docs) {
+        var transactionPonter = t.data();
+        transactionPonter["id"] =
+            t.id; //le paso el ID de la transacción pq no lo pasa directamente
+        transactionPonter["categoria"] = c
+            .data(); //le paso todos los datos que implica la categoria a la que pertenece dicha transacción
+        transactionPonter["categoria"]["id"] = c
+            .id; //le paso el ID de la categoria pq no lo pasa directamente --> id = nombre
+
+        allTransacciones.add(TransactionModel.fromMap(
+            transactionPonter)); //método transacción que se encarga de crear la transacción a partir del mapa
+      }
+    }
+
+    return allTransacciones;
+  }
+
+  //por si necesito recurrir a este metódo para ordenar por fecha y sin separar por categorias
+  /*
+  Future<List<Transaccion>> getTransactionsByDate(Usuario u) async {
+    List<Transaccion> allTransacciones = [];
+    var userdata = await Firebasedb.data.doc(u.id).get(); //obtengo el usuario
+
+    var categories = await userdata.reference
+        .collection('categories')
+        .get(); //obtengo las categorias
+
+    //obtengo las transacciones de cada categoria
+    for (var c in categories.docs) {
+      var transacciones = await c.reference.collection('transactions').get();
+      for (var t in transacciones.docs) {
+        var transaccion = t.data();
+        transaccion["id"] =
+            t.id; //le paso el ID de la transacción pq no lo pasa directamente
+        transaccion["categoria"] = c
+            .data(); //le paso todos los datos que implica la categoria a la que pertenece dicha transacción
+        transaccion["categoria"]["id"] =
+            c.id; //le paso el ID de la categoria pq no lo pasa directamente --> id = nombre
+
+        allTransacciones.add(Transaccion.fromMap(
+            transaccion)); //método transacción que se encarga de crear la transacción a partir del mapa
+      }
+    }
+    return allTransacciones;
+  }*/
+
+  ///Eliminar una transacción por ID
+  Future<void> deleteTransaction(UserModel u, TransactionModel t) async {
+    var userRef = await Firebasedb.data.doc(u.userId);
+    var categoryRef = userRef.collection("categories").doc(t.transactionCategory.categoryName);
+    var transaccionRef =
+        categoryRef.collection("transactions").doc(t.transactionId); //ID de la transacción
+    await transaccionRef.delete(); //eliminar la transacción
+  }
+
   ///Consulta para obtener ingresos/gastos por categoría
-  Future<Map<Categoria, List<Transaccion>>> obtenerIngresosGastosPorCategoria({
+  Future<Map<Category, List<TransactionModel>>> obtenerIngresosGastosPorCategoria({
     String filter = 'all',
     String? year,
-    required Usuario u,
+    required UserModel u,
     required String actualCode,
     required bool isIncome,
   }) async {
     //lista de cada categoría con sus transacciones
-    Map<Categoria, List<Transaccion>> mapaCategories = {};
+    Map<Category, List<TransactionModel>> mapaCategoriesWithTransactions = {};
 
     //acceder a las categorías del usuario
-    var userRef = await data.doc(u.id).collection("categories").get();
+    var userRef = await data.doc(u.userId).collection("categories").get();
     //recorrer cada categoría
     for (var c in userRef.docs) {
       Map<String, dynamic> cat = c.data(); //cat --> datos categoria
       cat['id'] = c.id;
-      Categoria categoria = Categoria.fromMap(
+      Category categoria = Category.fromMap(
           cat); //crear objeto categoria en funcion del valor obtenido
       //acceder a las transacciones de la categoría por la que se llega recorriendo
       var transactionsInCategory =
           await c.reference.collection('transactions').get();
       //creo lista de transacciones que va a pertenecer a una categoria concreta
-      List<Transaccion> transacciones = [];
+      List<TransactionModel> transacciones = [];
       //recorrer cada transacción
       for (var t in transactionsInCategory.docs) {
         Map<String, dynamic> transdata = t.data();
         transdata['id'] = t.id;
-        Transaccion transaccion = Transaccion.fromMap(transdata);
+        TransactionModel transaccion = TransactionModel.fromMap(transdata);
         //añadir la transacción a la lista
         transacciones.add(transaccion);
       }
       //añadir la categoría y sus transacciones a la lista
-      mapaCategories[categoria] = transacciones;
+      mapaCategoriesWithTransactions[categoria] = transacciones;
     }
     //filtrar por ingreso
-    mapaCategories.removeWhere((key, _) => !(key.esingreso == isIncome));
+    mapaCategoriesWithTransactions.removeWhere((key, _) => !(key.categoryIsIncome == isIncome));
     //filtrar por año
     if (filter == 'year' && year != null) {
-      mapaCategories.forEach((key, value) {
+      mapaCategoriesWithTransactions.forEach((key, value) {
         value.removeWhere(
-            (transaccion) => transaccion.fecha.year.toString() != year);
+            (transaccion) => transaccion.transactionDate.year.toString() != year);
       });
     }
-    return mapaCategories;
+    return mapaCategoriesWithTransactions;
   }
 
   ///Consulta para obtener el balance de los movimientos
   Future<double> obtenerTotalPorTipo({
-    required Usuario u,
+    required UserModel u,
     required bool isIncome,
     String filter = 'all',
     String? year,
@@ -79,7 +152,7 @@ class TransaccionDao {
     double total = 0;
 
     //acceder a las categorías del usuario
-    var userRef = await data.doc(u.id).collection("categories").get();
+    var userRef = await data.doc(u.userId).collection("categories").get();
     //recorrer cada categoría
     for (var c in userRef.docs) {
       if (c.data()['isincome'] != isIncome)

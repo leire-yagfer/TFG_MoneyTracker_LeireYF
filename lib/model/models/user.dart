@@ -1,12 +1,12 @@
-///Clase que representa un usuario
-class Usuario {
-  final String id;
-  final String correoUsuario;
+///Clase que representa un usuario. Se llama así porque puedo tener probelmas con el nombre User del propio FireBase
+class UserModel {
+  final String userId;
+  final String userEmail;
   
   //sin contraseña pq ya la guarda el authenticator de FireBase
 
-  Usuario({
-    required this.id,
-    required this.correoUsuario
+  UserModel({
+    required this.userId,
+    required this.userEmail
   });
 }

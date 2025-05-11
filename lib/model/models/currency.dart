@@ -1,10 +1,10 @@
-class Divisa {
-  String nombre_divisa;
-  String codigo_divisa;
-  String simbolo_divisa;
+class Currency {
+  String currencyName;
+  String currencyCode;
+  String currencySymbol;
 
-  Divisa(
-      {required this.nombre_divisa,
-      required this.codigo_divisa,
-      required this.simbolo_divisa});
+  Currency(
+      {required this.currencyName,
+      required this.currencyCode,
+      required this.currencySymbol});
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/view/estadisticas/resumen_balance.dart';
-import 'package:proyecto2eva_budget/view/estadisticas/resumen_gastos.dart';
-import 'package:proyecto2eva_budget/view/estadisticas/resumen_ingresos.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/view/statistics/balancesummary.dart';
+import 'package:tfg_monetracker_leireyafer/view/statistics/expensesummary.dart';
+import 'package:tfg_monetracker_leireyafer/view/statistics/incomesummary.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 ///Clase que contiene tres pestañas en las que se ve las estadísticas de ingresos, gastos y balance
-class Estadisticas extends StatelessWidget {
+class StatisticsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -26,7 +26,7 @@ class Estadisticas extends StatelessWidget {
           ),
         ),
         body: const TabBarView(
-          children: [IngresosTab(), GastosTab(),BalanceTab()],
+          children: [IngresosTab(), ExpenseTab(), BalanceTab()],
         ),
       ),
       

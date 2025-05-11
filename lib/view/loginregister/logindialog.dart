@@ -1,15 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/model/models/usuario.dart';
-import 'package:proyecto2eva_budget/model/services/firebaseauth.dart';
-import 'package:proyecto2eva_budget/reusable/reusablemainbutton.dart';
-import 'package:proyecto2eva_budget/reusable/reusablerowloginregister.dart';
-import 'package:proyecto2eva_budget/view/home.dart';
-import 'package:proyecto2eva_budget/view/loginsignup/mixinloginregisterlogout.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusableTxtFormFieldLoginRegister.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablerowloginregister.dart';
+import 'package:tfg_monetracker_leireyafer/util/firebaseauthentication.dart';
+import 'package:tfg_monetracker_leireyafer/view/appbottomnavigationbar.dart';
+import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../main.dart' show firestore;
 
 class LogInDialog extends StatefulWidget {
@@ -25,9 +25,6 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
   final TextEditingController _usernameController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
-
-  bool _isPasswordVisible =
-      false; // Variable para controlar la visibilidad de la contraseña
 
   String? _errorMessage;
 
@@ -46,14 +43,12 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(
+              //Campo de correo electrónico
+              ReusableTxtFormFieldLoginRegister(
                 keyboardType: TextInputType.emailAddress,
                 controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.email,
-                  hintText: AppLocalizations.of(context)!.emailhint,
-                  border: const OutlineInputBorder(),
-                ),
+                labelText: AppLocalizations.of(context)!.email,
+                hintText: AppLocalizations.of(context)!.emailhint,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return AppLocalizations.of(context)!.emailerror;
@@ -62,29 +57,12 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
                 },
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: !_isPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.passwordsi,
-                  hintText: AppLocalizations.of(context)!.passwordhintsi,
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: context
-                          .watch<ThemeProvider>()
-                          .palette()['buttonBlackWhite']!,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  ),
-                ),
+              //Campo de contraseña
+              ReusableTxtFormFieldLoginRegister(controller: _passwordController, 
+                labelText: AppLocalizations.of(context)!.passwordsi,
+                hintText: AppLocalizations.of(context)!.passwordhintsi,
+                obscureText: true,
+                passwordIcon: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return AppLocalizations.of(context)!.passworderror;
@@ -101,13 +79,13 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
                   showRegisterDialog(context);
                 },
               ),
-              ReusableMainButton(
+              ReusableButton(
                 onClick: () async {
                   await _signIn();
                   if (_errorMessage == null) {
                     Navigator.pop(context);
                     Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => MyHomePage()));
+                        MaterialPageRoute(builder: (context) => MainApp()));
                   } else {
                     showDialog(
                       context: context,
@@ -161,18 +139,17 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
           email: _usernameController.text.trim(),
           password: _passwordController.text.trim(),
         );
-        
+
         // Save credentials for auto-login (always enabled)
         await _authService.saveCredentials(_usernameController.text.trim(),
             _passwordController.text.trim(), false // No biometrics by default
             );
-            
 
         if (mounted) {
           // Use Future.microtask to avoid navigation during build
-          context.read<ProviderAjustes>().inicioSesion(Usuario(
-              id: userCredential.user!.uid,
-              correoUsuario: _usernameController.text));
+          context.read<ProviderAjustes>().inicioSesion(UserModel(
+              userId: userCredential.user!.uid,
+              userEmail: _usernameController.text));
           await context.read<ProviderAjustes>().cargarTransacciones();
         }
       } on FirebaseAuthException catch (e) {

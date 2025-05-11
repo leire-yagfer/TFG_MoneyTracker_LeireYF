@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/model/models/dao/categoriadao.dart';
-import 'package:proyecto2eva_budget/reusable/categorycard.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:proyecto2eva_budget/model/models/categoria.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/categorycard.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 
 ///Clase que muestra las categorías almacenadas en la base de datos de cada usuario separadas pòr ingresos y gastos
-class Categorias extends StatefulWidget {
+class CategoriesPage extends StatefulWidget {
   @override
-  _CategoriasState createState() => _CategoriasState();
+  _CategoriesPageState createState() => _CategoriesPageState();
 }
 
-class _CategoriasState extends State<Categorias> {
-  late Database db;
-  List<Categoria> categorias = [];
-  CategoriaDao categoriaDao = CategoriaDao();
+class _CategoriesPageState extends State<CategoriesPage> {
+  List<Category> categorias = [];
+  CategoryDao categoriaDao = CategoryDao();
 
   @override
   void initState() {
@@ -26,14 +24,14 @@ class _CategoriasState extends State<Categorias> {
 
   ///Método para cargar las categorías desde la base de datos
   Future<void> _cargarCategorias() async {
-    List<Categoria> categoriasDB = await categoriaDao.obtenerCategorias(context
+    List<Category> categoriasDB = await categoriaDao.getCategories(context
         .read<ProviderAjustes>()
         .usuario!); //Obtiene las categorías del usuario actual
     //Se ordenan las categorías por tipo (ingreso o gasto)
     categoriasDB.sort((a, b) {
-      if (a.esingreso && !b.esingreso) {
+      if (a.categoryIsIncome && !b.categoryIsIncome) {
         return -1; // a es ingreso y b es gasto
-      } else if (!a.esingreso && b.esingreso) {
+      } else if (!a.categoryIsIncome && b.categoryIsIncome) {
         return 1; // a es gasto y b es ingreso
       } else {
         return 0; // ambos son ingresos o ambos son gastos
@@ -80,10 +78,10 @@ class _CategoriasState extends State<Categorias> {
   @override
   Widget build(BuildContext context) {
     //Se separan las categorías en dos listas: una para ingresos y otra para gastos
-    List<Categoria> ingresos =
-        categorias.where((categoria) => categoria.esingreso).toList();
-    List<Categoria> gastos =
-        categorias.where((categoria) => !categoria.esingreso).toList();
+    List<Category> ingresos =
+        categorias.where((categoria) => categoria.categoryIsIncome).toList();
+    List<Category> gastos =
+        categorias.where((categoria) => !categoria.categoryIsIncome).toList();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -92,13 +90,13 @@ class _CategoriasState extends State<Categorias> {
             if (ingresos.isNotEmpty)
               CategoryCard(
                 title: AppLocalizations.of(context)!.income,
-                categorias: ingresos,
+                categoriesList: ingresos,
                 categoryIcon: obtenerIcono,
               ),
             if (gastos.isNotEmpty)
               CategoryCard(
                 title: AppLocalizations.of(context)!.expenses,
-                categorias: gastos,
+                categoriesList: gastos,
                 categoryIcon: obtenerIcono,
               ),
           ],

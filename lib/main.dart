@@ -8,16 +8,15 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:proyecto2eva_budget/model/models/usuario.dart';
-import 'package:proyecto2eva_budget/model/services/apicambiodivisa.dart';
-import 'package:proyecto2eva_budget/model/services/firebaseauth.dart';
-import 'package:proyecto2eva_budget/view/home.dart';
-import 'package:proyecto2eva_budget/view/loginsignup/loginregister.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
-import 'firebase_options.dart';
-
+import 'package:tfg_monetracker_leireyafer/firebase_options.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
+import 'package:tfg_monetracker_leireyafer/util/changecurrencyapi.dart';
+import 'package:tfg_monetracker_leireyafer/util/firebaseauthentication.dart';
+import 'package:tfg_monetracker_leireyafer/view/appbottomnavigationbar.dart';
+import 'package:tfg_monetracker_leireyafer/view/loginregister/loginregister.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 FirebaseFirestore?
     firestore; //variable que se pasa por todas las clases para iniciar firebase --> que haya acceso a la base de datos
 
@@ -26,17 +25,19 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await APIUtils.get_all_currencies();
+
+  //Cargo el archivo interno que qcontiene las divisas
+  await APIUtils.getAllCurrencies();
 
   // Inicializa Firebase Firestore
   firestore = FirebaseFirestore.instance;
 
   User? user = await _tryAutoLogin();
 
-  Usuario? u;
+  UserModel? u;
 
   if (user != null) {
-    u = Usuario(id: user.uid, correoUsuario: user.email!);
+    u = UserModel(userId: user.uid, userEmail: user.email!);
   }
 
   //MultiProvider para los cambios
@@ -113,7 +114,7 @@ class _MyAppState extends State<MyApp> {
           //En función de si existe un usuario ya registrado que ha iniciado sesión, se muestra la pantalla principal y sino, la pagina de inicio de sesión/registro
           home: (context.read<ProviderAjustes>().usuario == null)
               ? LoginSignupPage()
-              : MyHomePage(),
+              : MainApp(),
         );
       },
     );

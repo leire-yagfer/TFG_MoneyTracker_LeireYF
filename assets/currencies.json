@@ -1,0 +1,927 @@
+[
+    {
+        "nombre_divisa": "Afghan Afghani",
+        "codigo_divisa": "AFN",
+        "simbolo_divisa": "Af"
+    },
+    {
+        "nombre_divisa": "Albanian Lek",
+        "codigo_divisa": "ALL",
+        "simbolo_divisa": "ALL"
+    },
+    {
+        "nombre_divisa": "Armenian Dram",
+        "codigo_divisa": "AMD",
+        "simbolo_divisa": "AMD"
+    },
+    {
+        "nombre_divisa": "NL Antillean Guilder",
+        "codigo_divisa": "ANG",
+        "simbolo_divisa": "ƒ"
+    },
+    {
+        "nombre_divisa": "Angolan Kwanza",
+        "codigo_divisa": "AOA",
+        "simbolo_divisa": "Kz"
+    },
+    {
+        "nombre_divisa": "Argentine Peso",
+        "codigo_divisa": "ARS",
+        "simbolo_divisa": "AR$"
+    },
+    {
+        "nombre_divisa": "Australian Dollar",
+        "codigo_divisa": "AUD",
+        "simbolo_divisa": "AU$"
+    },
+    {
+        "nombre_divisa": "Aruban Florin",
+        "codigo_divisa": "AWG",
+        "simbolo_divisa": "Afl."
+    },
+    {
+        "nombre_divisa": "Azerbaijani Manat",
+        "codigo_divisa": "AZN",
+        "simbolo_divisa": "man."
+    },
+    {
+        "nombre_divisa": "Bosnia-Herzegovina Convertible Mark",
+        "codigo_divisa": "BAM",
+        "simbolo_divisa": "KM"
+    },
+    {
+        "nombre_divisa": "Barbadian Dollar",
+        "codigo_divisa": "BBD",
+        "simbolo_divisa": "Bds$"
+    },
+    {
+        "nombre_divisa": "Bangladeshi Taka",
+        "codigo_divisa": "BDT",
+        "simbolo_divisa": "Tk"
+    },
+    {
+        "nombre_divisa": "Bulgarian Lev",
+        "codigo_divisa": "BGN",
+        "simbolo_divisa": "BGN"
+    },
+    {
+        "nombre_divisa": "Bahraini Dinar",
+        "codigo_divisa": "BHD",
+        "simbolo_divisa": "BD"
+    },
+    {
+        "nombre_divisa": "Burundian Franc",
+        "codigo_divisa": "BIF",
+        "simbolo_divisa": "FBu"
+    },
+    {
+        "nombre_divisa": "Bermudan Dollar",
+        "codigo_divisa": "BMD",
+        "simbolo_divisa": "BD$"
+    },
+    {
+        "nombre_divisa": "Brunei Dollar",
+        "codigo_divisa": "BND",
+        "simbolo_divisa": "BN$"
+    },
+    {
+        "nombre_divisa": "Bolivian Boliviano",
+        "codigo_divisa": "BOB",
+        "simbolo_divisa": "Bs"
+    },
+    {
+        "nombre_divisa": "Brazilian Real",
+        "codigo_divisa": "BRL",
+        "simbolo_divisa": "R$"
+    },
+    {
+        "nombre_divisa": "Bahamian Dollar",
+        "codigo_divisa": "BSD",
+        "simbolo_divisa": "B$"
+    },
+    {
+        "nombre_divisa": "Botswanan Pula",
+        "codigo_divisa": "BWP",
+        "simbolo_divisa": "BWP"
+    },
+    {
+        "nombre_divisa": "Belarusian ruble",
+        "codigo_divisa": "BYN",
+        "simbolo_divisa": "Br"
+    },
+    {
+        "nombre_divisa": "Belarusian Ruble",
+        "codigo_divisa": "BYR",
+        "simbolo_divisa": "BYR"
+    },
+    {
+        "nombre_divisa": "Belize Dollar",
+        "codigo_divisa": "BZD",
+        "simbolo_divisa": "BZ$"
+    },
+    {
+        "nombre_divisa": "Canadian Dollar",
+        "codigo_divisa": "CAD",
+        "simbolo_divisa": "CA$"
+    },
+    {
+        "nombre_divisa": "Congolese Franc",
+        "codigo_divisa": "CDF",
+        "simbolo_divisa": "CDF"
+    },
+    {
+        "nombre_divisa": "Swiss Franc",
+        "codigo_divisa": "CHF",
+        "simbolo_divisa": "CHF"
+    },
+    {
+        "nombre_divisa": "Unidad de Fomento",
+        "codigo_divisa": "CLF",
+        "simbolo_divisa": "UF"
+    },
+    {
+        "nombre_divisa": "Chilean Peso",
+        "codigo_divisa": "CLP",
+        "simbolo_divisa": "CL$"
+    },
+    {
+        "nombre_divisa": "Chinese Yuan",
+        "codigo_divisa": "CNY",
+        "simbolo_divisa": "CN¥"
+    },
+    {
+        "nombre_divisa": "Coombian Peso",
+        "codigo_divisa": "COP",
+        "simbolo_divisa": "CO$"
+    },
+    {
+        "nombre_divisa": "Costa Rican Colón",
+        "codigo_divisa": "CRC",
+        "simbolo_divisa": "₡"
+    },
+    {
+        "nombre_divisa": "Cuban Convertible Peso",
+        "codigo_divisa": "CUC",
+        "simbolo_divisa": "CUC$"
+    },
+    {
+        "nombre_divisa": "Cuban Peso",
+        "codigo_divisa": "CUP",
+        "simbolo_divisa": "$MN"
+    },
+    {
+        "nombre_divisa": "Cape Verdean Escudo",
+        "codigo_divisa": "CVE",
+        "simbolo_divisa": "CV$"
+    },
+    {
+        "nombre_divisa": "Czech Republic Koruna",
+        "codigo_divisa": "CZK",
+        "simbolo_divisa": "Kč"
+    },
+    {
+        "nombre_divisa": "Djiboutian Franc",
+        "codigo_divisa": "DJF",
+        "simbolo_divisa": "Fdj"
+    },
+    {
+        "nombre_divisa": "Danish Krone",
+        "codigo_divisa": "DKK",
+        "simbolo_divisa": "Dkr"
+    },
+    {
+        "nombre_divisa": "Dominican Peso",
+        "codigo_divisa": "DOP",
+        "simbolo_divisa": "RD$"
+    },
+    {
+        "nombre_divisa": "Algerian Dinar",
+        "codigo_divisa": "DZD",
+        "simbolo_divisa": "DA"
+    },
+    {
+        "nombre_divisa": "Eritrean Nakfa",
+        "codigo_divisa": "ERN",
+        "simbolo_divisa": "Nfk"
+    },
+    {
+        "nombre_divisa": "Ethiopian Birr",
+        "codigo_divisa": "ETB",
+        "simbolo_divisa": "Br"
+    },
+    {
+        "nombre_divisa": "Euro",
+        "codigo_divisa": "EUR",
+        "simbolo_divisa": "€"
+    },
+    {
+        "nombre_divisa": "Fijian Dollar",
+        "codigo_divisa": "FJD",
+        "simbolo_divisa": "FJ$"
+    },
+    {
+        "nombre_divisa": "Falkland Islands Pound",
+        "codigo_divisa": "FKP",
+        "simbolo_divisa": "FK£"
+    },
+    {
+        "nombre_divisa": "British Pound Sterling",
+        "codigo_divisa": "GBP",
+        "simbolo_divisa": "£"
+    },
+    {
+        "nombre_divisa": "Georgian Lari",
+        "codigo_divisa": "GEL",
+        "simbolo_divisa": "GEL"
+    },
+    {
+        "nombre_divisa": "Guernsey pound",
+        "codigo_divisa": "GGP",
+        "simbolo_divisa": "£"
+    },
+    {
+        "nombre_divisa": "Ghanaian Cedi",
+        "codigo_divisa": "GHS",
+        "simbolo_divisa": "GH₵"
+    },
+    {
+        "nombre_divisa": "Gibraltar Pound",
+        "codigo_divisa": "GIP",
+        "simbolo_divisa": "£"
+    },
+    {
+        "nombre_divisa": "Gambian Dalasi",
+        "codigo_divisa": "GMD",
+        "simbolo_divisa": "D"
+    },
+    {
+        "nombre_divisa": "Guinean Franc",
+        "codigo_divisa": "GNF",
+        "simbolo_divisa": "FG"
+    },
+    {
+        "nombre_divisa": "Guatemalan Quetzal",
+        "codigo_divisa": "GTQ",
+        "simbolo_divisa": "GTQ"
+    },
+    {
+        "nombre_divisa": "Guyanaese Dollar",
+        "codigo_divisa": "GYD",
+        "simbolo_divisa": "G$"
+    },
+    {
+        "nombre_divisa": "Hong Kong Dollar",
+        "codigo_divisa": "HKD",
+        "simbolo_divisa": "HK$"
+    },
+    {
+        "nombre_divisa": "Honduran Lempira",
+        "codigo_divisa": "HNL",
+        "simbolo_divisa": "HNL"
+    },
+    {
+        "nombre_divisa": "Croatian Kuna",
+        "codigo_divisa": "HRK",
+        "simbolo_divisa": "kn"
+    },
+    {
+        "nombre_divisa": "Haitian Gourde",
+        "codigo_divisa": "HTG",
+        "simbolo_divisa": "G"
+    },
+    {
+        "nombre_divisa": "Hungarian Forint",
+        "codigo_divisa": "HUF",
+        "simbolo_divisa": "Ft"
+    },
+    {
+        "nombre_divisa": "Indonesian Rupiah",
+        "codigo_divisa": "IDR",
+        "simbolo_divisa": "Rp"
+    },
+    {
+        "nombre_divisa": "Israeli New Sheqel",
+        "codigo_divisa": "ILS",
+        "simbolo_divisa": "₪"
+    },
+    {
+        "nombre_divisa": "Manx pound",
+        "codigo_divisa": "IMP",
+        "simbolo_divisa": "£"
+    },
+    {
+        "nombre_divisa": "Iraqi Dinar",
+        "codigo_divisa": "IQD",
+        "simbolo_divisa": "IQD"
+    },
+    {
+        "nombre_divisa": "Iranian Rial",
+        "codigo_divisa": "IRR",
+        "simbolo_divisa": "IRR"
+    },
+    {
+        "nombre_divisa": "Icelandic Króna",
+        "codigo_divisa": "ISK",
+        "simbolo_divisa": "Ikr"
+    },
+    {
+        "nombre_divisa": "Jersey pound",
+        "codigo_divisa": "JEP",
+        "simbolo_divisa": "£"
+    },
+    {
+        "nombre_divisa": "Jamaican Dollar",
+        "codigo_divisa": "JMD",
+        "simbolo_divisa": "J$"
+    },
+    {
+        "nombre_divisa": "Jordanian Dinar",
+        "codigo_divisa": "JOD",
+        "simbolo_divisa": "JD"
+    },
+    {
+        "nombre_divisa": "Japanese Yen",
+        "codigo_divisa": "JPY",
+        "simbolo_divisa": "¥"
+    },
+    {
+        "nombre_divisa": "Kenyan Shilling",
+        "codigo_divisa": "KES",
+        "simbolo_divisa": "Ksh"
+    },
+    {
+        "nombre_divisa": "Kyrgystani Som",
+        "codigo_divisa": "KGS",
+        "simbolo_divisa": "KGS"
+    },
+    {
+        "nombre_divisa": "Cambodian Riel",
+        "codigo_divisa": "KHR",
+        "simbolo_divisa": "KHR"
+    },
+    {
+        "nombre_divisa": "Comorian Franc",
+        "codigo_divisa": "KMF",
+        "simbolo_divisa": "CF"
+    },
+    {
+        "nombre_divisa": "North Korean Won",
+        "codigo_divisa": "KPW",
+        "simbolo_divisa": "₩"
+    },
+    {
+        "nombre_divisa": "South Korean Won",
+        "codigo_divisa": "KRW",
+        "simbolo_divisa": "₩"
+    },
+    {
+        "nombre_divisa": "Kuwaiti Dinar",
+        "codigo_divisa": "KWD",
+        "simbolo_divisa": "KD"
+    },
+    {
+        "nombre_divisa": "Cayman Islands Dollar",
+        "codigo_divisa": "KYD",
+        "simbolo_divisa": "CI$"
+    },
+    {
+        "nombre_divisa": "Kazakhstani Tenge",
+        "codigo_divisa": "KZT",
+        "simbolo_divisa": "KZT"
+    },
+    {
+        "nombre_divisa": "Laotian Kip",
+        "codigo_divisa": "LAK",
+        "simbolo_divisa": "₭N"
+    },
+    {
+        "nombre_divisa": "Lebanese Pound",
+        "codigo_divisa": "LBP",
+        "simbolo_divisa": "LB£"
+    },
+    {
+        "nombre_divisa": "Sri Lankan Rupee",
+        "codigo_divisa": "LKR",
+        "simbolo_divisa": "SLRs"
+    },
+    {
+        "nombre_divisa": "Liberian Dollar",
+        "codigo_divisa": "LRD",
+        "simbolo_divisa": "LD$"
+    },
+    {
+        "nombre_divisa": "Lesotho Loti",
+        "codigo_divisa": "LSL",
+        "simbolo_divisa": "L"
+    },
+    {
+        "nombre_divisa": "Lithuanian Litas",
+        "codigo_divisa": "LTL",
+        "simbolo_divisa": "Lt"
+    },
+    {
+        "nombre_divisa": "Latvian Lats",
+        "codigo_divisa": "LVL",
+        "simbolo_divisa": "Ls"
+    },
+    {
+        "nombre_divisa": "Moroccan Dirham",
+        "codigo_divisa": "MAD",
+        "simbolo_divisa": "MAD"
+    },
+    {
+        "nombre_divisa": "Moldovan Leu",
+        "codigo_divisa": "MDL",
+        "simbolo_divisa": "MDL"
+    },
+    {
+        "nombre_divisa": "Silver Ounce",
+        "codigo_divisa": "XAG",
+        "simbolo_divisa": "XAG"
+    },
+    {
+        "nombre_divisa": "Gold Ounce",
+        "codigo_divisa": "XAU",
+        "simbolo_divisa": "XAU"
+    },
+    {
+        "nombre_divisa": "East Caribbean Dollar",
+        "codigo_divisa": "XCD",
+        "simbolo_divisa": "EC$"
+    },
+    {
+        "nombre_divisa": "Special drawing rights",
+        "codigo_divisa": "XDR",
+        "simbolo_divisa": "SDR"
+    },
+    {
+        "nombre_divisa": "CFA Franc BCEAO",
+        "codigo_divisa": "XOF",
+        "simbolo_divisa": "CFA"
+    },
+    {
+        "nombre_divisa": "CFP Franc",
+        "codigo_divisa": "XPF",
+        "simbolo_divisa": "CFP"
+    },
+    {
+        "nombre_divisa": "Yemeni Rial",
+        "codigo_divisa": "YER",
+        "simbolo_divisa": "YR"
+    },
+    {
+        "nombre_divisa": "South African Rand",
+        "codigo_divisa": "ZAR",
+        "simbolo_divisa": "R"
+    },
+    {
+        "nombre_divisa": "Zambian Kwacha",
+        "codigo_divisa": "ZMK",
+        "simbolo_divisa": "ZK"
+    },
+    {
+        "nombre_divisa": "Zambian Kwacha",
+        "codigo_divisa": "ZMW",
+        "simbolo_divisa": "ZK"
+    },
+    {
+        "nombre_divisa": "Zimbabwean dollar",
+        "codigo_divisa": "ZWL",
+        "simbolo_divisa": "ZWL"
+    },
+    {
+        "nombre_divisa": "Platinum Ounce",
+        "codigo_divisa": "XPT",
+        "simbolo_divisa": "XPT"
+    },
+    {
+        "nombre_divisa": "Palladium Ounce",
+        "codigo_divisa": "XPD",
+        "simbolo_divisa": "XPD"
+    },
+    {
+        "nombre_divisa": "Bitcoin",
+        "codigo_divisa": "BTC",
+        "simbolo_divisa": "₿"
+    },
+    {
+        "nombre_divisa": "Ethereum",
+        "codigo_divisa": "ETH",
+        "simbolo_divisa": "Ξ"
+    },
+    {
+        "nombre_divisa": "Binance",
+        "codigo_divisa": "BNB",
+        "simbolo_divisa": "BNB"
+    },
+    {
+        "nombre_divisa": "Ripple",
+        "codigo_divisa": "XRP",
+        "simbolo_divisa": "XRP"
+    },
+    {
+        "nombre_divisa": "Solana",
+        "codigo_divisa": "SOL",
+        "simbolo_divisa": "SOL"
+    },
+    {
+        "nombre_divisa": "Polkadot",
+        "codigo_divisa": "DOT",
+        "simbolo_divisa": "DOT"
+    },
+    {
+        "nombre_divisa": "Avalanche",
+        "codigo_divisa": "AVAX",
+        "simbolo_divisa": "AVAX"
+    },
+    {
+        "nombre_divisa": "Matic Token",
+        "codigo_divisa": "MATIC",
+        "simbolo_divisa": "MATIC"
+    },
+    {
+        "nombre_divisa": "Litecoin",
+        "codigo_divisa": "LTC",
+        "simbolo_divisa": "Ł"
+    },
+    {
+        "nombre_divisa": "Cardano",
+        "codigo_divisa": "ADA",
+        "simbolo_divisa": "ADA"
+    },
+    {
+        "nombre_divisa": "Tether",
+        "codigo_divisa": "USDT",
+        "simbolo_divisa": "USDT"
+    },
+    {
+        "nombre_divisa": "USD Coin",
+        "codigo_divisa": "USDC",
+        "simbolo_divisa": "USDC"
+    },
+    {
+        "nombre_divisa": "Dai",
+        "codigo_divisa": "DAI",
+        "simbolo_divisa": "DAI"
+    },
+    {
+        "nombre_divisa": "Binance USD",
+        "codigo_divisa": "BUSD",
+        "simbolo_divisa": "BUSD"
+    },
+    {
+        "nombre_divisa": "Arbitrum",
+        "codigo_divisa": "ARB",
+        "simbolo_divisa": "ARB"
+    },
+    {
+        "nombre_divisa": "Optimism",
+        "codigo_divisa": "OP",
+        "simbolo_divisa": "OP"
+    },
+    {
+        "nombre_divisa": "United Arab Emirates Dirham",
+        "codigo_divisa": "AED",
+        "simbolo_divisa": "AED"
+    },
+    {
+        "nombre_divisa": "Bhutanese Ngultrum",
+        "codigo_divisa": "BTN",
+        "simbolo_divisa": "Nu."
+    },
+    {
+        "nombre_divisa": "Macedonian Denar",
+        "codigo_divisa": "MKD",
+        "simbolo_divisa": "MKD"
+    },
+    {
+        "nombre_divisa": "Myanma Kyat",
+        "codigo_divisa": "MMK",
+        "simbolo_divisa": "MMK"
+    },
+    {
+        "nombre_divisa": "Mongolian Tugrik",
+        "codigo_divisa": "MNT",
+        "simbolo_divisa": "₮"
+    },
+    {
+        "nombre_divisa": "Macanese Pataca",
+        "codigo_divisa": "MOP",
+        "simbolo_divisa": "MOP$"
+    },
+    {
+        "nombre_divisa": "Mauritanian ouguiya",
+        "codigo_divisa": "MRO",
+        "simbolo_divisa": "UM"
+    },
+    {
+        "nombre_divisa": "Mauritian Rupee",
+        "codigo_divisa": "MUR",
+        "simbolo_divisa": "MURs"
+    },
+    {
+        "nombre_divisa": "Maldivian Rufiyaa",
+        "codigo_divisa": "MVR",
+        "simbolo_divisa": "MRf"
+    },
+    {
+        "nombre_divisa": "Malawian Kwacha",
+        "codigo_divisa": "MWK",
+        "simbolo_divisa": "MK"
+    },
+    {
+        "nombre_divisa": "Mexican Peso",
+        "codigo_divisa": "MXN",
+        "simbolo_divisa": "MX$"
+    },
+    {
+        "nombre_divisa": "Mozambican Metical",
+        "codigo_divisa": "MZN",
+        "simbolo_divisa": "MTn"
+    },
+    {
+        "nombre_divisa": "Namibian Dollar",
+        "codigo_divisa": "NAD",
+        "simbolo_divisa": "N$"
+    },
+    {
+        "nombre_divisa": "Nigerian Naira",
+        "codigo_divisa": "NGN",
+        "simbolo_divisa": "₦"
+    },
+    {
+        "nombre_divisa": "Nicaraguan Córdoba",
+        "codigo_divisa": "NIO",
+        "simbolo_divisa": "C$"
+    },
+    {
+        "nombre_divisa": "Norwegian Krone",
+        "codigo_divisa": "NOK",
+        "simbolo_divisa": "Nkr"
+    },
+    {
+        "nombre_divisa": "Nepalese Rupee",
+        "codigo_divisa": "NPR",
+        "simbolo_divisa": "NPRs"
+    },
+    {
+        "nombre_divisa": "New Zealand Dollar",
+        "codigo_divisa": "NZD",
+        "simbolo_divisa": "NZ$"
+    },
+    {
+        "nombre_divisa": "Omani Rial",
+        "codigo_divisa": "OMR",
+        "simbolo_divisa": "OMR"
+    },
+    {
+        "nombre_divisa": "Panamanian Balboa",
+        "codigo_divisa": "PAB",
+        "simbolo_divisa": "B/."
+    },
+    {
+        "nombre_divisa": "Peruvian Nuevo Sol",
+        "codigo_divisa": "PEN",
+        "simbolo_divisa": "S/."
+    },
+    {
+        "nombre_divisa": "Papua New Guinean Kina",
+        "codigo_divisa": "PGK",
+        "simbolo_divisa": "K"
+    },
+    {
+        "nombre_divisa": "Philippine Peso",
+        "codigo_divisa": "PHP",
+        "simbolo_divisa": "₱"
+    },
+    {
+        "nombre_divisa": "Pakistani Rupee",
+        "codigo_divisa": "PKR",
+        "simbolo_divisa": "PKRs"
+    },
+    {
+        "nombre_divisa": "Polish Zloty",
+        "codigo_divisa": "PLN",
+        "simbolo_divisa": "zł"
+    },
+    {
+        "nombre_divisa": "Paraguayan Guarani",
+        "codigo_divisa": "PYG",
+        "simbolo_divisa": "₲"
+    },
+    {
+        "nombre_divisa": "Qatari Rial",
+        "codigo_divisa": "QAR",
+        "simbolo_divisa": "QR"
+    },
+    {
+        "nombre_divisa": "Romanian Leu",
+        "codigo_divisa": "RON",
+        "simbolo_divisa": "RON"
+    },
+    {
+        "nombre_divisa": "Serbian Dinar",
+        "codigo_divisa": "RSD",
+        "simbolo_divisa": "din."
+    },
+    {
+        "nombre_divisa": "Russian Ruble",
+        "codigo_divisa": "RUB",
+        "simbolo_divisa": "RUB"
+    },
+    {
+        "nombre_divisa": "Rwandan Franc",
+        "codigo_divisa": "RWF",
+        "simbolo_divisa": "RWF"
+    },
+    {
+        "nombre_divisa": "Saudi Riyal",
+        "codigo_divisa": "SAR",
+        "simbolo_divisa": "SR"
+    },
+    {
+        "nombre_divisa": "Seychellois Rupee",
+        "codigo_divisa": "SCR",
+        "simbolo_divisa": "SRe"
+    },
+    {
+        "nombre_divisa": "Sudanese Pound",
+        "codigo_divisa": "SDG",
+        "simbolo_divisa": "SDG"
+    },
+    {
+        "nombre_divisa": "Swedish Krona",
+        "codigo_divisa": "SEK",
+        "simbolo_divisa": "Skr"
+    },
+    {
+        "nombre_divisa": "Singapore Dollar",
+        "codigo_divisa": "SGD",
+        "simbolo_divisa": "S$"
+    },
+    {
+        "nombre_divisa": "Saint Helena Pound",
+        "codigo_divisa": "SHP",
+        "simbolo_divisa": "£"
+    },
+    {
+        "nombre_divisa": "Sierra Leonean Leone",
+        "codigo_divisa": "SLL",
+        "simbolo_divisa": "Le"
+    },
+    {
+        "nombre_divisa": "Somali Shilling",
+        "codigo_divisa": "SOS",
+        "simbolo_divisa": "Ssh"
+    },
+    {
+        "nombre_divisa": "Surinamese Dollar",
+        "codigo_divisa": "SRD",
+        "simbolo_divisa": "$"
+    },
+    {
+        "nombre_divisa": "São Tomé and Príncipe dobra",
+        "codigo_divisa": "STD",
+        "simbolo_divisa": "Db"
+    },
+    {
+        "nombre_divisa": "Salvadoran Colón",
+        "codigo_divisa": "SVC",
+        "simbolo_divisa": "₡"
+    },
+    {
+        "nombre_divisa": "Syrian Pound",
+        "codigo_divisa": "SYP",
+        "simbolo_divisa": "SY£"
+    },
+    {
+        "nombre_divisa": "Swazi Lilangeni",
+        "codigo_divisa": "SZL",
+        "simbolo_divisa": "L"
+    },
+    {
+        "nombre_divisa": "Thai Baht",
+        "codigo_divisa": "THB",
+        "simbolo_divisa": "฿"
+    },
+    {
+        "nombre_divisa": "Tajikistani Somoni",
+        "codigo_divisa": "TJS",
+        "simbolo_divisa": "TJS"
+    },
+    {
+        "nombre_divisa": "Turkmenistani Manat",
+        "codigo_divisa": "TMT",
+        "simbolo_divisa": "T"
+    },
+    {
+        "nombre_divisa": "Tunisian Dinar",
+        "codigo_divisa": "TND",
+        "simbolo_divisa": "DT"
+    },
+    {
+        "nombre_divisa": "Tongan Paʻanga",
+        "codigo_divisa": "TOP",
+        "simbolo_divisa": "T$"
+    },
+    {
+        "nombre_divisa": "Turkish Lira",
+        "codigo_divisa": "TRY",
+        "simbolo_divisa": "TL"
+    },
+    {
+        "nombre_divisa": "Trinidad and Tobago Dollar",
+        "codigo_divisa": "TTD",
+        "simbolo_divisa": "TT$"
+    },
+    {
+        "nombre_divisa": "New Taiwan Dollar",
+        "codigo_divisa": "TWD",
+        "simbolo_divisa": "NT$"
+    },
+    {
+        "nombre_divisa": "Tanzanian Shilling",
+        "codigo_divisa": "TZS",
+        "simbolo_divisa": "TSh"
+    },
+    {
+        "nombre_divisa": "Ukrainian Hryvnia",
+        "codigo_divisa": "UAH",
+        "simbolo_divisa": "₴"
+    },
+    {
+        "nombre_divisa": "Ugandan Shilling",
+        "codigo_divisa": "UGX",
+        "simbolo_divisa": "USh"
+    },
+    {
+        "nombre_divisa": "US Dollar",
+        "codigo_divisa": "USD",
+        "simbolo_divisa": "$"
+    },
+    {
+        "nombre_divisa": "Uruguayan Peso",
+        "codigo_divisa": "UYU",
+        "simbolo_divisa": "$U"
+    },
+    {
+        "nombre_divisa": "Venezuelan Bolívar",
+        "codigo_divisa": "VEF",
+        "simbolo_divisa": "Bs.F."
+    },
+    {
+        "nombre_divisa": "Vietnamese Dong",
+        "codigo_divisa": "VND",
+        "simbolo_divisa": "₫"
+    },
+    {
+        "nombre_divisa": "Vanuatu Vatu",
+        "codigo_divisa": "VUV",
+        "simbolo_divisa": "VUV"
+    },
+    {
+        "nombre_divisa": "Samoan Tala",
+        "codigo_divisa": "WST",
+        "simbolo_divisa": "WS$"
+    },
+    {
+        "nombre_divisa": "CFA Franc BEAC",
+        "codigo_divisa": "XAF",
+        "simbolo_divisa": "FCFA"
+    },
+    {
+        "nombre_divisa": "Egyptian Pound",
+        "codigo_divisa": "EGP",
+        "simbolo_divisa": "EGP"
+    },
+    {
+        "nombre_divisa": "Indian Rupee",
+        "codigo_divisa": "INR",
+        "simbolo_divisa": "Rs"
+    },
+    {
+        "nombre_divisa": "Libyan Dinar",
+        "codigo_divisa": "LYD",
+        "simbolo_divisa": "LD"
+    },
+    {
+        "nombre_divisa": "Malagasy Ariary",
+        "codigo_divisa": "MGA",
+        "simbolo_divisa": "MGA"
+    },
+    {
+        "nombre_divisa": "Malaysian Ringgit",
+        "codigo_divisa": "MYR",
+        "simbolo_divisa": "RM"
+    },
+    {
+        "nombre_divisa": "Solomon Islands Dollar",
+        "codigo_divisa": "SBD",
+        "simbolo_divisa": "SI$"
+    },
+    {
+        "nombre_divisa": "Uzbekistan Som",
+        "codigo_divisa": "UZS",
+        "simbolo_divisa": "UZS"
+    }
+]

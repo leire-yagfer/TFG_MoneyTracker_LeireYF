@@ -1,10 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/model/models/dao/transaccionesdao.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 ///Clase que muestra los movimientos cuyo tipo es ingresos en la base de datos en un gráfico circular divido con los colores de las categorías a las que pertenece
 class IngresosTab extends StatefulWidget {
@@ -15,7 +15,7 @@ class IngresosTab extends StatefulWidget {
 }
 
 class _IngresosTabState extends State<IngresosTab> {
-  final TransaccionDao transaccionDao = TransaccionDao();
+  final TransactionDao transaccionDao = TransactionDao();
   Map<String, double> dataMap = {}; //Almacena las categorías
   Map<String, Color> colorMap = {}; //Almacena los colores de las categorías
   String? selectedYear; //Almacena el año seleccionado en el DropDownButton
@@ -38,7 +38,7 @@ class _IngresosTabState extends State<IngresosTab> {
       filter: selectedFilter,
       year: selectedYear,
       u: context.read<ProviderAjustes>().usuario!,
-      actualCode: context.read<ProviderAjustes>().divisaEnUso.codigo_divisa,
+      actualCode: context.read<ProviderAjustes>().divisaEnUso.currencyCode,
       isIncome: true,
     );
 
@@ -46,12 +46,12 @@ class _IngresosTabState extends State<IngresosTab> {
     Map<String, Color> tempColor = {};
 
     for (var row in result.entries) {
-      String categoria = row.key.nombre;
+      String categoria = row.key.categoryName;
       double total = 0;
       row.value.forEach((transaccion) {
-        total += transaccion.importe;
+        total += transaccion.transactionImport;
       });
-      Color color = row.key.colorCategoria;
+      Color color = row.key.categoryColor;
 
       tempData[categoria] = total;
       tempColor[categoria] = color;
@@ -113,7 +113,7 @@ class _IngresosTabState extends State<IngresosTab> {
                   ),
                 )
               : SizedBox(
-                  child: GraficoTransacciones(
+                  child: IncomeChart(
                       dataMap: dataMap, colorMap: colorMap),
                 ),
         ],
@@ -144,11 +144,11 @@ class _IngresosTabState extends State<IngresosTab> {
 }
 
 ///Gráfico circular de transacciones de tipo ingresos
-class GraficoTransacciones extends StatelessWidget {
+class IncomeChart extends StatelessWidget {
   final Map<String, double> dataMap;
   final Map<String, Color> colorMap;
 
-  const GraficoTransacciones({
+  const IncomeChart({
     super.key,
     required this.dataMap,
     required this.colorMap,
@@ -168,7 +168,7 @@ class GraficoTransacciones extends StatelessWidget {
                 return PieChartSectionData(
                   value: entry.value,
                   title:
-                      "${entry.value.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.simbolo_divisa}",
+                      "${entry.value.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.currencySymbol}",
                   color: colorMap[entry.key],
                   radius: 80,
                   titleStyle: TextStyle(

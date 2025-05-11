@@ -3,30 +3,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:proyecto2eva_budget/view/categorias.dart';
-import 'package:proyecto2eva_budget/view/configuration.dart';
-import 'package:proyecto2eva_budget/view/estadisticas/estadisticas.dart';
-import 'package:proyecto2eva_budget/view/movimientos.dart';
-import 'package:proyecto2eva_budget/view/principal.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/view/categories.dart';
+import 'package:tfg_monetracker_leireyafer/view/configuration.dart';
+import 'package:tfg_monetracker_leireyafer/view/home.dart';
+import 'package:tfg_monetracker_leireyafer/view/statistics/statistics.dart';
+import 'package:tfg_monetracker_leireyafer/view/transactions.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 //Clase que define la distribución de la app
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainAppState createState() => _MainAppState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainAppState extends State<MainApp> {
   int _currentIndex = 0;
 
   //Lista de pantallas para la barra de navegación
   final List<Widget> _screens = [
-    Principal(),
-    Movimientos(),
-    Estadisticas(),
-    Categorias(),
+    HomePage(),
+    TransactionsPage(),
+    StatisticsPage(),
+    CategoriesPage(),
   ];
 
   @override

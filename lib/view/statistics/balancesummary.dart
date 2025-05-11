@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/model/models/dao/transaccionesdao.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:proyecto2eva_budget/viewmodel/provider_ajustes.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 ///Clase que muestra el balance entre ingresos y gastos en un gráfico circular
 class BalanceTab extends StatefulWidget {
@@ -15,7 +15,7 @@ class BalanceTab extends StatefulWidget {
 }
 
 class _BalanceTabState extends State<BalanceTab> {
-  final TransaccionDao transaccionDao = TransaccionDao();
+  final TransactionDao transaccionDao = TransactionDao();
   double ingresos = 0;
   double gastos = 0;
   String? selectedYear;
@@ -101,7 +101,7 @@ class _BalanceTabState extends State<BalanceTab> {
                   sections: [
                     PieChartSectionData(
                       value: ingresosMostrar,
-                      title: "${ingresos.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.simbolo_divisa}",
+                      title: "${ingresos.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.currencySymbol}",
                       color: context
                           .watch<ThemeProvider>()
                           .palette()['greenButton']!,
@@ -116,7 +116,7 @@ class _BalanceTabState extends State<BalanceTab> {
                     ),
                     PieChartSectionData(
                       value: gastosMostrar,
-                      title: "${gastos.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.simbolo_divisa}",
+                      title: "${gastos.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.currencySymbol}",
                       color: context
                           .watch<ThemeProvider>()
                           .palette()['redButton']!,

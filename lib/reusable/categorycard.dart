@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto2eva_budget/model/models/categoria.dart';
-import 'package:proyecto2eva_budget/viewmodel/themeprovider.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-///Clase reutilizable para mostrar todas las actegorías en función del tipo
+///Clase reutilizable para mostrar todas las actegorías en su pantalla en función del tipo para dividirlas en ingreso y gasto
 class CategoryCard extends StatelessWidget {
   final String
       title; //Título que se muestra arriba de la lista -> Ingresos/Gastos
-  final List<Categoria> categorias; //Lista de categorías a mostrar
+  final List<Category> categoriesList; //Lista de categorías a mostrar
   
   final IconData Function(String)
       categoryIcon; //Función para obtener el icono de la categoría
@@ -16,7 +15,7 @@ class CategoryCard extends StatelessWidget {
   const CategoryCard({
     Key? key,
     required this.title,
-    required this.categorias,
+    required this.categoriesList,
     required this.categoryIcon,
   }) : super(key: key);
 
@@ -31,13 +30,13 @@ class CategoryCard extends StatelessWidget {
               fontWeight: FontWeight.w600),
         ),
         ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: categorias.length,
+          shrinkWrap: true, //Permite que la lista ocupe el espacio necesario
+          physics: const NeverScrollableScrollPhysics(), //Desactiva el scroll para que no se superponga con el scroll del dialog
+          itemCount: categoriesList.length,
           itemBuilder: (context, index) {
-            var categoria = categorias[index];
+            var categoryPointer = categoriesList[index];
             return Card(
-              color: categoria.colorCategoria,
+              color: categoryPointer.categoryColor,
               margin: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height * 0.008,
                   horizontal: MediaQuery.of(context).size.width * 0.015),
@@ -45,7 +44,7 @@ class CategoryCard extends StatelessWidget {
                 contentPadding:
                     EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
                 title: Text(
-                  categoria.nombre,
+                  categoryPointer.categoryName,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color:
@@ -53,7 +52,7 @@ class CategoryCard extends StatelessWidget {
                   ),
                 ),
                 trailing: Icon(
-                  categoryIcon(categoria.icono),
+                  categoryIcon(categoryPointer.categoryIcon),
                 ),
               ),
             );
