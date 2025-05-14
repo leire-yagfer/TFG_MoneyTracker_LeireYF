@@ -7,7 +7,7 @@ class Category {
   bool categoryIsIncome;
   Color
       categoryColor; //se juntarán los colores en un solo campo. En la BD se almacenará por partes como rgb, guardando en variables cr, cg y cb
-
+    
   Category(
       {required this.categoryName,
       required this.categoryIcon,

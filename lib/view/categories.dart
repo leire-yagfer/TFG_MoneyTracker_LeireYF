@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/staticdata.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/categorycard.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 
@@ -42,62 +43,29 @@ class _CategoriesPageState extends State<CategoriesPage> {
     });
   }
 
-  ///Método para obtener el icono correspondiente según el nombre del icono -> alamcenado en la BD con nombre concretos de iconos accesibles
-  IconData obtenerIcono(String iconName) {
-    switch (iconName) {
-      //GASTOS
-      case 'house':
-        return Icons.house;
-      case 'shopping_cart':
-        return Icons.shopping_cart;
-      case 'shopping_bag':
-        return Icons.shopping_bag;
-      case 'directions_car':
-        return Icons.directions_car;
-      case 'self_improvement':
-        return Icons.self_improvement;
-      case 'book':
-        return Icons.book;
-
-      //INGRESOS
-      case 'money':
-        return Icons.money;
-      case 'card_giftcard':
-        return Icons.card_giftcard;
-      case 'attach_money':
-        return Icons.attach_money;
-      case 'monetization_on':
-        return Icons.monetization_on;
-      case 'more_horiz':
-        return Icons.more_horiz;
-      default:
-        return Icons.help_outline; //Icono por defecto
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     //Se separan las categorías en dos listas: una para ingresos y otra para gastos
-    List<Category> ingresos =
+    List<Category> listIncomes =
         categorias.where((categoria) => categoria.categoryIsIncome).toList();
-    List<Category> gastos =
+    List<Category> listExpenses =
         categorias.where((categoria) => !categoria.categoryIsIncome).toList();
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            if (ingresos.isNotEmpty)
+            if (listIncomes.isNotEmpty)
               CategoryCard(
                 title: AppLocalizations.of(context)!.income,
-                categoriesList: ingresos,
-                categoryIcon: obtenerIcono,
+                categoriesList: listIncomes,
+                categoryMap: StaticData.incomeIcon,
               ),
-            if (gastos.isNotEmpty)
+            if (listExpenses.isNotEmpty)
               CategoryCard(
                 title: AppLocalizations.of(context)!.expenses,
-                categoriesList: gastos,
-                categoryIcon: obtenerIcono,
+                categoriesList: listExpenses,
+                categoryMap: StaticData.expenseIcon,
               ),
           ],
         ),
