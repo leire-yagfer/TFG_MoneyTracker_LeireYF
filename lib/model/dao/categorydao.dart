@@ -26,7 +26,7 @@ class CategoryDao {
       var categoryName = c.id;
       userCategoriesList.add(Category(
           categoryName: categoryName,
-          categoryIcon: categoryData["icon"],
+          
           categoryIsIncome: categoryData["isincome"],
           categoryColor: Color.fromARGB(255, categoryData["cr"],
               categoryData["cg"], categoryData["cb"])));
@@ -46,19 +46,28 @@ class CategoryDao {
   }
 
   ///Insertar categoría
+  Future<void> insertCategory(UserModel u, Category c) async {
+    //sacar el usuario pasado por param
+    var userRef = await data.doc(u.userId);
+
+    //añado la categoría a la colección
+    await userRef.collection("categories").doc(c.categoryName).set(c.toMap()); //creo el documento con el nombre de la categoría (doc(c.categoryName)) y le meto los datos propios (.set(c.toMap()))
+  }
+  
+  /*
   Future<void> insertarCategoria(UserModel u, Category c) async {
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
     var userdoc = await data.doc(u.userId).get();
 
     //2. guardar los datos de la categoria
     await userdoc.reference.collection("categories").doc(c.categoryName).set({
-      "icon": c.categoryIcon,
+      
       "isincome": c.categoryIsIncome,
       "cr": c.categoryColor.red,
       "cg": c.categoryColor.green,
       "cb": c.categoryColor.blue
     });
-  }
+  }*/
 
   ///Eliminar categoría
   Future<void> eliminarCategoria(UserModel usuario, Category categoria) async {
@@ -79,8 +88,8 @@ class CategoryDao {
 
     //2. guardar los datos de la categoria
     await userdoc.reference.collection("categories").doc('Housing').set(
-        {"icon": "house", "isincome": false, "cr": 232, "cg": 160, "cb": 242});
+        {"isincome": false, "cr": 232, "cg": 160, "cb": 242});
     await userdoc.reference.collection("categories").doc("Salary").set(
-        {"icon": "money", "isincome": true, "cr": 160, "cg": 242, "cb": 233});
+        {"isincome": true, "cr": 160, "cg": 242, "cb": 233});
   }
 }

@@ -55,7 +55,7 @@
     "categoryError": "Por favor, selecciona una categoría",
     "dateError": "Por favor, selecciona una fecha",
 
-    "correctAdding": "Transacción creada con éxito",
+    "correctTransactionAdding": "Transacción creada con éxito",
 
     "noTransactions": "No hay transacciones registradas",
 
@@ -81,5 +81,14 @@
     "gift": "Regalos",
     "refund": "Reembolso",
     "scholarship": "Becas",
-    "others": "Otros"
+    "others": "Otros",
+
+    "newCategoryNameLabel": "Nombre de la categoría",
+    "newCategoryNameLabelHint": "Introduzca el nombre de la categoría",
+    "newCategoryNameLabelError": "Introduzca valores válidos",
+    "newCategoryIconLabel": "Icono de la categoría",
+    "newCategoryIconLabelHint": "Selecciona un icono",
+    "newCategoryColorLabel": "Color de la categoría",
+    "newCategoryColorLabelHint": "Selecciona un color",
+    "correctCategoryAdding": "Categoría creada con éxito"
 }

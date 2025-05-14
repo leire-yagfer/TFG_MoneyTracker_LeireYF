@@ -2,31 +2,38 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusabletxtformfield.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 ///Clase reutilizable para mostrar todas las actegorías en su pantalla en función del tipo para dividirlas en ingreso y gasto
 class CategoryCard extends StatefulWidget {
   String title; //Título que se muestra arriba de la lista -> Ingresos/Gastos
   List<Category> categoriesList; //Lista de categorías a mostrar
 
-  Map<String, IconData>
-      categoryMap; //Función para obtener el icono de la categoría
+  bool newCategoryIsIncome;
+
+  //Key viewKey;
 
   //Constructor de la clase
-  CategoryCard({
-    required this.title,
-    required this.categoriesList,
-    required this.categoryMap,
-  });
+  CategoryCard(
+      {required this.title,
+      required this.categoriesList,
+      required this.newCategoryIsIncome,
+      /*required this.viewKey*/});
   @override
   State<StatefulWidget> createState() => _CategoryCardState();
 }
 
 class _CategoryCardState extends State<CategoryCard> {
-  late Map<String, IconData>
-      categoryMap; //Función para obtener el icono de la categoría
   final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _newCategoryNameController =
+      TextEditingController();
 
   late Map<String, Color> colorMap;
   Color colorPicker = Colors.red; //Color por defecto del color picker
@@ -38,7 +45,6 @@ class _CategoryCardState extends State<CategoryCard> {
   void initState() {
     super.initState();
     setState(() {
-      categoryMap = widget.categoryMap;
     });
   }
 
@@ -80,22 +86,36 @@ class _CategoryCardState extends State<CategoryCard> {
                               key: _formKey,
                               child: Column(
                                 children: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      labelText: 'Nombre de la categoría',
-                                    ),
+                                  ReusableTxtFormFieldNewTransactionCategory(
+                                    controller: _newCategoryNameController,
+                                    labelText: AppLocalizations.of(context)!
+                                        .newCategoryNameLabel,
+                                    hintText: AppLocalizations.of(context)!
+                                        .newCategoryNameLabelHint,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return AppLocalizations.of(context)!
+                                            .newCategoryNameLabelError;
+                                      }
+                                      return null;
+                                    },
                                   ),
 
                                   //mostrar un dropdown con los iconos disponibles de la lista creada en la clase staticdata
-                                  DropdownButtonFormField(
+                                  //UTIL PARA EL COLOR PICKER
+                                  /*DropdownButtonFormField(
                                     decoration: InputDecoration(
                                       labelText: 'Icono de la categoría',
                                       hintText: 'Seleccione un icono',
                                     ),
                                     //mostrar los iconos que no estén ya en uso
-                                    items: categoryMap
-                                        .keys.skipWhile((iconInUse){ //si se cumple la condición, se "salta" el elemnto de la lista
-                                          return widget.categoriesList.map((e)=>e.categoryIcon).contains(iconInUse); //lambda que devuelve un boolean --> si se cumple que está se lsalta, sino se mantiene
+                                    items: categoryMap.keys
+                                        .skipWhile((iconInUse) {
+                                          //si se cumple la condición, se "salta" el elemnto de la lista
+                                          return widget.categoriesList
+                                              .map((e) => e.categoryIcon)
+                                              .contains(
+                                                  iconInUse); //lambda que devuelve un boolean --> si se cumple que está se lsalta, sino se mantiene
                                         }) //acceder a las claves pq es lo que me da el icono y lo que guardo en la BD
                                         .map((categoryKeyMap) =>
                                             DropdownMenuItem(
@@ -104,9 +124,12 @@ class _CategoryCardState extends State<CategoryCard> {
                                                     categoryKeyMap])))
                                         .toList(), //accedo al valor del mapa a través de su nombre pq Icon(almacena el valor)
                                     onChanged: (value) {
-                                      //Lógica para seleccionar el icono
+                                      setState(() {
+                                        newCategoryIcon =
+                                            value!; //le doy el valor de la clave del mapa estátio de icono para almacenarlo en la BD
+                                      });
                                     },
-                                  ),
+                                  ),*/
 /*
                                   //color picker para seleccionar el color de la categoría
                                   DropdownButtonFormField(
@@ -123,6 +146,56 @@ class _CategoryCardState extends State<CategoryCard> {
                                       //Lógica para seleccionar el icono
                                     },
                                   ),*/
+                                  //Botón para agregar la categoría
+                                  ReusableButton(
+                                      onClick: () async {
+                                        if (_formKey.currentState!.validate()) {
+                                          //Si el formulario es válido, proceder con la transacción
+                                          //Recoger los datos
+                                          String newCategoryName =
+                                              _newCategoryNameController.text;
+
+                                          //Crear la categoría --> el id es el nombre
+                                          Category newCategory = Category(
+                                              categoryName: newCategoryName,
+                                              categoryIsIncome:
+                                                  widget.newCategoryIsIncome,
+                                              categoryColor: Color.fromARGB(
+                                                  255, 23, 40, 90));
+
+                                          //Insertar la nueva categoría en la base de datos
+                                          await CategoryDao().insertCategory(
+                                              context
+                                                  .read<ProviderAjustes>()
+                                                  .usuario!,
+                                              newCategory);
+
+                                          //recargo la pantalla
+                                          //await (widget.viewKey as GlobalKey<CategoriesPageState>).currentState!.cargarCategorias();
+
+                                          //Cerrar el diálogo
+                                          Navigator.of(context).pop();
+
+                                          //Mostrar SnackBar de confirmación
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .correctCategoryAdding),
+                                              duration: Duration(
+                                                  seconds:
+                                                      3), //duración del SnackBar
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      colorButton: 'fixedWhite',
+                                      textButton:
+                                          AppLocalizations.of(context)!.add,
+                                      colorTextButton: 'buttonBlackWhite',
+                                      buttonHeight: 0.09,
+                                      buttonWidth: 0.5),
                                 ],
                               ),
                             ),
@@ -136,7 +209,6 @@ class _CategoryCardState extends State<CategoryCard> {
             ),
           ],
         ),
-
         ListView.builder(
           shrinkWrap: true, //Permite que la lista ocupe el espacio necesario
           physics:
@@ -160,8 +232,8 @@ class _CategoryCardState extends State<CategoryCard> {
                         context.watch<ThemeProvider>().palette()['fixedBlack']!,
                   ),
                 ),
-                trailing: Icon(
-                  categoryMap[(categoryPointer.categoryIcon)],
+                trailing: IconButton(
+                  icon: Icon(Icons.delete), onPressed: () {  },
                 ),
               ),
             );

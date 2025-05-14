@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 //Clase que crea un TextFormField reutilizable para el formulario de nueva transacción
-class ReusableTxtFormFieldNewTransaction extends StatelessWidget {
+class ReusableTxtFormFieldNewTransactionCategory extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final String hintText;
@@ -12,7 +12,7 @@ class ReusableTxtFormFieldNewTransaction extends StatelessWidget {
   final VoidCallback? onTap; //especial para la selección de fecha
   final String? Function(String?)? validator; //función para validar el campo
 
-  const ReusableTxtFormFieldNewTransaction({
+  const ReusableTxtFormFieldNewTransactionCategory({
     required this.controller,
     required this.labelText,
     required this.hintText,

@@ -117,7 +117,7 @@ class HomePage extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         //Campo para el título de la transacción
-                        ReusableTxtFormFieldNewTransaction(
+                        ReusableTxtFormFieldNewTransactionCategory(
                           controller: _tituloController,
                           labelText: AppLocalizations.of(context)!.title,
                           hintText: AppLocalizations.of(context)!.titleHint,
@@ -133,7 +133,7 @@ class HomePage extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         //Campo para la cantidad de la transacción
-                        ReusableTxtFormFieldNewTransaction(
+                        ReusableTxtFormFieldNewTransactionCategory(
                           controller: _cantidadController,
                           keyboardType: TextInputType.number, //solo números
                           labelText: AppLocalizations.of(context)!.quantity,
@@ -197,7 +197,7 @@ class HomePage extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         // Selector de fecha para la transacción
-                        ReusableTxtFormFieldNewTransaction(
+                        ReusableTxtFormFieldNewTransactionCategory(
                           controller: _dateController,
                           labelText: AppLocalizations.of(context)!.date,
                           hintText: AppLocalizations.of(context)!.dateHint,
@@ -231,7 +231,7 @@ class HomePage extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.02),
 
                         // Campo para la descripción de la transacción
-                        ReusableTxtFormFieldNewTransaction(
+                        ReusableTxtFormFieldNewTransactionCategory(
                           controller: _descripcionController,
                           labelText: AppLocalizations.of(context)!.description,
                           hintText:
@@ -282,7 +282,7 @@ class HomePage extends StatelessWidget {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(AppLocalizations.of(context)!
-                                        .correctAdding),
+                                        .correctTransactionAdding),
                                     duration: Duration(
                                         seconds: 3), //duración del SnackBar
                                   ),

@@ -55,7 +55,7 @@
     "categoryError": "Please select a category",
     "dateError": "Please select a date",
 
-    "correctAdding": "Transaction successfully created",
+    "correctTransactionAdding": "Transaction successfully created",
 
     "noTransactions": "No transactions recorded",
 
@@ -81,5 +81,14 @@
     "gift": "Gifts",
     "refund": "Refund",
     "scholarship": "Scholarship",
-    "others": "Others"
+    "others": "Others",
+
+    "newCategoryNameLabel": "Nombre de la categoría",
+    "newCategoryNameLabelHint": "Introduzca el nombre de la categoría",
+    "newCategoryNameLabelError": "Introduzca valores válidos",
+    "newCategoryIconLabel": "Icono de la categoría",
+    "newCategoryIconLabelHint": "Selecciona un icono",
+    "newCategoryColorLabel": "Color de la categoría",
+    "newCategoryColorLabelHint": "Selecciona un color",
+    "correctCategoryAdding": "Category successfully created"
 }
