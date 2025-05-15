@@ -40,7 +40,7 @@ class TransactionModel {
   Map<String, dynamic> toMap() {
     return {
       'currency': transactionCurrency.currencyCode,
-      'datetime': transactionDate,
+      'datetime': Timestamp.fromDate(transactionDate),
       'description': transactionDescription,
       'import': transactionImport,
       'title': transactionTittle

@@ -14,7 +14,9 @@ class TransactionDao {
     var userRef = await data.doc(u.userId);
 
     //recojo la categoría que tiene asignada la transacción t pasada por parametro --> si no hay la crea
-    var categoryRef = userRef.collection("categories").doc(t.transactionCategory.categoryName);
+    var categoryRef = userRef
+        .collection("categories")
+        .doc(t.transactionCategory.categoryName);
 
     //añado la transaccion a la colección de transacciones, de la categoría a la que pertence, del usuario
     await categoryRef.collection("transactions").add(
@@ -24,35 +26,30 @@ class TransactionDao {
   ///Obtener las transacciones ordenadas por fecha de un usuario
   Future<List<TransactionModel>> getTransactionsByDate(UserModel u) async {
     List<TransactionModel> allTransacciones = [];
-    var userdata = await Firebasedb.data.doc(u.userId).get(); //obtengo el usuario
-
+    var userdata =
+        await Firebasedb.data.doc(u.userId).get(); //obtengo el usuario
     var userCategories = await userdata.reference
         .collection('categories')
-        .get(); //obtengo las categorias de ese usuario
-
-    //obtengo las transacciones de cada categoria ordenadas por fecha
+        .get(); //obtengo las categorías del usuario
     for (var c in userCategories.docs) {
       var transactionsInCategory = await c.reference
           .collection('transactions')
           .orderBy('datetime',
-              descending:
-                  true) //ordena por fecha, de más reciente a más antiguo
+              descending: true) //ordenar por fecha en cada categoría en FireBase --> se ve más ordenado en la BD
           .get();
-
       for (var t in transactionsInCategory.docs) {
         var transactionPonter = t.data();
-        transactionPonter["id"] =
-            t.id; //le paso el ID de la transacción pq no lo pasa directamente
-        transactionPonter["categoria"] = c
-            .data(); //le paso todos los datos que implica la categoria a la que pertenece dicha transacción
-        transactionPonter["categoria"]["id"] = c
-            .id; //le paso el ID de la categoria pq no lo pasa directamente --> id = nombre
+        transactionPonter["id"] = t.id; //añadir id de la transacción
+        transactionPonter["categoria"] =
+            c.data(); //añadir datos de la categoría
+        transactionPonter["categoria"]["id"] = c.id; //añadir id de la categoría
 
-        allTransacciones.add(TransactionModel.fromMap(
-            transactionPonter)); //método transacción que se encarga de crear la transacción a partir del mapa
+        allTransacciones.add(TransactionModel.fromMap(transactionPonter));
       }
     }
-
+    //ordenar todas las transacciones globalmente por fecha (de más reciente a más antigua) a la hora de la representación en la interfaz
+    allTransacciones
+        .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
     return allTransacciones;
   }
 
@@ -88,14 +85,18 @@ class TransactionDao {
   ///Eliminar una transacción por ID
   Future<void> deleteTransaction(UserModel u, TransactionModel t) async {
     var userRef = await Firebasedb.data.doc(u.userId);
-    var categoryRef = userRef.collection("categories").doc(t.transactionCategory.categoryName);
-    var transaccionRef =
-        categoryRef.collection("transactions").doc(t.transactionId); //ID de la transacción
+    var categoryRef = userRef
+        .collection("categories")
+        .doc(t.transactionCategory.categoryName);
+    var transaccionRef = categoryRef
+        .collection("transactions")
+        .doc(t.transactionId); //ID de la transacción
     await transaccionRef.delete(); //eliminar la transacción
   }
 
   ///Consulta para obtener ingresos/gastos por categoría
-  Future<Map<Category, List<TransactionModel>>> obtenerIngresosGastosPorCategoria({
+  Future<Map<Category, List<TransactionModel>>>
+      obtenerIngresosGastosPorCategoria({
     String filter = 'all',
     String? year,
     required UserModel u,
@@ -130,12 +131,13 @@ class TransactionDao {
       mapaCategoriesWithTransactions[categoria] = transacciones;
     }
     //filtrar por ingreso
-    mapaCategoriesWithTransactions.removeWhere((key, _) => !(key.categoryIsIncome == isIncome));
+    mapaCategoriesWithTransactions
+        .removeWhere((key, _) => !(key.categoryIsIncome == isIncome));
     //filtrar por año
     if (filter == 'year' && year != null) {
       mapaCategoriesWithTransactions.forEach((key, value) {
-        value.removeWhere(
-            (transaccion) => transaccion.transactionDate.year.toString() != year);
+        value.removeWhere((transaccion) =>
+            transaccion.transactionDate.year.toString() != year);
       });
     }
     return mapaCategoriesWithTransactions;
@@ -165,11 +167,11 @@ class TransactionDao {
       for (var t in transactionsInCategory.docs) {
         Map<String, dynamic> transdata = t.data();
         if (filter == 'year' && year != null) {
-          if(transdata['datetime'].year.toString() == year) {
+          if (transdata['datetime'].year.toString() == year) {
             total += transdata['import'];
           }
-        }else{
-          total+=transdata['import'];
+        } else {
+          total += transdata['import'];
         }
       }
     }
