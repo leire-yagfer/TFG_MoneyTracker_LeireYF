@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
+import 'package:tfg_monetracker_leireyafer/model/models/staticdata.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/categorycard.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 
@@ -10,7 +11,7 @@ import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart'
 class CategoriesPage extends StatefulWidget {
   @override
   //Key? key = GlobalKey<CategoriesPageState>(); --> HACER _CategoriesPageState PÚBLICO SI SE DESCOMENTA
-  
+
   @override
   _CategoriesPageState createState() => _CategoriesPageState();
 }
@@ -62,16 +63,18 @@ class _CategoriesPageState extends State<CategoriesPage> {
           children: [
             if (listIncomes.isNotEmpty)
               CategoryCard(
-                  title: AppLocalizations.of(context)!.income,
-                  categoriesList: listIncomes,
-                  newCategoryIsIncome: true,
-                  /*viewKey: widget.key!*/),
+                title: AppLocalizations.of(context)!.income,
+                categoriesList: listIncomes,
+                newCategoryIsIncome: true,
+                categoriesColorMap: StaticData.categoriesColorMap, //paso la clase de colores disponibles para las categorías
+              ),
             if (listExpenses.isNotEmpty)
               CategoryCard(
-                  title: AppLocalizations.of(context)!.expenses,
-                  categoriesList: listExpenses,
-                  newCategoryIsIncome: false,
-                  /*viewKey: widget.key!*/),
+                title: AppLocalizations.of(context)!.expenses,
+                categoriesList: listExpenses,
+                newCategoryIsIncome: false,
+                categoriesColorMap: StaticData.categoriesColorMap, //paso la clase de colores disponibles para las categorías
+              ),
           ],
         ),
       ),

@@ -88,8 +88,9 @@
     "newCategoryNameLabelError": "Introduzca valores válidos",
     "maxLimitExceeded": "Límite máximo excedido",
     "maxLimitExceededLabel": "Límite alcanzado: solo se permiten 6 categorías por tipo. Elimina alguna para crear nuevas.",
-    "newCategoryColorLabel": "Color de la categoría",
-    "newCategoryColorLabelHint": "Selecciona un color",
+    "newCategoryColorLabel": "Seleccionar color",
+    "newCategoryColorTitle": "Seleccione un color",
+    "noColorsAvailable": "No hay colores disponibles",
     "correctCategoryAdding": "Categoría creada con éxito",
     "correctCategoryDeleting": "Categoría eliminada con éxito"
 }
