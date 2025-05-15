@@ -11,11 +11,11 @@ class CategoryDao {
   ///Obtener todas las categorías
   Future<List<Category>> getCategories(UserModel usuario) async {
     //1. sacar el docuemnto del user --> de un usuario en concreto pq se lo paso por parametro
-    var userdoc = await data.doc(usuario.userId).get();
+    var userRef = await data.doc(usuario.userId).get();
 
     //2. coger categ asignadas a ese usuario
     var userCategories =
-        await userdoc.reference.collection("categories").get();
+        await userRef.reference.collection("categories").get();
 
     //3. guardar todos los datos
     List<Category> userCategoriesList = [];
@@ -57,10 +57,10 @@ class CategoryDao {
   /*
   Future<void> insertarCategoria(UserModel u, Category c) async {
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
-    var userdoc = await data.doc(u.userId).get();
+    var userRef = await data.doc(u.userId).get();
 
     //2. guardar los datos de la categoria
-    await userdoc.reference.collection("categories").doc(c.categoryName).set({
+    await userRef.reference.collection("categories").doc(c.categoryName).set({
       
       "isincome": c.categoryIsIncome,
       "cr": c.categoryColor.red,
@@ -70,26 +70,26 @@ class CategoryDao {
   }*/
 
   ///Eliminar categoría
-  Future<void> eliminarCategoria(UserModel usuario, Category categoria) async {
+  Future<void> deleteCategory(UserModel u, Category c) async {
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
-    var userdoc = await data.doc(usuario.userId).get();
+    var userRef = await data.doc(u.userId).get();
 
     //2. eliminar la categoria
-    await userdoc.reference
+    await userRef.reference
         .collection("categories")
-        .doc(categoria.categoryName)
+        .doc(c.categoryName)
         .delete();
   }
 
   ///Insertar varias categorías de primeras al registrarse un usuario
   Future<void> insertarCategoriasRegistro(String uid) async { //le paso el uid del usuario proporcionaod por firebase que se genera al registrarse
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
-    var userdoc = await data.doc(uid).get();
+    var userRef = await data.doc(uid).get();
 
     //2. guardar los datos de la categoria
-    await userdoc.reference.collection("categories").doc('Housing').set(
+    await userRef.reference.collection("categories").doc('Housing').set(
         {"isincome": false, "cr": 232, "cg": 160, "cb": 242});
-    await userdoc.reference.collection("categories").doc("Salary").set(
+    await userRef.reference.collection("categories").doc("Salary").set(
         {"isincome": true, "cr": 160, "cg": 242, "cb": 233});
   }
 }

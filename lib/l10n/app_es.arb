@@ -90,5 +90,6 @@
     "maxLimitExceededLabel": "Límite alcanzado: solo se permiten 6 categorías por tipo. Elimina alguna para crear nuevas.",
     "newCategoryColorLabel": "Color de la categoría",
     "newCategoryColorLabelHint": "Selecciona un color",
-    "correctCategoryAdding": "Categoría creada con éxito"
+    "correctCategoryAdding": "Categoría creada con éxito",
+    "correctCategoryDeleting": "Categoría eliminada con éxito"
 }

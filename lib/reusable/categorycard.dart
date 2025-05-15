@@ -238,7 +238,8 @@ class _CategoryCardState extends State<CategoryCard> {
                                 .maxLimitExceededLabel),
                             actions: <Widget>[
                               TextButton(
-                                child: Text(AppLocalizations.of(context)!.accept),
+                                child:
+                                    Text(AppLocalizations.of(context)!.accept),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -274,8 +275,32 @@ class _CategoryCardState extends State<CategoryCard> {
                   ),
                 ),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {},
+                  icon: Icon(Icons.delete,
+                      color: context
+                          .watch<ThemeProvider>()
+                          .palette()['fixedBlack']!),
+                  iconSize: MediaQuery.of(context).size.width * 0.1,
+                  onPressed: () async {
+                    //llamo al método del DAO para eliminar la categoría de Firestore
+                    await CategoryDao().deleteCategory(
+                      context.read<ProviderAjustes>().usuario!,
+                      categoryPointer,
+                    );
+
+                    //elimino la categoría también de la lista local
+                    setState(() {
+                      widget.categoriesList.removeAt(index);
+                    });
+
+                    //muestro un mensaje de confirmación
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)!
+                            .correctCategoryDeleting),
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
+                  },
                 ),
               ),
             );
