@@ -96,7 +96,7 @@ class TransactionDao {
 
   ///Consulta para obtener ingresos/gastos por categoría
   Future<Map<Category, List<TransactionModel>>>
-      obtenerIngresosGastosPorCategoria({
+      getIncomeExpensesByCategory({
     String filter = 'all',
     String? year,
     required UserModel u,
@@ -130,7 +130,7 @@ class TransactionDao {
       //añadir la categoría y sus transacciones a la lista
       mapaCategoriesWithTransactions[categoria] = transacciones;
     }
-    //filtrar por ingreso
+    //filtrar por tipo
     mapaCategoriesWithTransactions
         .removeWhere((key, _) => !(key.categoryIsIncome == isIncome));
     //filtrar por año
@@ -144,7 +144,7 @@ class TransactionDao {
   }
 
   ///Consulta para obtener el balance de los movimientos
-  Future<double> obtenerTotalPorTipo({
+  Future<double> getTotalByType({
     required UserModel u,
     required bool isIncome,
     String filter = 'all',

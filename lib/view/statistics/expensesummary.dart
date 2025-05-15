@@ -15,9 +15,9 @@ class ExpenseTab extends StatefulWidget {
 }
 
 class _ExpenseTabState extends State<ExpenseTab> {
-  final TransactionDao transaccionDao = TransactionDao();
-  Map<String, double> dataMap = {}; //Almacena las categorías
-  Map<String, Color> colorMap = {}; //Almacena los colores de las categorías
+  final TransactionDao transactionDao = TransactionDao();
+  Map<String, double> categoryTotalMap = {}; //Almacena las categorías como clave y como valor el total por categoría
+    Map<String, Color> categoryColorMap = {}; //Almacena los colores de las categorías, como clave la categoría y como valor el color
   String? selectedYear; //Almacena el año seleccionado en el DropDownButton
   String selectedFilter =
       'all'; //Filtro por defecto -> se muestra el resumen de todos los movimeintos
@@ -25,20 +25,21 @@ class _ExpenseTabState extends State<ExpenseTab> {
   @override
   void initState() {
     super.initState();
-    _cargarDatos(); //Cargo los datos según se inicia la pantalla
+    _loadData(); //Cargo los datos según se inicia la pantalla
   }
 
   ///Cargar los datos desde la base de datos por filtros -> o mostrar todos o por año (seleccionado en un DropDownButton)
-  Future<void> _cargarDatos() async {
+  Future<void> _loadData() async {
     if (selectedFilter == 'year' && selectedYear == null) {
       return;
     }
 
-    final result = await transaccionDao.obtenerIngresosGastosPorCategoria(
+    final result = await transactionDao.getIncomeExpensesByCategory(
       filter: selectedFilter,
       year: selectedYear,
       u: context.read<ConfigurationProvider>().userRegistered!,
-      actualCode: context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
+      actualCode:
+          context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
       isIncome: false,
     );
 
@@ -58,12 +59,10 @@ class _ExpenseTabState extends State<ExpenseTab> {
     }
 
     setState(() {
-      dataMap = tempData;
-      colorMap = tempColor;
+      categoryTotalMap = tempData;
+      categoryColorMap = tempColor;
     });
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +82,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
                     selectedFilter = value!;
                     selectedYear = null;
                   });
-                  _cargarDatos();
+                  _loadData();
                 },
               ),
               Text(AppLocalizations.of(context)!.all),
@@ -94,14 +93,14 @@ class _ExpenseTabState extends State<ExpenseTab> {
                   setState(() {
                     selectedFilter = value!;
                   });
-                  _cargarDatos();
+                  _loadData();
                 },
               ),
               Text(AppLocalizations.of(context)!.year),
             ],
           ),
           if (selectedFilter == 'year') _buildYearPicker(),
-          dataMap.isEmpty
+          categoryTotalMap.isEmpty
               ? Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: MediaQuery.of(context).size.height * 0.05),
@@ -115,7 +114,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
                   ),
                 )
               : SizedBox(
-                  child: ExpenseChart(dataMap: dataMap, colorMap: colorMap),
+                  child: ExpenseChart(dataMap: categoryTotalMap, colorMap: categoryColorMap),
                 ),
         ],
       ),
@@ -138,7 +137,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
         setState(() {
           selectedYear = value!;
         });
-        _cargarDatos();
+        _loadData();
       },
     );
   }
@@ -186,18 +185,18 @@ class ExpenseChart extends StatelessWidget {
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         Wrap(
           spacing: MediaQuery.of(context).size.width * 0.02,
-          children: dataMap.keys.map((categoria) {
+          children: dataMap.keys.map((category) {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   width: MediaQuery.of(context).size.height * 0.015,
                   height: MediaQuery.of(context).size.height * 0.015,
-                  color: colorMap[categoria],
+                  color: colorMap[category],
                 ),
                 SizedBox(width: MediaQuery.of(context).size.width * 0.005),
                 Text(
-                  categoria,
+                  category,
                 ),
               ],
             );

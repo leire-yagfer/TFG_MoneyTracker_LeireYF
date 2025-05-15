@@ -7,17 +7,17 @@ import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart'
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 ///Clase que muestra los movimientos cuyo tipo es ingresos en la base de datos en un gráfico circular divido con los colores de las categorías a las que pertenece
-class IngresosTab extends StatefulWidget {
-  const IngresosTab({super.key});
+class IncomeTab extends StatefulWidget {
+  const IncomeTab({super.key});
 
   @override
-  _IngresosTabState createState() => _IngresosTabState();
+  _IncomeTabState createState() => _IncomeTabState();
 }
 
-class _IngresosTabState extends State<IngresosTab> {
-  final TransactionDao transaccionDao = TransactionDao();
-  Map<String, double> dataMap = {}; //Almacena las categorías
-  Map<String, Color> colorMap = {}; //Almacena los colores de las categorías
+class _IncomeTabState extends State<IncomeTab> {
+  final TransactionDao transactionDao = TransactionDao();
+  Map<String, double> categoryTotalMap = {}; //Almacena las categorías como clave y como valor el total por categoría
+  Map<String, Color> categoryColorMap = {}; //Almacena los colores de las categorías, como clave la categoría y como valor el color
   String? selectedYear; //Almacena el año seleccionado en el DropDownButton
   String selectedFilter =
       'all'; //Filtro por defecto -> se muestra el resumen de todos los movimeintos
@@ -25,16 +25,16 @@ class _IngresosTabState extends State<IngresosTab> {
   @override
   void initState() {
     super.initState();
-    _cargarDatos(); //Cargo los datos según se inicia la pantalla
+    _loadData(); //Cargo los datos según se inicia la pantalla
   }
 
   ///Cargar los datos desde la base de datos
-  Future<void> _cargarDatos() async {
+  Future<void> _loadData() async {
     if (selectedFilter == 'year' && selectedYear == null) {
       return;
     }
 
-    final result = await transaccionDao.obtenerIngresosGastosPorCategoria(
+    final result = await transactionDao.getIncomeExpensesByCategory(
       filter: selectedFilter,
       year: selectedYear,
       u: context.read<ConfigurationProvider>().userRegistered!,
@@ -58,8 +58,8 @@ class _IngresosTabState extends State<IngresosTab> {
     }
 
     setState(() {
-      dataMap = tempData;
-      colorMap = tempColor;
+      categoryTotalMap = tempData;
+      categoryColorMap = tempColor;
     });
   }
 
@@ -81,7 +81,7 @@ class _IngresosTabState extends State<IngresosTab> {
                     selectedFilter = value!;
                     selectedYear = null;
                   });
-                  _cargarDatos();
+                  _loadData();
                 },
               ),
               Text(AppLocalizations.of(context)!.all),
@@ -92,14 +92,14 @@ class _IngresosTabState extends State<IngresosTab> {
                   setState(() {
                     selectedFilter = value!;
                   });
-                  _cargarDatos();
+                  _loadData();
                 },
               ),
               Text(AppLocalizations.of(context)!.year),
             ],
           ),
           if (selectedFilter == 'year') _buildYearPicker(),
-          dataMap.isEmpty
+          categoryTotalMap.isEmpty
               ? Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: MediaQuery.of(context).size.height * 0.05),
@@ -114,7 +114,7 @@ class _IngresosTabState extends State<IngresosTab> {
                 )
               : SizedBox(
                   child: IncomeChart(
-                      dataMap: dataMap, colorMap: colorMap),
+                      dataMap: categoryTotalMap, colorMap: categoryColorMap),
                 ),
         ],
       ),
@@ -137,7 +137,7 @@ class _IngresosTabState extends State<IngresosTab> {
         setState(() {
           selectedYear = value!;
         });
-        _cargarDatos();
+        _loadData();
       },
     );
   }
@@ -185,18 +185,18 @@ class IncomeChart extends StatelessWidget {
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         Wrap(
           spacing: MediaQuery.of(context).size.height * 0.02,
-          children: dataMap.keys.map((categoria) {
+          children: dataMap.keys.map((category) {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width * 0.015,
                   height: MediaQuery.of(context).size.height * 0.015,
-                  color: colorMap[categoria],
+                  color: colorMap[category],
                 ),
                 SizedBox(width: MediaQuery.of(context).size.height * 0.005),
                 Text(
-                  categoria,
+                  category,
                 ),
               ],
             );

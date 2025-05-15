@@ -26,7 +26,7 @@ class StatisticsPage extends StatelessWidget {
           ),
         ),
         body: const TabBarView(
-          children: [IngresosTab(), ExpenseTab(), BalanceTab()],
+          children: [IncomeTab(), ExpenseTab(), BalanceTab()],
         ),
       ),
       
