@@ -20,11 +20,12 @@ class CategoryCard extends StatefulWidget {
   //Key viewKey;
 
   //Constructor de la clase
-  CategoryCard(
-      {required this.title,
-      required this.categoriesList,
-      required this.newCategoryIsIncome,
-      /*required this.viewKey*/});
+  CategoryCard({
+    required this.title,
+    required this.categoriesList,
+    required this.newCategoryIsIncome,
+    /*required this.viewKey*/
+  });
   @override
   State<StatefulWidget> createState() => _CategoryCardState();
 }
@@ -44,8 +45,7 @@ class _CategoryCardState extends State<CategoryCard> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -62,48 +62,57 @@ class _CategoryCardState extends State<CategoryCard> {
                   fontSize: MediaQuery.of(context).textScaler.scale(20),
                   fontWeight: FontWeight.w600),
             ),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                //Dialog para añadir una nueva categoría en funión del tipo
-                showDialog(
-                  barrierDismissible:
-                      true, //Permitir cerrar el diálogo al hacer clic fuera de él
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical:
-                                  MediaQuery.of(context).size.height * 0.01,
-                              horizontal:
-                                  MediaQuery.of(context).size.width * 0.01),
-                          child: Center(
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                children: [
-                                  ReusableTxtFormFieldNewTransactionCategory(
-                                    controller: _newCategoryNameController,
-                                    labelText: AppLocalizations.of(context)!
-                                        .newCategoryNameLabel,
-                                    hintText: AppLocalizations.of(context)!
-                                        .newCategoryNameLabelHint,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return AppLocalizations.of(context)!
-                                            .newCategoryNameLabelError;
-                                      }
-                                      return null;
-                                    },
-                                  ),
+            //he puesto que máximo puede haber 6 categorías por tipo y si es inferior se muestra un icono de añadir y si no, un icono de info que informa sobre que no se pueden añadir nuevas categorías pq se ha superado el límite
+            (widget.categoriesList.length < 6)
+                ? IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      //Dialog para añadir una nueva categoría en funión del tipo
+                      showDialog(
+                        barrierDismissible:
+                            true, //Permitir cerrar el diálogo al hacer clic fuera de él
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical:
+                                        MediaQuery.of(context).size.height *
+                                            0.01,
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                            0.01),
+                                child: Center(
+                                  child: Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      children: [
+                                        ReusableTxtFormFieldNewTransactionCategory(
+                                          controller:
+                                              _newCategoryNameController,
+                                          labelText:
+                                              AppLocalizations.of(context)!
+                                                  .newCategoryNameLabel,
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .newCategoryNameLabelHint,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return AppLocalizations.of(
+                                                      context)!
+                                                  .newCategoryNameLabelError;
+                                            }
+                                            return null;
+                                          },
+                                        ),
 
-                                  //mostrar un dropdown con los iconos disponibles de la lista creada en la clase staticdata
-                                  //UTIL PARA EL COLOR PICKER
-                                  /*DropdownButtonFormField(
+                                        //mostrar un dropdown con los iconos disponibles de la lista creada en la clase staticdata
+                                        //UTIL PARA EL COLOR PICKER
+                                        /*DropdownButtonFormField(
                                     decoration: InputDecoration(
                                       labelText: 'Icono de la categoría',
                                       hintText: 'Seleccione un icono',
@@ -146,67 +155,99 @@ class _CategoryCardState extends State<CategoryCard> {
                                       //Lógica para seleccionar el icono
                                     },
                                   ),*/
-                                  //Botón para agregar la categoría
-                                  ReusableButton(
-                                      onClick: () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          //Si el formulario es válido, proceder con la transacción
-                                          //Recoger los datos
-                                          String newCategoryName =
-                                              _newCategoryNameController.text;
+                                        //Botón para agregar la categoría
+                                        ReusableButton(
+                                            onClick: () async {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                //Si el formulario es válido, proceder con la transacción
+                                                //Recoger los datos
+                                                String newCategoryName =
+                                                    _newCategoryNameController
+                                                        .text;
 
-                                          //Crear la categoría --> el id es el nombre
-                                          Category newCategory = Category(
-                                              categoryName: newCategoryName,
-                                              categoryIsIncome:
-                                                  widget.newCategoryIsIncome,
-                                              categoryColor: Color.fromARGB(
-                                                  255, 23, 40, 90));
+                                                //Crear la categoría --> el id es el nombre
+                                                Category newCategory = Category(
+                                                    categoryName:
+                                                        newCategoryName,
+                                                    categoryIsIncome: widget
+                                                        .newCategoryIsIncome,
+                                                    categoryColor:
+                                                        Color.fromARGB(
+                                                            255, 23, 40, 90));
 
-                                          //Insertar la nueva categoría en la base de datos
-                                          await CategoryDao().insertCategory(
-                                              context
-                                                  .read<ProviderAjustes>()
-                                                  .usuario!,
-                                              newCategory);
+                                                //Insertar la nueva categoría en la base de datos
+                                                await CategoryDao()
+                                                    .insertCategory(
+                                                        context
+                                                            .read<
+                                                                ProviderAjustes>()
+                                                            .usuario!,
+                                                        newCategory);
 
-                                          //recargo la pantalla
-                                          //await (widget.viewKey as GlobalKey<CategoriesPageState>).currentState!.cargarCategorias();
+                                                //recargo la pantalla
+                                                //await (widget.viewKey as GlobalKey<CategoriesPageState>).currentState!.cargarCategorias();
 
-                                          //Cerrar el diálogo
-                                          Navigator.of(context).pop();
+                                                //Cerrar el diálogo
+                                                Navigator.of(context).pop();
 
-                                          //Mostrar SnackBar de confirmación
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .correctCategoryAdding),
-                                              duration: Duration(
-                                                  seconds:
-                                                      3), //duración del SnackBar
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      colorButton: 'fixedWhite',
-                                      textButton:
-                                          AppLocalizations.of(context)!.add,
-                                      colorTextButton: 'buttonBlackWhite',
-                                      buttonHeight: 0.09,
-                                      buttonWidth: 0.5),
-                                ],
+                                                //Mostrar SnackBar de confirmación
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(AppLocalizations
+                                                            .of(context)!
+                                                        .correctCategoryAdding),
+                                                    duration: Duration(
+                                                        seconds:
+                                                            3), //duración del SnackBar
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            colorButton: 'fixedWhite',
+                                            textButton:
+                                                AppLocalizations.of(context)!
+                                                    .add,
+                                            colorTextButton: 'buttonBlackWhite',
+                                            buttonHeight: 0.09,
+                                            buttonWidth: 0.5),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+                          );
+                        },
+                      );
+                    },
+                  )
+                : IconButton(
+                    icon: Icon(Icons.info),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible:
+                            true, //Permitir cerrar el diálogo al hacer clic fuera de él
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                                AppLocalizations.of(context)!.maxLimitExceeded),
+                            content: Text(AppLocalizations.of(context)!
+                                .maxLimitExceededLabel),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text(AppLocalizations.of(context)!.accept),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    })
           ],
         ),
         ListView.builder(
@@ -233,7 +274,8 @@ class _CategoryCardState extends State<CategoryCard> {
                   ),
                 ),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete), onPressed: () {  },
+                  icon: Icon(Icons.delete),
+                  onPressed: () {},
                 ),
               ),
             );

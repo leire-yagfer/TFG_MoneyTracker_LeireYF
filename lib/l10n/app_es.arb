@@ -86,8 +86,8 @@
     "newCategoryNameLabel": "Nombre de la categoría",
     "newCategoryNameLabelHint": "Introduzca el nombre de la categoría",
     "newCategoryNameLabelError": "Introduzca valores válidos",
-    "newCategoryIconLabel": "Icono de la categoría",
-    "newCategoryIconLabelHint": "Selecciona un icono",
+    "maxLimitExceeded": "Límite máximo excedido",
+    "maxLimitExceededLabel": "Límite alcanzado: solo se permiten 6 categorías por tipo. Elimina alguna para crear nuevas.",
     "newCategoryColorLabel": "Color de la categoría",
     "newCategoryColorLabelHint": "Selecciona un color",
     "correctCategoryAdding": "Categoría creada con éxito"
