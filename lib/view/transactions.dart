@@ -111,7 +111,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                   .palette()['fixedBlack']!),
                         ),
                         Text(
-                          "${AppLocalizations.of(context)!.category}: ${transaccion.transactionCategory}",
+                          "${AppLocalizations.of(context)!.category}: ${transaccion.transactionCategory.categoryName}",
                           style: TextStyle(
                               color: context
                                   .watch<ThemeProvider>()
@@ -139,7 +139,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                               color: context
                                   .watch<ThemeProvider>()
                                   .palette()['fixedBlack']!),
-                          iconSize: MediaQuery.of(context).size.width * 0.05,
+                          iconSize: MediaQuery.of(context).size.width * 0.1,
                           onPressed: () {
                             _eliminarTransaccion(index);
                           },
