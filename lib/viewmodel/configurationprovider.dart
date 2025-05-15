@@ -7,94 +7,94 @@ import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
 import 'package:tfg_monetracker_leireyafer/util/changecurrencyapi.dart';
 
 ///Clase que gestiona el estado global de la app
-class ProviderAjustes extends ChangeNotifier {
-  bool _modoOscuro = false;
-  Locale _idioma = Locale('es');
-  Currency _codigoDivisaEnUso = APIUtils.getFromList('EUR')!;
+class ConfigurationProvider extends ChangeNotifier {
+  bool _darkMode = false;
+  Locale _languaje = Locale('es');
+  Currency _currencyCodeInUse = APIUtils.getFromList('EUR')!;
   //lista de transacciones
-  List<TransactionModel> listaTransacciones = [];
+  List<TransactionModel> listAllTransactions = [];
 
   ///Cargar las preferencias guardadas al iniciar la app
-  ProviderAjustes(UserModel? usuario) {
-    this.usuario = usuario;
-    _cargarPreferencias();
+  ConfigurationProvider(UserModel? u) {
+    this.userRegistered = u;
+    _loadPreferences();
   }
 
   //Obtener el estado actual del modo oscuro
-  bool get modoOscuro => _modoOscuro;
+  bool get darkMode => _darkMode;
 
   //Obtener el idioma actual
-  Locale get idioma => _idioma;
+  Locale get languaje => _languaje;
 
   //Obetener la divisa en la que se está trabajando
-  Currency get divisaEnUso => _codigoDivisaEnUso;
+  Currency get currencyCodeInUse => _currencyCodeInUse;
 
   //Obtener el usuario
-  UserModel? usuario; //? pq puede ser nulo (puede que no esté registrado)
+  UserModel? userRegistered; //? pq puede ser nulo (puede que no esté registrado)
 
   ///Cambiar el modo oscuro y guardar la preferencia
-  Future<void> cambiarModoOscuro(bool valor) async {
-    _modoOscuro = valor;
+  Future<void> changeDarkMode(bool value) async {
+    _darkMode = value;
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('modoOscuro', valor);
+    await prefs.setBool('darkMode', value);
   }
 
   ///Cambiar el idioma y guardar la preferencia
-  Future<void> cambiarIdioma(String codigoIdioma) async {
-    _idioma = Locale(codigoIdioma);
+  Future<void> changeLanguaje(String languajeCode) async {
+    _languaje = Locale(languajeCode);
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('idioma', codigoIdioma);
+    await prefs.setString('languaje', languajeCode);
   }
 
   ///Cambiar la divisa y guardar la preferencia
-  Future<void> cambiarDivisa(Currency nuevoCodigoDivisa) async {
-    _codigoDivisaEnUso = nuevoCodigoDivisa;
-    await cargarTransacciones(); //Recargar las transacciones con la nueva divisa
+  Future<void> changeCurrency(Currency newCurrencyCode) async {
+    _currencyCodeInUse = newCurrencyCode;
+    await loadTransactions(); //Recargar las transacciones con la nueva divisa
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('divisaEnUso', nuevoCodigoDivisa.currencyCode);
+    await prefs.setString('currencyCodeInUse', newCurrencyCode.currencyCode);
   }
 
   ///Cargar las preferencias guardadas en el dispositivo
-  Future<void> _cargarPreferencias() async {
+  Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    _modoOscuro = prefs.getBool('modoOscuro') ?? false;
-    _idioma = Locale(prefs.getString('idioma') ?? 'es');
-    _codigoDivisaEnUso =
-        APIUtils.getFromList(prefs.getString('divisaEnUso') ?? 'EUR')!;
+    _darkMode = prefs.getBool('darkMode') ?? false;
+    _languaje = Locale(prefs.getString('languaje') ?? 'es');
+    _currencyCodeInUse =
+        APIUtils.getFromList(prefs.getString('codeCurrencyInUse') ?? 'EUR')!;
     //Cargar las transacciones desde la base de datos
-    await cargarTransacciones();
+    await loadTransactions();
     notifyListeners();
   }
 
   ///Cargar las transacciones desde la base de datos, ordenadas por fecha
-  Future<void> cargarTransacciones() async {
-    listaTransacciones =
-        await TransactionDao().getTransactionsByDate(usuario!);
-    listaTransacciones.sort((a, b) => -a.transactionDate.compareTo(b.transactionDate));
+  Future<void> loadTransactions() async {
+    listAllTransactions =
+        await TransactionDao().getTransactionsByDate(userRegistered!);
+    listAllTransactions.sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
 
     //Cambiar cada importe en función de la divisa que se esté usando --> en esta clase para que sea accesible y recargable desde todo el contexto (la app)
-    for (var element in listaTransacciones) {
-      if (element.transactionCurrency != divisaEnUso) {
+    for (var element in listAllTransactions) {
+      if (element.transactionCurrency != currencyCodeInUse) {
         Map<String, double> cambios =
             await APIUtils.getChangesBasedOnCurrencyCode(element.transactionCurrency.currencyCode);
-        element.transactionImport = element.transactionImport * cambios[divisaEnUso.currencyCode]!;
+        element.transactionImport = element.transactionImport * cambios[currencyCodeInUse.currencyCode]!;
       }
     }
     notifyListeners();
   }
 
   ///Iniciar sesión
-  void inicioSesion(UserModel u) {
-    this.usuario = u;
+  void logIn(UserModel u) {
+    this.userRegistered = u;
     notifyListeners();
   }
 
   ///Cerrar sesión
-  void cerrarSesion() {
-    this.usuario = null;
+  void logOut() {
+    this.userRegistered = null;
     notifyListeners();
   }
 }

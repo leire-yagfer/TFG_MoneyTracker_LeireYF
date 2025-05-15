@@ -37,8 +37,8 @@ class _IngresosTabState extends State<IngresosTab> {
     final result = await transaccionDao.obtenerIngresosGastosPorCategoria(
       filter: selectedFilter,
       year: selectedYear,
-      u: context.read<ProviderAjustes>().usuario!,
-      actualCode: context.read<ProviderAjustes>().divisaEnUso.currencyCode,
+      u: context.read<ConfigurationProvider>().userRegistered!,
+      actualCode: context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
       isIncome: true,
     );
 
@@ -168,7 +168,7 @@ class IncomeChart extends StatelessWidget {
                 return PieChartSectionData(
                   value: entry.value,
                   title:
-                      "${entry.value.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.currencySymbol}",
+                      "${entry.value.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
                   color: colorMap[entry.key],
                   radius: 80,
                   titleStyle: TextStyle(

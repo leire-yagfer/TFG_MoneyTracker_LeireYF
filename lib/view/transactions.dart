@@ -36,12 +36,12 @@ class _TransactionsPageState extends State<TransactionsPage> {
   Future<void> _deleteUITransaction(int index) async {
     //llamo al DAO para eliminar la transacción de Firestore
     await transactionDao.deleteTransaction(
-        context.read<ProviderAjustes>().usuario!,
-        context.read<ProviderAjustes>().listaTransacciones[index]);
-    context.read<ProviderAjustes>().listaTransacciones.removeAt(
+        context.read<ConfigurationProvider>().userRegistered!,
+        context.read<ConfigurationProvider>().listAllTransactions[index]);
+    context.read<ConfigurationProvider>().listAllTransactions.removeAt(
         index); //elimino la transacción de la lista local del Provider
     context
-        .read<ProviderAjustes>()
+        .read<ConfigurationProvider>()
         .notifyListeners(); //notifico a los listeners para que se actualice la interfaz
   }
 
@@ -134,7 +134,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ProviderAjustes>().divisaEnUso.currencySymbol}', //Importe con símbolo de la divisa en uso
+                              '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize:
@@ -171,7 +171,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
       _isLoading = true;
     });
     var aux = await transactionDao
-        .getTransactionsByDate(context.read<ProviderAjustes>().usuario!);
+        .getTransactionsByDate(context.read<ConfigurationProvider>().userRegistered!);
     setState(() {
       transacciones = aux;
     });

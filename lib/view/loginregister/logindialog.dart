@@ -147,10 +147,10 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
 
         if (mounted) {
           // Use Future.microtask to avoid navigation during build
-          context.read<ProviderAjustes>().inicioSesion(UserModel(
+          context.read<ConfigurationProvider>().logIn(UserModel(
               userId: userCredential.user!.uid,
               userEmail: _usernameController.text));
-          await context.read<ProviderAjustes>().cargarTransacciones();
+          await context.read<ConfigurationProvider>().loadTransactions();
         }
       } on FirebaseAuthException catch (e) {
         String errorMsg = 'Authentication failed';

@@ -32,14 +32,14 @@ class _BalanceTabState extends State<BalanceTab> {
   Future<void> _cargarDatos() async {
     final ingresosResult = await transaccionDao.obtenerTotalPorTipo(
       isIncome: true,
-      u: context.read<ProviderAjustes>().usuario!,
+      u: context.read<ConfigurationProvider>().userRegistered!,
       filter: selectedFilter,
       year: selectedYear,
       //actualCode: context.read<ProviderAjustes>().divisaEnUso.codigo_divisa,
     );
     final gastosResult = await transaccionDao.obtenerTotalPorTipo(
       isIncome: false,
-      u: context.read<ProviderAjustes>().usuario!,
+      u: context.read<ConfigurationProvider>().userRegistered!,
       filter: selectedFilter,
       year: selectedYear,
       //actualCode: context.read<ProviderAjustes>().divisaEnUso.codigo_divisa,
@@ -101,7 +101,7 @@ class _BalanceTabState extends State<BalanceTab> {
                   sections: [
                     PieChartSectionData(
                       value: ingresosMostrar,
-                      title: "${ingresos.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.currencySymbol}",
+                      title: "${ingresos.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
                       color: context
                           .watch<ThemeProvider>()
                           .palette()['greenButton']!,
@@ -116,7 +116,7 @@ class _BalanceTabState extends State<BalanceTab> {
                     ),
                     PieChartSectionData(
                       value: gastosMostrar,
-                      title: "${gastos.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.currencySymbol}",
+                      title: "${gastos.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
                       color: context
                           .watch<ThemeProvider>()
                           .palette()['redButton']!,

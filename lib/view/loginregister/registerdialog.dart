@@ -277,7 +277,7 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
           await firestore!.collection('users').doc(uid).set({
             'email': _emailController.text.trim(),
           });
-          context.read<ProviderAjustes>().inicioSesion(
+          context.read<ConfigurationProvider>().logIn(
               UserModel(userId: uid, userEmail: _emailController.text.trim()));
           await CategoryDao().insertarCategoriasRegistro(uid);
         } catch (firestoreError) {

@@ -32,8 +32,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
   ///Método para cargar las categorías desde la base de datos
   Future<void> cargarCategorias() async {
     List<Category> categoriasDB = await categoriaDao.getCategories(context
-        .read<ProviderAjustes>()
-        .usuario!); //Obtiene las categorías del usuario actual
+        .read<ConfigurationProvider>()
+        .userRegistered!); //Obtiene las categorías del usuario actual
     //Se ordenan las categorías por tipo (ingreso o gasto)
     categoriasDB.sort((a, b) {
       if (a.categoryIsIncome && !b.categoryIsIncome) {

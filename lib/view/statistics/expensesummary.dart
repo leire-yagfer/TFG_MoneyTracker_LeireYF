@@ -37,8 +37,8 @@ class _ExpenseTabState extends State<ExpenseTab> {
     final result = await transaccionDao.obtenerIngresosGastosPorCategoria(
       filter: selectedFilter,
       year: selectedYear,
-      u: context.read<ProviderAjustes>().usuario!,
-      actualCode: context.read<ProviderAjustes>().divisaEnUso.currencyCode,
+      u: context.read<ConfigurationProvider>().userRegistered!,
+      actualCode: context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
       isIncome: false,
     );
 
@@ -169,7 +169,7 @@ class ExpenseChart extends StatelessWidget {
                 return PieChartSectionData(
                   value: entry.value,
                   title:
-                      "${entry.key}\n${entry.value.toStringAsFixed(2)} ${context.read<ProviderAjustes>().divisaEnUso.currencySymbol}",
+                      "${entry.key}\n${entry.value.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
                   color: colorMap[entry.key],
                   radius: 80,
                   titleStyle: TextStyle(

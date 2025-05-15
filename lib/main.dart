@@ -44,7 +44,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ProviderAjustes(u)),
+        ChangeNotifierProvider(create: (context) => ConfigurationProvider(u)),
         ChangeNotifierProvider(create: (context) => ThemeProvider())
       ],
       child: MyApp(),
@@ -74,7 +74,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProviderAjustes>(
+    return Consumer<ConfigurationProvider>(
       builder: (context, ajustesProvider, child) {
         //Bloqueo de orientación -> solo permite vertical
         SystemChrome.setPreferredOrientations(
@@ -106,13 +106,13 @@ class _MyAppState extends State<MyApp> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          locale: ajustesProvider.idioma, //Idioma de la aplicación
+          locale: ajustesProvider.languaje, //Idioma de la aplicación
           supportedLocales: const [
             Locale('es'),
             Locale('en'),
           ],
           //En función de si existe un usuario ya registrado que ha iniciado sesión, se muestra la pantalla principal y sino, la pagina de inicio de sesión/registro
-          home: (context.read<ProviderAjustes>().usuario == null)
+          home: (context.read<ConfigurationProvider>().userRegistered == null)
               ? LoginSignupPage()
               : MainApp(),
         );

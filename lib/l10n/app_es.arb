@@ -30,8 +30,11 @@
     "categories": "Categorías",
     "category": "Categoría",
 
+    "darkMode": "Cambiar a modo oscuro",
+    "lightMode": "Cambair a modo claro",
+    "selectLanguaje": "Seleccione el idioma de la aplicación",
+    "selectCurrency": "Seleccione la moneda en la que quiere trabajar",
     "logout": "Cerrar sesión",
-
     "logoutdialogtitle": "Confirmar cierre de sesión",
     "logoutdialogcontent": "¿Estás seguro de que deseas cerrar sesión?",
     "cancel": "Cancelar",

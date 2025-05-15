@@ -240,8 +240,8 @@ class _CategoryCardState extends State<CategoryCard> {
                                                     .insertCategory(
                                                         context
                                                             .read<
-                                                                ProviderAjustes>()
-                                                            .usuario!,
+                                                                ConfigurationProvider>()
+                                                            .userRegistered!,
                                                         newCategory);
                                                 //Cerrar el diálogo
                                                 Navigator.of(context).pop();
@@ -342,7 +342,7 @@ class _CategoryCardState extends State<CategoryCard> {
                   onPressed: () async {
                     //llamo al método del DAO para eliminar la categoría de Firestore
                     await CategoryDao().deleteCategory(
-                      context.read<ProviderAjustes>().usuario!,
+                      context.read<ConfigurationProvider>().userRegistered!,
                       categoryPointer,
                     );
                     //elimino la categoría también de la lista local
