@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/currency.dart';
-import 'package:tfg_monetracker_leireyafer/util/changecurrencyapi.dart';
+import 'package:tfg_monetracker_leireyafer/model/util/changecurrencyapi.dart';
 import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';

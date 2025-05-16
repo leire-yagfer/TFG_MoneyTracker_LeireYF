@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
-import 'package:tfg_monetracker_leireyafer/util/firebasedb.dart';
+import 'package:tfg_monetracker_leireyafer/model/util/firebasedb.dart';
 
 ///Clase que gestiona las categorías en la base de datos
 class CategoryDao {
@@ -88,8 +88,8 @@ class CategoryDao {
 
     //2. guardar los datos de la categoria
     await userRef.reference.collection("categories").doc('Housing').set(
-        {"isincome": false, "cr": 232, "cg": 160, "cb": 242});
+        {"isincome": false, "cr": 242, "cg": 153, "cb": 74});
     await userRef.reference.collection("categories").doc("Salary").set(
-        {"isincome": true, "cr": 160, "cg": 242, "cb": 233});
+        {"isincome": true, "cr": 245, "cg": 210, "cb": 85});
   }
 }

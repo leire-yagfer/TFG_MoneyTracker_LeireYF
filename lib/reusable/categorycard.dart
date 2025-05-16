@@ -243,6 +243,8 @@ class _CategoryCardState extends State<CategoryCard> {
                                                                 ConfigurationProvider>()
                                                             .userRegistered!,
                                                         newCategory);
+                                                //Borro lo escrito en el controller
+                                                _newCategoryNameController.clear();
                                                 //Cerrar el diálogo
                                                 Navigator.of(context).pop();
                                                 //añado la categoría a la lista de la interfaz

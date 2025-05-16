@@ -57,8 +57,8 @@ class ReusableTxtFormFieldLoginRegisterState
             ? IconButton(
                 icon: Icon(
                   _isPasswordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off,
+                      ? Icons.visibility_off
+                      : Icons.visibility,
                   color: context
                       .watch<ThemeProvider>()
                       .palette()['buttonBlackWhite']!,

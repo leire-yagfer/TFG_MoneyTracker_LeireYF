@@ -5,7 +5,7 @@ import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusableTxtFormFieldLoginRegister.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablerowloginregister.dart';
-import 'package:tfg_monetracker_leireyafer/util/firebaseauthentication.dart';
+import 'package:tfg_monetracker_leireyafer/model/util/firebaseauthentication.dart';
 import 'package:tfg_monetracker_leireyafer/view/appbottomnavigationbar.dart';
 import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';

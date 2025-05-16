@@ -4,7 +4,7 @@ import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/currency.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
-import 'package:tfg_monetracker_leireyafer/util/changecurrencyapi.dart';
+import 'package:tfg_monetracker_leireyafer/model/util/changecurrencyapi.dart';
 
 ///Clase que gestiona el estado global de la app
 class ConfigurationProvider extends ChangeNotifier {

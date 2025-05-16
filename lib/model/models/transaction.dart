@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/currency.dart';
-import 'package:tfg_monetracker_leireyafer/util/changecurrencyapi.dart';
+import 'package:tfg_monetracker_leireyafer/model/util/changecurrencyapi.dart';
 
 ///Clase que representa una transacción. Se llama así porque puedo tener probelmas con el nombre Transaction del propio FireBase
 class TransactionModel {

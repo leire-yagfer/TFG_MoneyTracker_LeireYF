@@ -11,11 +11,10 @@ import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusableTxtFormFieldLoginRegister.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablerowloginregister.dart';
-import 'package:tfg_monetracker_leireyafer/util/firebaseauthentication.dart';
+import 'package:tfg_monetracker_leireyafer/model/util/firebaseauthentication.dart';
 import 'package:tfg_monetracker_leireyafer/view/appbottomnavigationbar.dart';
 import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
-import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 //clase que implementa el dopDownButton de selección de país, ya que es de tipo stateful
 class SignupDialog extends StatefulWidget {
@@ -29,9 +28,9 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repeatedpasswordController =
       TextEditingController();
-  final _emailKey = GlobalKey<FormFieldState>();
   final _passwordKey = GlobalKey<FormFieldState>();
   final _repeatedPasswordKey = GlobalKey<FormFieldState>();
+  String? _passwordMismatchError;
 
   String? _errorMessage;
 
@@ -39,11 +38,52 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
 
   bool _isLoading = false;
 
+  //añado listeners a los controller de los campos de contraseñas para comprobar en tiempo real que coincidan --> para ello llamo al método que comprueba que se cumpla
+  @override
+  void initState() {
+    super.initState();
+
+    _repeatedpasswordController.addListener(() {
+      if (_repeatedpasswordController.text != _passwordController.text) {
+        setState(() {
+          _passwordMismatchError =
+              AppLocalizations.of(context)!.nocoincidencedpasswords;
+        });
+      } else {
+        setState(() {
+          _passwordMismatchError = null;
+        });
+      }
+    });
+
+    _passwordController.addListener(() {
+      if (_repeatedpasswordController.text != _passwordController.text) {
+        setState(() {
+          _passwordMismatchError =
+              AppLocalizations.of(context)!.nocoincidencedpasswords;
+        });
+      } else {
+        setState(() {
+          _passwordMismatchError = null;
+        });
+      }
+    });
+  }
+
   @override
   void dispose() {
+    _passwordController.removeListener(_onPasswordChanged);
+    _repeatedpasswordController.removeListener(_onPasswordChanged);
     _passwordController.dispose();
     _repeatedpasswordController.dispose();
     super.dispose();
+  }
+
+  //método para comprobar en tiempo real si las contraseñas introducidas al registrarse coinciden
+  void _onPasswordChanged() {
+    if (_repeatedPasswordKey.currentState != null) {
+      _repeatedPasswordKey.currentState!.validate();
+    }
   }
 
   @override
@@ -61,6 +101,7 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ReusableTxtFormFieldLoginRegister(
+                    keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
                     labelText: AppLocalizations.of(context)!.email,
                     hintText: AppLocalizations.of(context)!.emailhint,
@@ -79,7 +120,6 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                   ),
 
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-
                   //EL KEY LO USO PARA VALIDAR EL CAMPO Y QUE SEAN IGUALES LAS CONSTRASEÑAS --> MIRAR CÓMO HACER PARA QUE NO DE ERROR EN EL REUSABLE
                   ReusableTxtFormFieldLoginRegister(
                     key: _passwordKey,
@@ -95,43 +135,6 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                       return null;
                     },
                   ),
-
-                  /*TextFormField(
-                    key: _passwordKey,
-                    obscureText: !_isPasswordVisible,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.passwordr,
-                      hintText: AppLocalizations.of(context)!.passwordhintr,
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: context
-                              .watch<ThemeProvider>()
-                              .palette()['buttonBlackWhite']!,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null ||
-                          value.isEmpty ||
-                          _passwordController.text.length < 6) {
-                        return AppLocalizations.of(context)!.newpassworderror;
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      _passwordKey.currentState!.validate();
-                    },
-                  ),*/
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   ReusableTxtFormFieldLoginRegister(
                     key: _repeatedPasswordKey,
@@ -150,45 +153,14 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                       return null;
                     },
                   ),
-
-                  /*TextFormField(
-                    key: _repeatedPasswordKey,
-                    obscureText: !_isPasswordVisible,
-                    controller: _repeatedpasswordController,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.repeatpassword,
-                      hintText:
-                          AppLocalizations.of(context)!.repeatpasswordhint,
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: context
-                              .watch<ThemeProvider>()
-                              .palette()['buttonBlackWhite']!,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
+                  if (_passwordMismatchError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        _passwordMismatchError!,
+                        style: TextStyle(color: Colors.red, fontSize: 12),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null ||
-                          value.isEmpty ||
-                          value != _passwordController.text) {
-                        return AppLocalizations.of(context)!
-                            .nocoincidencedpasswords;
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      _repeatedPasswordKey.currentState!.validate();
-                    },
-                  ),*/
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,

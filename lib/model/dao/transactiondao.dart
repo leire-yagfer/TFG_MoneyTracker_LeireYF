@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
-import 'package:tfg_monetracker_leireyafer/util/firebasedb.dart';
+import 'package:tfg_monetracker_leireyafer/model/util/firebasedb.dart';
 
 ///Clase que gestiona transacciones en la base de datos
 class TransactionDao {
