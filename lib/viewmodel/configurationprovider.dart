@@ -8,7 +8,6 @@ import 'package:tfg_monetracker_leireyafer/util/changecurrencyapi.dart';
 
 ///Clase que gestiona el estado global de la app
 class ConfigurationProvider extends ChangeNotifier {
-  bool _darkMode = false;
   Locale _languaje = Locale('es');
   Currency _currencyCodeInUse = APIUtils.getFromList('EUR')!;
   //lista de transacciones
@@ -20,9 +19,6 @@ class ConfigurationProvider extends ChangeNotifier {
     _loadPreferences();
   }
 
-  //Obtener el estado actual del modo oscuro
-  bool get darkMode => _darkMode;
-
   //Obtener el idioma actual
   Locale get languaje => _languaje;
 
@@ -30,15 +26,8 @@ class ConfigurationProvider extends ChangeNotifier {
   Currency get currencyCodeInUse => _currencyCodeInUse;
 
   //Obtener el usuario
-  UserModel? userRegistered; //? pq puede ser nulo (puede que no esté registrado)
-
-  ///Cambiar el modo oscuro y guardar la preferencia
-  Future<void> changeDarkMode(bool value) async {
-    _darkMode = value;
-    notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('darkMode', value);
-  }
+  UserModel?
+      userRegistered; //? pq puede ser nulo (puede que no esté registrado)
 
   ///Cambiar el idioma y guardar la preferencia
   Future<void> changeLanguaje(String languajeCode) async {
@@ -60,7 +49,7 @@ class ConfigurationProvider extends ChangeNotifier {
   ///Cargar las preferencias guardadas en el dispositivo
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    _darkMode = prefs.getBool('darkMode') ?? false;
+
     _languaje = Locale(prefs.getString('languaje') ?? 'es');
     _currencyCodeInUse =
         APIUtils.getFromList(prefs.getString('codeCurrencyInUse') ?? 'EUR')!;
@@ -73,14 +62,17 @@ class ConfigurationProvider extends ChangeNotifier {
   Future<void> loadTransactions() async {
     listAllTransactions =
         await TransactionDao().getTransactionsByDate(userRegistered!);
-    listAllTransactions.sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
+    listAllTransactions
+        .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
 
     //Cambiar cada importe en función de la divisa que se esté usando --> en esta clase para que sea accesible y recargable desde todo el contexto (la app)
     for (var element in listAllTransactions) {
       if (element.transactionCurrency != currencyCodeInUse) {
         Map<String, double> cambios =
-            await APIUtils.getChangesBasedOnCurrencyCode(element.transactionCurrency.currencyCode);
-        element.transactionImport = element.transactionImport * cambios[currencyCodeInUse.currencyCode]!;
+            await APIUtils.getChangesBasedOnCurrencyCode(
+                element.transactionCurrency.currencyCode);
+        element.transactionImport = element.transactionImport *
+            cambios[currencyCodeInUse.currencyCode]!;
       }
     }
     notifyListeners();

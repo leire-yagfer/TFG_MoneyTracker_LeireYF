@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ThemeProvider extends ChangeNotifier {
   bool isLightModeActive = true;
 
-  //Los sigueintes colores es siguiendo el modo claro de la app (isLightModeActive == true)
+  //Los sigueintes colores es siguiendo el modo claro de la app (isLightModeActive == true). Controlo desde esta clase el modo claro/oscuro
   Map<String, Color> palette() => {
         //General
         "scaffoldBackground": (isLightModeActive) ? Color.fromARGB(255, 242, 242, 247) : Color.fromARGB(255, 28, 28, 30),

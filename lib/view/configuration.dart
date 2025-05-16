@@ -65,12 +65,16 @@ class _ConfigurationPageState extends State<ConfigurationPage>
                             padding: EdgeInsets.all(
                                 MediaQuery.of(context).size.width * 0.05),
                             child: Row(children: [
-                              Text(ajustesProvider.darkMode
+                              Text(context
+                                      .watch<ThemeProvider>()
+                                      .isLightModeActive
                                   ? AppLocalizations.of(context)!.darkMode
                                   : AppLocalizations.of(context)!.lightMode),
                               IconButton(
                                 icon: Icon(
-                                  ajustesProvider.darkMode
+                                  context
+                                          .watch<ThemeProvider>()
+                                          .isLightModeActive
                                       ? Icons
                                           .nightlight_round //Icono modo oscuro
                                       : Icons.wb_sunny, //Icono modo claro
