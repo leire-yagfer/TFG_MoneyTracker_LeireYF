@@ -66,14 +66,18 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 title: AppLocalizations.of(context)!.income,
                 categoriesList: listIncomes,
                 newCategoryIsIncome: true,
-                categoriesColorMap: StaticData.categoriesColorMap, //paso la clase de colores disponibles para las categorías
+                categoriesColorMap: StaticData
+                    .categoriesColorMap, //paso la clase de colores disponibles para las categorías
+                listAllCategories: listExpenses + listIncomes,
               ),
             if (listExpenses.isNotEmpty)
               CategoryCard(
                 title: AppLocalizations.of(context)!.expenses,
                 categoriesList: listExpenses,
                 newCategoryIsIncome: false,
-                categoriesColorMap: StaticData.categoriesColorMap, //paso la clase de colores disponibles para las categorías
+                categoriesColorMap: StaticData
+                    .categoriesColorMap, //paso la clase de colores disponibles para las categorías
+                listAllCategories: listExpenses + listIncomes,
               ),
           ],
         ),

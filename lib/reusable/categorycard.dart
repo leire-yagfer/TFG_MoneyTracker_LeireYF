@@ -18,6 +18,7 @@ class CategoryCard extends StatefulWidget {
   List<Category> categoriesList; //Lista de categorías a mostrar
   bool newCategoryIsIncome;
   Map<String, Color> categoriesColorMap;
+  List<Category> listAllCategories; //lista que almacena todas las categorías
 
   //Constructor de la clase
   CategoryCard({
@@ -25,6 +26,7 @@ class CategoryCard extends StatefulWidget {
     required this.categoriesList,
     required this.newCategoryIsIncome,
     required this.categoriesColorMap,
+    required this.listAllCategories,
   });
 
   @override
@@ -116,9 +118,9 @@ class _CategoryCardState extends State<CategoryCard> {
                                         //color picker para seleccionar el color de la categorí
                                         GestureDetector(
                                           onTap: () {
-                                            //obtengo los colores ya usados por otras categorías
+                                            //obtengo los colores ya usados por otras categorías, independientemente del tipo
                                             final usedColors = widget
-                                                .categoriesList
+                                                .listAllCategories
                                                 .map((c) => c.categoryColor)
                                                 .toList();
 
@@ -236,20 +238,21 @@ class _CategoryCardState extends State<CategoryCard> {
                                                         categoryColorSelected);
 
                                                 //Insertar la nueva categoría en la base de datos
-                                                await CategoryDao()
-                                                    .insertCategory(
-                                                        context
-                                                            .read<
-                                                                ConfigurationProvider>()
-                                                            .userRegistered!,
-                                                        newCategory);
+                                                await CategoryDao().insertCategory(
+                                                    context
+                                                        .read<
+                                                            ConfigurationProvider>()
+                                                        .userRegistered!,
+                                                    newCategory);
                                                 //Borro lo escrito en el controller
-                                                _newCategoryNameController.clear();
+                                                _newCategoryNameController
+                                                    .clear();
                                                 //Cerrar el diálogo
                                                 Navigator.of(context).pop();
                                                 //añado la categoría a la lista de la interfaz
                                                 setState(() {
-                                                  widget.categoriesList.add(newCategory);
+                                                  widget.categoriesList
+                                                      .add(newCategory);
                                                 });
                                                 //Mostrar SnackBar de confirmación
                                                 ScaffoldMessenger.of(context)
