@@ -42,13 +42,6 @@ class _CategoryCardState extends State<CategoryCard> {
   Color categoryColorSelected = StaticData.categoriesColorMap.values
       .first; //Color seleccionado por el usuario para la categoría --> lo inicializo en el primer valor del mapa de colores para categorías
 
-  //crear una variable que va a almacenar el mapa de los iconos de las categorías, y voy a eliminar de la variable (mapa2) aquellos elementos que ya estén en uso
-  @override
-  void initState() {
-    super.initState();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -119,13 +112,13 @@ class _CategoryCardState extends State<CategoryCard> {
                                         GestureDetector(
                                           onTap: () {
                                             //obtengo los colores ya usados por otras categorías, independientemente del tipo
-                                            final usedColors = widget
+                                            var usedColors = widget
                                                 .listAllCategories
                                                 .map((c) => c.categoryColor)
-                                                .toList();
+                                                .toSet();
 
                                             //excluyo los colores usados para quedarme solo con los disponibles
-                                            final availableColors = widget
+                                            var availableColors = widget
                                                 .categoriesColorMap.values
                                                 .where((c) =>
                                                     !usedColors.contains(c))
@@ -135,9 +128,13 @@ class _CategoryCardState extends State<CategoryCard> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
-                                                  title: Text(AppLocalizations
-                                                          .of(context)!
-                                                      .newCategoryColorTitle, overflow: TextOverflow.ellipsis,),
+                                                  title: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .newCategoryColorTitle,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                   //si hay colores disponibles, les muestro, sino muestra mensaje de que no hay colores disponibles. Es útil para que si se sambia el número de categorías permitidas, pues no haya errores --> Control de error
                                                   content: availableColors
                                                           .isNotEmpty
@@ -205,9 +202,12 @@ class _CategoryCardState extends State<CategoryCard> {
                                                   ),
                                                 ),
                                                 SizedBox(width: 12),
-                                                Text(AppLocalizations.of(
-                                                        context)!
-                                                    .newCategoryColorLabel, overflow: TextOverflow.ellipsis,),
+                                                Text(
+                                                  AppLocalizations.of(context)!
+                                                      .newCategoryColorLabel,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                                 Icon(Icons.arrow_drop_down),
                                               ],
                                             ),
@@ -252,7 +252,9 @@ class _CategoryCardState extends State<CategoryCard> {
                                                 //añado la categoría a la lista de la interfaz
                                                 setState(() {
                                                   widget.categoriesList
-                                                      .add(newCategory);
+                                                      .add(newCategory); //añado la nueva categoría a la UI
+                                                  widget.listAllCategories
+                                                      .add(newCategory); //añado la nueva categoría a la lista de todas las categorías para que se actualicen los colores 
                                                 });
                                                 //Mostrar SnackBar de confirmación
                                                 ScaffoldMessenger.of(context)

@@ -46,28 +46,32 @@ class IncomeExpenseChart extends StatelessWidget {
         ),
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         //Leyenda
-        Wrap(
-          spacing: MediaQuery.of(context).size.height *
-              0.02, //espacio horizontal entre las categorías
-          //saco el nombre de las categorías que se encuentran en la clave del mapa
-          children: dataMap.keys.map((categoryName) {
-            //cada fila representa una categoría con su color y nombre
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.015,
-                  height: MediaQuery.of(context).size.height * 0.015,
-                  color: colorMap[categoryName],
-                ),
-                SizedBox(width: MediaQuery.of(context).size.height * 0.005),
-                Text(
-                  categoryName,
-                ),
-              ],
-            );
-          }).toList(),
-        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.1), // margen lateral para que no se aproxime al margen la leyenda
+          child: Wrap(
+            spacing: MediaQuery.of(context).size.height *
+                0.02, //espacio horizontal entre las categorías
+            //saco el nombre de las categorías que se encuentran en la clave del mapa
+            children: dataMap.keys.map((categoryName) {
+              //cada fila representa una categoría con su color y nombre
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.015,
+                    height: MediaQuery.of(context).size.height * 0.015,
+                    color: colorMap[categoryName],
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.height * 0.005),
+                  Text(
+                    categoryName,
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+        )
       ],
     );
   }
