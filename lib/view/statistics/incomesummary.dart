@@ -1,10 +1,9 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
+import 'package:tfg_monetracker_leireyafer/view/statistics/icomeexpensechart.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
-import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 ///Clase que muestra los movimientos cuyo tipo es ingresos en la base de datos en un gráfico circular divido con los colores de las categorías a las que pertenece
 class IncomeTab extends StatefulWidget {
@@ -137,26 +136,11 @@ class _IncomeTabState extends State<IncomeTab> {
                       ],
                     ),
                     if (selectedFilter == 'year') _buildYearPicker(),
-                    categoryTotalMap.isEmpty
-                        ? Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical:
-                                    MediaQuery.of(context).size.height * 0.05),
-                            child: Text(
-                              AppLocalizations.of(context)!.noTransactions,
-                              style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).textScaler.scale(30),
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        : SizedBox(
-                            child: IncomeChart(
-                                dataMap: categoryTotalMap,
-                                colorMap: categoryColorMap),
-                          ),
+                    SizedBox(
+                      child: IncomeExpenseChart(
+                          dataMap: categoryTotalMap,
+                          colorMap: categoryColorMap),
+                    ),
                   ],
                 ),
               );
@@ -180,70 +164,6 @@ class _IncomeTabState extends State<IncomeTab> {
         });
         _loadData();
       },
-    );
-  }
-}
-
-///Gráfico circular de transacciones de tipo ingresos
-class IncomeChart extends StatelessWidget {
-  final Map<String, double> dataMap;
-  final Map<String, Color> colorMap;
-
-  const IncomeChart({
-    super.key,
-    required this.dataMap,
-    required this.colorMap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.45,
-          child: PieChart(
-            PieChartData(
-              sections: dataMap.entries.map((entry) {
-                return PieChartSectionData(
-                  value: entry.value,
-                  title:
-                      "${entry.value.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
-                  color: colorMap[entry.key],
-                  radius: 80,
-                  titleStyle: TextStyle(
-                    fontSize: MediaQuery.of(context).textScaler.scale(18),
-                    fontWeight: FontWeight.w600,
-                    color:
-                        context.watch<ThemeProvider>().palette()['fixedBlack']!,
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-        Wrap(
-          spacing: MediaQuery.of(context).size.height * 0.02,
-          children: dataMap.keys.map((category) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.015,
-                  height: MediaQuery.of(context).size.height * 0.015,
-                  color: colorMap[category],
-                ),
-                SizedBox(width: MediaQuery.of(context).size.height * 0.005),
-                Text(
-                  category,
-                ),
-              ],
-            );
-          }).toList(),
-        ),
-      ],
     );
   }
 }

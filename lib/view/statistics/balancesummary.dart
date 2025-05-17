@@ -16,8 +16,8 @@ class BalanceTab extends StatefulWidget {
 
 class _BalanceTabState extends State<BalanceTab> {
   final TransactionDao transaccionDao = TransactionDao();
-  double ingresos = 0;
-  double gastos = 0;
+  double totalIncome = 0;
+  double totalExpense = 0;
   String? selectedYear;
   String selectedFilter = 'all';
 
@@ -36,14 +36,14 @@ class _BalanceTabState extends State<BalanceTab> {
     setState(() {
       _isLoading = true;
     });
-    final ingresosResult = await transaccionDao.getTotalByType(
+    final totalIncomeResult = await transaccionDao.getTotalByType(
       isIncome: true,
       u: context.read<ConfigurationProvider>().userRegistered!,
       filter: selectedFilter,
       year: selectedYear,
       //actualCode: context.read<ProviderAjustes>().divisaEnUso.codigo_divisa,
     );
-    final gastosResult = await transaccionDao.getTotalByType(
+    final totalExpenseResult = await transaccionDao.getTotalByType(
       isIncome: false,
       u: context.read<ConfigurationProvider>().userRegistered!,
       filter: selectedFilter,
@@ -52,17 +52,17 @@ class _BalanceTabState extends State<BalanceTab> {
     );
 
     setState(() {
-      ingresos = ingresosResult; //Actualizo el total de ingresos
-      gastos = gastosResult; //Actualizo el total de gastos
+      totalIncome = totalIncomeResult; //Actualizo el total de ingresos
+      totalExpense = totalExpenseResult; //Actualizo el total de gastos
       _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    //Evita que la gráfica desaparezca si los valores son 0
-    double ingresosMostrar = ingresos > 0 ? ingresos : 0.01;
-    double gastosMostrar = gastos > 0 ? gastos : 0.01;
+    //Evito que la gráfica desaparezca si los valores son 0
+    double showIncome = totalIncome > 0 ? totalIncome : 0.01;
+    double showExpense = totalExpense > 0 ? totalExpense : 0.01;
 
     return _isLoading
         ? Center(
@@ -110,17 +110,18 @@ class _BalanceTabState extends State<BalanceTab> {
                     ],
                   ),
                   if (selectedFilter == 'year') _buildYearPicker(),
-                  SizedBox(height: 20),
-                  //Gráfica circular
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  //Gráfica circular --> no está en un método pq es única
                   SizedBox(
-                    height: 300,
+                     height: MediaQuery.of(context).size.height * 0.45,
                     child: PieChart(
                       PieChartData(
+                        //Solo cuenta con dos secciones: Ingresos y Gastos
                         sections: [
                           PieChartSectionData(
-                            value: ingresosMostrar,
+                            value: showIncome,
                             title:
-                                "${ingresos.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                                "${totalIncome.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
                             color: context
                                 .watch<ThemeProvider>()
                                 .palette()['greenButton']!,
@@ -135,9 +136,9 @@ class _BalanceTabState extends State<BalanceTab> {
                             ),
                           ),
                           PieChartSectionData(
-                            value: gastosMostrar,
+                            value: showExpense,
                             title:
-                                "${gastos.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                                "${totalExpense.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
                             color: context
                                 .watch<ThemeProvider>()
                                 .palette()['redButton']!,
@@ -157,7 +158,7 @@ class _BalanceTabState extends State<BalanceTab> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
 
-                  // Leyenda
+                  // Leyenda --> diferente a las otras porque solo cuenta con dos
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -202,7 +203,7 @@ class _BalanceTabState extends State<BalanceTab> {
     );
   }
 
-  ///Método para generar los elementos de leyenda
+  ///Método para generar los elementos de leyenda porque hay más de una leyenda
   Widget _buildLegendItem(String label, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
