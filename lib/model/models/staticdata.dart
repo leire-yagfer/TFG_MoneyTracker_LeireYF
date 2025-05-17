@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 ///Clase de colores disponibles para el color único representativo de las categorías
 class StaticData {
   static const Map<String, Color> categoriesColorMap = {
-    "mutedOrange": Color.fromARGB(255, 242, 153, 74), //naranja moderado
-    "softYellow": Color.fromARGB(255, 245, 210, 85), //amarillo suave
-    "dustyPurple": Color.fromARGB(255, 155, 118, 188), //púrpura apagado
-    "mediumBlue": Color.fromARGB(255, 100, 149, 237), //azul medio
-    "warmPink": Color.fromARGB(255, 241, 143, 164), //rosa cálido
-    "calmTurquoise": Color.fromARGB(255, 102, 205, 170), //turquesa medio
-    "fadedCyan": Color.fromARGB(255, 102, 204, 204), //cian medio
-    "mutedMagenta": Color.fromARGB(255, 216, 112, 214), //magenta moderado
-    "softLime": Color.fromARGB(255, 218, 230, 101), //lime menos chillón
-    "amberTone": Color.fromARGB(255, 240, 180, 83), //ámbar medio
-    "rosyCoral": Color.fromARGB(255, 244, 154, 132), //coral rosado
-    "duskyLavender": Color.fromARGB(255, 180, 167, 214), //lavanda grisácea
-    "peachTone": Color.fromARGB(255, 255, 183, 131), //melocotón medio
-    "mintTone": Color.fromARGB(255, 170, 220, 160), //menta medio
-    "skyTone": Color.fromARGB(255, 135, 206, 250), //cielo moderado
+    "warmOrange": Color.fromARGB(255, 235, 135, 70), // naranja cálido
+    "sunnyYellow": Color.fromARGB(255, 240, 200, 70), // amarillo suave y alegre
+    "royalPurple": Color.fromARGB(255, 125, 75, 180), // púrpura elegante
+    "deepBlue": Color.fromARGB(255, 40, 100, 180), // azul profundo y sereno
+    "coralPink": Color.fromARGB(255, 235, 110, 130), // rosa coral vivo
+    "tealGreen": Color.fromARGB(255, 45, 140, 130), // verde azulado fresco
+    "skyBlue": Color.fromARGB(255, 90, 180, 230), // azul cielo luminoso
+    "plum": Color.fromARGB(255, 160, 70, 150), // ciruela vibrante
+    "limeGreen": Color.fromARGB(255, 165, 210, 70), // lima natural
+    "amber": Color.fromARGB(255, 220, 160, 40), // ámbar dorado
+    "salmon": Color.fromARGB(255, 240, 130, 100), // salmón suave
+    "lavender": Color.fromARGB(255, 180, 160, 210), // lavanda delicada
+    "peach": Color.fromARGB(255, 255, 165, 110), // melocotón cálido
+    "mint": Color.fromARGB(255, 120, 200, 140), // menta fresca
+    "cerulean": Color.fromARGB(255, 70, 150, 220), // cerúleo brillante
   };
 }

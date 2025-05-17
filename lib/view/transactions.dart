@@ -81,22 +81,52 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   itemCount: transacciones.length,
                   itemBuilder: (context, index) {
                     TransactionModel transaccion = transacciones[index];
-                    Color fechaEImporteColor;
+
+                    //obtengo el color de fondo sobre el que voy a ajustar el color rojo y verde para que se vean de manera correcta
+                    Color transationCardBackgroundColor =
+                        transaccion.transactionCategory.categoryColor;
+
+                    Color rowAndImportColor;
                     Icon icono;
+
+                    //obtengo la luminosidad del fondo de la card
+                    double luminance =
+                        transationCardBackgroundColor.computeLuminance();
+
                     if (transaccion.transactionCategory.categoryIsIncome) {
-                      //si es ingreso
-                      fechaEImporteColor = context
-                          .watch<ThemeProvider>()
-                          .palette()['greenButton']!; //Verde
-                      icono =
-                          Icon(Icons.arrow_upward, color: fechaEImporteColor);
+                      //si es ingreso --> verde. En función del color de la card será en un tono u otro
+                      rowAndImportColor = luminance > 0.5
+                          ? context
+                              .watch<ThemeProvider>()
+                              .palette()['greenButtonIsDark']!
+                          : context
+                              .watch<ThemeProvider>()
+                              .palette()['greenButton']!;
+                      icono = Icon(Icons.arrow_upward,
+                          color: luminance > 0.5
+                              ? context
+                                  .watch<ThemeProvider>()
+                                  .palette()['greenButtonIsDark']!
+                              : context
+                                  .watch<ThemeProvider>()
+                                  .palette()['greenButton']!);
                     } else {
-                      //si es gasto
-                      fechaEImporteColor = context
-                          .watch<ThemeProvider>()
-                          .palette()['redButton']!; //Rojo
-                      icono =
-                          Icon(Icons.arrow_downward, color: fechaEImporteColor);
+                      //si es gasto --> rojo. En función del color de la card será en un tono u otro
+                      rowAndImportColor = luminance > 0.5
+                          ? context
+                              .watch<ThemeProvider>()
+                              .palette()['redButton']!
+                          : context
+                              .watch<ThemeProvider>()
+                              .palette()['redButtonIsDark']!;
+                      icono = Icon(Icons.arrow_upward,
+                          color: luminance > 0.5
+                              ? context
+                                  .watch<ThemeProvider>()
+                                  .palette()['redButton']!
+                              : context
+                                  .watch<ThemeProvider>()
+                                  .palette()['redButtonIsDark']!);
                     }
                     return Card(
                       margin: EdgeInsets.symmetric(
@@ -148,7 +178,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                 fontSize:
                                     MediaQuery.of(context).textScaler.scale(14),
                                 color:
-                                    fechaEImporteColor, //Importe con color según tipo
+                                    rowAndImportColor, //Importe con color según tipo
                               ),
                             ),
                             SizedBox(
@@ -162,6 +192,15 @@ class _TransactionsPageState extends State<TransactionsPage> {
                               iconSize: MediaQuery.of(context).size.width * 0.1,
                               onPressed: () {
                                 _deleteUITransaction(index);
+                                //Muestro SnackBar indicando que se ha eliminado correctamente
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        "Transacción eliminada correctamente"),
+                                    duration: Duration(
+                                        seconds: 3), //duración del SnackBar
+                                  ),
+                                );
                               },
                             ),
                           ],
