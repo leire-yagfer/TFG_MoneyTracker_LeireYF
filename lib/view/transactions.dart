@@ -98,35 +98,35 @@ class _TransactionsPageState extends State<TransactionsPage> {
                       rowAndImportColor = luminance > 0.5
                           ? context
                               .watch<ThemeProvider>()
-                              .palette()['greenButtonIsDark']!
+                              .palette()['greenButton']!
                           : context
                               .watch<ThemeProvider>()
-                              .palette()['greenButton']!;
+                              .palette()['greenButtonIsDark']!;
                       icono = Icon(Icons.arrow_upward,
                           color: luminance > 0.5
                               ? context
                                   .watch<ThemeProvider>()
-                                  .palette()['greenButtonIsDark']!
+                                  .palette()['greenButton']!
                               : context
                                   .watch<ThemeProvider>()
-                                  .palette()['greenButton']!);
+                                  .palette()['greenButtonIsDark']!);
                     } else {
                       //si es gasto --> rojo. En función del color de la card será en un tono u otro
                       rowAndImportColor = luminance > 0.5
                           ? context
                               .watch<ThemeProvider>()
-                              .palette()['redButton']!
+                              .palette()['redButtonIsDark']!
                           : context
                               .watch<ThemeProvider>()
-                              .palette()['redButtonIsDark']!;
+                              .palette()['redButton']!;
                       icono = Icon(Icons.arrow_upward,
                           color: luminance > 0.5
                               ? context
                                   .watch<ThemeProvider>()
-                                  .palette()['redButton']!
+                                  .palette()['redButtonIsDark']!
                               : context
                                   .watch<ThemeProvider>()
-                                  .palette()['redButtonIsDark']!);
+                                  .palette()['redButton']!);
                     }
                     return Card(
                       margin: EdgeInsets.symmetric(
