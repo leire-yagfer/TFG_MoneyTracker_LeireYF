@@ -142,11 +142,11 @@ class _ConfigurationPageState extends State<ConfigurationPage>
                                       }
                                     },
                                     items: List.generate(
-                                        APIUtils.allDivisas.length, (index) {
+                                        APIUtils.allCurrenciesList.length, (index) {
                                       return DropdownMenuItem<Currency>(
-                                        value: APIUtils.allDivisas[index],
+                                        value: APIUtils.allCurrenciesList[index],
                                         child: Text(
-                                          "${APIUtils.allDivisas[index].currencyName} (${APIUtils.allDivisas[index].currencySymbol})", //lista de monedas junto con su símbolo
+                                          "${APIUtils.allCurrenciesList[index].currencyName} (${APIUtils.allCurrenciesList[index].currencySymbol})", //lista de monedas junto con su símbolo
                                           overflow: TextOverflow
                                               .ellipsis, //puntos suspensivos si se desborda
                                           maxLines: 1, //solo una línea

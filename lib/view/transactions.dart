@@ -218,7 +218,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
       _isLoading = true;
     });
     var aux = await transactionDao.getTransactionsByDate(
-        context.read<ConfigurationProvider>().userRegistered!);
+        context.read<ConfigurationProvider>().userRegistered!, context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode);
     setState(() {
       transacciones = aux;
     });

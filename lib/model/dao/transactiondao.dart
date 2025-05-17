@@ -2,7 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
+import 'package:tfg_monetracker_leireyafer/model/util/changecurrencyapi.dart';
 import 'package:tfg_monetracker_leireyafer/model/util/firebasedb.dart';
+
+/* ---------------------------------------------------------- */
+//Explicación de lo que he hecho
+// He creado al final un método que, en función de la moneda actual, convierto las transacciones a la moneda actual
+// Se llama a esa función desde todas las demás funciones
+// En la del total, simplemente lo he re creado para sacar el total de todas las monedas.
+// Dará un par de errores en el código, por lo que en todos esos lados tienes que añadir actualCurrency : context.read<ConfigurationProvider>().actualCurrency.currencyCode
+/* ---------------------------------------------------------- */
 
 ///Clase que gestiona transacciones en la base de datos
 class TransactionDao {
@@ -24,7 +33,8 @@ class TransactionDao {
   }
 
   ///Obtener las transacciones ordenadas por fecha de un usuario
-  Future<List<TransactionModel>> getTransactionsByDate(UserModel u) async {
+  Future<List<TransactionModel>> getTransactionsByDate(
+      UserModel u, String actualCode) async {
     List<TransactionModel> allTransacciones = [];
     var userdata =
         await Firebasedb.data.doc(u.userId).get(); //obtengo el usuario
@@ -35,7 +45,8 @@ class TransactionDao {
       var transactionsInCategory = await c.reference
           .collection('transactions')
           .orderBy('datetime',
-              descending: true) //ordenar por fecha en cada categoría en FireBase --> se ve más ordenado en la BD
+              descending:
+                  true) //ordenar por fecha en cada categoría en FireBase --> se ve más ordenado en la BD
           .get();
       for (var t in transactionsInCategory.docs) {
         var transactionPonter = t.data();
@@ -50,6 +61,9 @@ class TransactionDao {
     //ordenar todas las transacciones globalmente por fecha (de más reciente a más antigua) a la hora de la representación en la interfaz
     allTransacciones
         .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
+
+    allTransacciones =
+        await getTransactionsOnCurrency(allTransacciones, actualCode);
     return allTransacciones;
   }
 
@@ -95,8 +109,7 @@ class TransactionDao {
   }
 
   ///Consulta para obtener ingresos/gastos por categoría
-  Future<Map<Category, List<TransactionModel>>>
-      getIncomeExpensesByCategory({
+  Future<Map<Category, List<TransactionModel>>> getIncomeExpensesByCategory({
     String filter = 'all',
     String? year,
     required UserModel u,
@@ -123,11 +136,14 @@ class TransactionDao {
       for (var t in transactionsInCategory.docs) {
         Map<String, dynamic> transdata = t.data();
         transdata['id'] = t.id; //guardarlo en el mapa de transacciones
-        transdata['categoria'] = cat; //guardarlo en el mapa y poder cargar todas sus transacciones
+        transdata['categoria'] =
+            cat; //guardarlo en el mapa y poder cargar todas sus transacciones
         TransactionModel transaccion = TransactionModel.fromMap(transdata);
         //añadir la transacción a la lista
         transacciones.add(transaccion);
       }
+      transacciones =
+          await getTransactionsOnCurrency(transacciones, actualCode);
       //añadir la categoría y sus transacciones a la lista
       mapaCategoriesWithTransactions[categoria] = transacciones;
     }
@@ -145,12 +161,12 @@ class TransactionDao {
   }
 
   ///Consulta para obtener el balance de los movimientos
-  Future<double> getTotalByType({
-    required UserModel u,
-    required bool isIncome,
-    String filter = 'all',
-    String? year,
-  }) async {
+  Future<double> getTotalByType(
+      {required UserModel u,
+      required bool isIncome,
+      String filter = 'all',
+      String? year,
+      required String actualCurrency}) async {
     //lista de cada categoría con sus transacciones
     double total = 0;
 
@@ -169,13 +185,38 @@ class TransactionDao {
         Map<String, dynamic> transdata = t.data();
         if (filter == 'year' && year != null) {
           if (transdata['datetime'].year.toString() == year) {
-            total += transdata['import'];
+            if (transdata['currency'] != actualCurrency) {
+              total = total += (transdata['import'] *
+                  (await APIUtils.getChangesBasedOnCurrencyCode(
+                      transdata['currency']!))[actualCurrency]);
+            } else {
+              total += transdata['import'];
+            }
           }
         } else {
-          total += transdata['import'];
+          if (transdata['currency'] != actualCurrency) {
+            total = total += (transdata['import'] *
+                (await APIUtils.getChangesBasedOnCurrencyCode(
+                    transdata['currency']!))[actualCurrency]);
+          } else {
+            total += transdata['import'];
+          }
         }
       }
     }
     return total;
+  }
+
+  ///Función para convertir la divisa de todas las transacciones a la moneda actual
+  Future<List<TransactionModel>> getTransactionsOnCurrency(
+      List<TransactionModel> transactions, String currency) async {
+    for (TransactionModel transaction in transactions) {
+      if (transaction.transactionCurrency.currencyCode != currency) {
+        transaction.transactionImport *=
+            (await APIUtils.getChangesBasedOnCurrencyCode(
+                transaction.transactionCurrency.currencyCode))[currency]!;
+      }
+    }
+    return transactions;
   }
 }

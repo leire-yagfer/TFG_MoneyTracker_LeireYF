@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
@@ -52,7 +54,7 @@ class ConfigurationProvider extends ChangeNotifier {
 
     _languaje = Locale(prefs.getString('languaje') ?? 'es');
     _currencyCodeInUse =
-        APIUtils.getFromList(prefs.getString('codeCurrencyInUse') ?? 'EUR')!;
+        APIUtils.getFromList(prefs.getString('currencyCodeInUse') ?? 'EUR')!;
     //Cargar las transacciones desde la base de datos
     await loadTransactions();
     notifyListeners();
@@ -61,18 +63,20 @@ class ConfigurationProvider extends ChangeNotifier {
   ///Cargar las transacciones desde la base de datos, ordenadas por fecha
   Future<void> loadTransactions() async {
     listAllTransactions =
-        await TransactionDao().getTransactionsByDate(userRegistered!);
+        await TransactionDao().getTransactionsByDate(userRegistered!, currencyCodeInUse.currencyCode);
     listAllTransactions
         .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
 
-    //Cambiar cada importe en función de la divisa que se esté usando --> en esta clase para que sea accesible y recargable desde todo el contexto (la app)
-    for (var element in listAllTransactions) {
-      if (element.transactionCurrency != currencyCodeInUse) {
-        Map<String, double> cambios =
+    for (var t in listAllTransactions) {
+      if (t.transactionCurrency.currencyCode != currencyCodeInUse) {
+        //obtengo las tasas de cambio desde la moneda original de la transacción en el puntero (es decir por la que me llego)
+        Map<String, double> changesRates =
             await APIUtils.getChangesBasedOnCurrencyCode(
-                element.transactionCurrency.currencyCode);
-        element.transactionImport = element.transactionImport *
-            cambios[currencyCodeInUse.currencyCode]!;
+                t.transactionCurrency.currencyCode);
+
+        //reemplazo el importe con el convertido a la moneda en uso
+        t.transactionImport = t.transactionImport *
+            changesRates[currencyCodeInUse.currencyCode]!;
       }
     }
     notifyListeners();

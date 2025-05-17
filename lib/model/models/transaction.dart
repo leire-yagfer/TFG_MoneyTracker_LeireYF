@@ -12,7 +12,7 @@ class TransactionModel {
   final Category transactionCategory;
   double transactionImport;
   final String? transactionDescription;
-  //No se necesita el usuario porque está en el provider y todo loq ue se haga se guarda en su sesión
+  //No se necesita el usuario porque está en el provider y todo lo que se haga se guarda en su sesión
 
   TransactionModel({
     required this.transactionId,

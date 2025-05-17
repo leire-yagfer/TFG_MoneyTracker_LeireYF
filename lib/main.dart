@@ -26,7 +26,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  //Cargo el archivo interno que qcontiene las divisas
+  //Cargo el archivo interno que contiene las divisas para saber cuáles se pueden usar
   await APIUtils.getAllCurrencies();
 
   // Inicializa Firebase Firestore
