@@ -168,11 +168,11 @@ class ExpenseChart extends StatelessWidget {
                 return PieChartSectionData(
                   value: entry.value,
                   title:
-                      "${entry.key}\n${entry.value.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                      "${entry.value.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
                   color: colorMap[entry.key],
                   radius: 80,
                   titleStyle: TextStyle(
-                    fontSize: MediaQuery.of(context).textScaler.scale(30),
+                    fontSize: MediaQuery.of(context).textScaler.scale(18),
                     fontWeight: FontWeight.w600,
                     color:
                         context.watch<ThemeProvider>().palette()['fixedBlack']!,

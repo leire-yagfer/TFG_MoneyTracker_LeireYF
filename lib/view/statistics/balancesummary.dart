@@ -107,7 +107,7 @@ class _BalanceTabState extends State<BalanceTab> {
                           .palette()['greenButton']!,
                       radius: 80,
                       titleStyle: TextStyle(
-                        fontSize: MediaQuery.of(context).textScaler.scale(14),
+                        fontSize: MediaQuery.of(context).textScaler.scale(18),
                         fontWeight: FontWeight.w600,
                         color: context
                             .watch<ThemeProvider>()
@@ -122,7 +122,7 @@ class _BalanceTabState extends State<BalanceTab> {
                           .palette()['redButton']!,
                       radius: 80,
                       titleStyle: TextStyle(
-                        fontSize: MediaQuery.of(context).textScaler.scale(14),
+                        fontSize: MediaQuery.of(context).textScaler.scale(18),
                         fontWeight: FontWeight.w600,
                         color: context
                             .watch<ThemeProvider>()

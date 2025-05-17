@@ -172,7 +172,7 @@ class IncomeChart extends StatelessWidget {
                   color: colorMap[entry.key],
                   radius: 80,
                   titleStyle: TextStyle(
-                    fontSize: MediaQuery.of(context).textScaler.scale(14),
+                    fontSize: MediaQuery.of(context).textScaler.scale(18),
                     fontWeight: FontWeight.w600,
                     color:
                         context.watch<ThemeProvider>().palette()['fixedBlack']!,

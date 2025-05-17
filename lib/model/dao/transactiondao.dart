@@ -122,7 +122,8 @@ class TransactionDao {
       //recorrer cada transacción
       for (var t in transactionsInCategory.docs) {
         Map<String, dynamic> transdata = t.data();
-        transdata['id'] = t.id;
+        transdata['id'] = t.id; //guardarlo en el mapa de transacciones
+        transdata['categoria'] = cat; //guardarlo en el mapa y poder cargar todas sus transacciones
         TransactionModel transaccion = TransactionModel.fromMap(transdata);
         //añadir la transacción a la lista
         transacciones.add(transaccion);
