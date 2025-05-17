@@ -58,8 +58,16 @@ class _TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: (_isLoading)
-          ? CircularProgressIndicator()
+      body: _isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Text("Cargando transacciones")
+                ],
+              ),
+            )
           : transacciones.isEmpty
               ? Center(
                   child: Text(
@@ -170,8 +178,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
     setState(() {
       _isLoading = true;
     });
-    var aux = await transactionDao
-        .getTransactionsByDate(context.read<ConfigurationProvider>().userRegistered!);
+    var aux = await transactionDao.getTransactionsByDate(
+        context.read<ConfigurationProvider>().userRegistered!);
     setState(() {
       transacciones = aux;
     });

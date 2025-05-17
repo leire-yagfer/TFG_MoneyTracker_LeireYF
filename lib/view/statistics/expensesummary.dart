@@ -16,11 +16,15 @@ class ExpenseTab extends StatefulWidget {
 
 class _ExpenseTabState extends State<ExpenseTab> {
   final TransactionDao transactionDao = TransactionDao();
-  Map<String, double> categoryTotalMap = {}; //Almacena las categorías como clave y como valor el total por categoría
-    Map<String, Color> categoryColorMap = {}; //Almacena los colores de las categorías, como clave la categoría y como valor el color
+  Map<String, double> categoryTotalMap =
+      {}; //Almacena las categorías como clave y como valor el total por categoría
+  Map<String, Color> categoryColorMap =
+      {}; //Almacena los colores de las categorías, como clave la categoría y como valor el color
   String? selectedYear; //Almacena el año seleccionado en el DropDownButton
   String selectedFilter =
       'all'; //Filtro por defecto -> se muestra el resumen de todos los movimeintos
+
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -33,6 +37,10 @@ class _ExpenseTabState extends State<ExpenseTab> {
     if (selectedFilter == 'year' && selectedYear == null) {
       return;
     }
+
+    setState(() {
+      _isLoading = true;
+    });
 
     final result = await transactionDao.getIncomeExpensesByCategory(
       filter: selectedFilter,
@@ -61,49 +69,31 @@ class _ExpenseTabState extends State<ExpenseTab> {
     setState(() {
       categoryTotalMap = tempData;
       categoryColorMap = tempColor;
+      _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        //Filtros (ubicados en la parte superior)
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Radio<String>(
-                value: 'all',
-                groupValue: selectedFilter,
-                onChanged: (value) {
-                  setState(() {
-                    selectedFilter = value!;
-                    selectedYear = null;
-                  });
-                  _loadData();
-                },
-              ),
-              Text(AppLocalizations.of(context)!.all),
-              Radio<String>(
-                value: 'year',
-                groupValue: selectedFilter,
-                onChanged: (value) {
-                  setState(() {
-                    selectedFilter = value!;
-                  });
-                  _loadData();
-                },
-              ),
-              Text(AppLocalizations.of(context)!.year),
-            ],
-          ),
-          if (selectedFilter == 'year') _buildYearPicker(),
-          categoryTotalMap.isEmpty
-              ? Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: MediaQuery.of(context).size.height * 0.05),
+    //Compruebo si todos los valores de las transacciones de las categorías es 0 para mostrar que no hay transacciones
+    bool allZero = categoryTotalMap.values.every((value) => value == 0);
+
+    return _isLoading
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text("Cargando datos"),
+              ],
+            ),
+          )
+        : (allZero || categoryTotalMap.isEmpty)
+            ? Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.05),
+                child: Center(
                   child: Text(
                     AppLocalizations.of(context)!.noTransactions,
                     style: TextStyle(
@@ -112,13 +102,51 @@ class _ExpenseTabState extends State<ExpenseTab> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                )
-              : SizedBox(
-                  child: ExpenseChart(dataMap: categoryTotalMap, colorMap: categoryColorMap),
                 ),
-        ],
-      ),
-    );
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  //Filtros (ubicados en la parte superior)
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Radio<String>(
+                          value: 'all',
+                          groupValue: selectedFilter,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedFilter = value!;
+                              selectedYear = null;
+                            });
+                            _loadData();
+                          },
+                        ),
+                        Text(AppLocalizations.of(context)!.all),
+                        Radio<String>(
+                          value: 'year',
+                          groupValue: selectedFilter,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedFilter = value!;
+                            });
+                            _loadData();
+                          },
+                        ),
+                        Text(AppLocalizations.of(context)!.year),
+                      ],
+                    ),
+                    if (selectedFilter == 'year') _buildYearPicker(),
+                    SizedBox(
+                      child: ExpenseChart(
+                        dataMap: categoryTotalMap,
+                        colorMap: categoryColorMap,
+                      ),
+                    ),
+                  ],
+                ),
+              );
   }
 
   ///Construir el selector de año

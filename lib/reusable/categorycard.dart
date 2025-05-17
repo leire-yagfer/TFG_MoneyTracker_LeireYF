@@ -137,7 +137,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                                 return AlertDialog(
                                                   title: Text(AppLocalizations
                                                           .of(context)!
-                                                      .newCategoryColorTitle),
+                                                      .newCategoryColorTitle, overflow: TextOverflow.ellipsis,),
                                                   //si hay colores disponibles, les muestro, sino muestra mensaje de que no hay colores disponibles. Es útil para que si se sambia el número de categorías permitidas, pues no haya errores --> Control de error
                                                   content: availableColors
                                                           .isNotEmpty
@@ -207,7 +207,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                                 SizedBox(width: 12),
                                                 Text(AppLocalizations.of(
                                                         context)!
-                                                    .newCategoryColorLabel),
+                                                    .newCategoryColorLabel, overflow: TextOverflow.ellipsis,),
                                                 Icon(Icons.arrow_drop_down),
                                               ],
                                             ),

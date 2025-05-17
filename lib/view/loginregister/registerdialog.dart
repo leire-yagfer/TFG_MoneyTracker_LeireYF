@@ -92,126 +92,148 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
       child: Dialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: SingleChildScrollView(
-              child: Padding(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.02),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ReusableTxtFormFieldLoginRegister(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: _emailController,
-                    labelText: AppLocalizations.of(context)!.email,
-                    hintText: AppLocalizations.of(context)!.emailhint,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.invalidemail;
-                      }
-                      String emailPattern =
-                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-                      RegExp regex = RegExp(emailPattern);
-                      if (!regex.hasMatch(value)) {
-                        return AppLocalizations.of(context)!.invalidemail;
-                      }
-                      return null;
-                    },
+          child: _isLoading
+              ? Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text("Cargando"),
+                    ],
                   ),
+                )
+              : SingleChildScrollView(
+                  child: Padding(
+                  padding:
+                      EdgeInsets.all(MediaQuery.of(context).size.height * 0.02),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ReusableTxtFormFieldLoginRegister(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _emailController,
+                          labelText: AppLocalizations.of(context)!.email,
+                          hintText: AppLocalizations.of(context)!.emailhint,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppLocalizations.of(context)!.invalidemail;
+                            }
+                            String emailPattern =
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                            RegExp regex = RegExp(emailPattern);
+                            if (!regex.hasMatch(value)) {
+                              return AppLocalizations.of(context)!.invalidemail;
+                            }
+                            return null;
+                          },
+                        ),
 
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  //EL KEY LO USO PARA VALIDAR EL CAMPO Y QUE SEAN IGUALES LAS CONSTRASEÑAS --> MIRAR CÓMO HACER PARA QUE NO DE ERROR EN EL REUSABLE
-                  ReusableTxtFormFieldLoginRegister(
-                    key: _passwordKey,
-                    controller: _passwordController,
-                    labelText: AppLocalizations.of(context)!.passwordr,
-                    hintText: AppLocalizations.of(context)!.passwordhintr,
-                    obscureText: true, // empieza oculto
-                    passwordIcon: true, // muestra el icono para ver/ocultar
-                    validator: (value) {
-                      if (value == null || value.isEmpty || value.length < 6) {
-                        return AppLocalizations.of(context)!.newpassworderror;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  ReusableTxtFormFieldLoginRegister(
-                    key: _repeatedPasswordKey,
-                    controller: _repeatedpasswordController,
-                    labelText: AppLocalizations.of(context)!.repeatpassword,
-                    hintText: AppLocalizations.of(context)!.repeatpasswordhint,
-                    obscureText: true,
-                    passwordIcon: true,
-                    validator: (value) {
-                      if (value == null ||
-                          value.isEmpty ||
-                          value != _passwordController.text) {
-                        return AppLocalizations.of(context)!
-                            .nocoincidencedpasswords;
-                      }
-                      return null;
-                    },
-                  ),
-                  if (_passwordMismatchError != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        _passwordMismatchError!,
-                        style: TextStyle(color: Colors.red, fontSize: 12),
-                      ),
-                    ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.03,
-                  ),
-                  ReusableRowLoginSignup(
-                    text1: AppLocalizations.of(context)!.signininsignup1,
-                    text2: AppLocalizations.of(context)!.signininsignup2,
-                    onClick: () {
-                      Navigator.pop(context);
-                      showLoginDialog(context);
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.03,
-                  ),
-                  ReusableButton(
-                      onClick: () async {
-                        await _register();
-                        if (_errorMessage == null) {
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainApp()));
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(_errorMessage!),
-                              content: Text(_errorMessage!),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("OK"),
-                                ),
-                              ],
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02),
+                        //EL KEY LO USO PARA VALIDAR EL CAMPO Y QUE SEAN IGUALES LAS CONSTRASEÑAS --> MIRAR CÓMO HACER PARA QUE NO DE ERROR EN EL REUSABLE
+                        ReusableTxtFormFieldLoginRegister(
+                          key: _passwordKey,
+                          controller: _passwordController,
+                          labelText: AppLocalizations.of(context)!.passwordr,
+                          hintText: AppLocalizations.of(context)!.passwordhintr,
+                          obscureText: true, // empieza oculto
+                          passwordIcon:
+                              true, // muestra el icono para ver/ocultar
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length < 6) {
+                              return AppLocalizations.of(context)!
+                                  .newpassworderror;
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02),
+                        ReusableTxtFormFieldLoginRegister(
+                          key: _repeatedPasswordKey,
+                          controller: _repeatedpasswordController,
+                          labelText:
+                              AppLocalizations.of(context)!.repeatpassword,
+                          hintText:
+                              AppLocalizations.of(context)!.repeatpasswordhint,
+                          obscureText: true,
+                          passwordIcon: true,
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value != _passwordController.text) {
+                              return AppLocalizations.of(context)!
+                                  .nocoincidencedpasswords;
+                            }
+                            return null;
+                          },
+                        ),
+                        if (_passwordMismatchError != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              _passwordMismatchError!,
+                              style: TextStyle(color: Colors.red, fontSize: 12),
                             ),
-                          );
-                        }
-                      },
-                      textButton: AppLocalizations.of(context)!.register,
-                      colorButton: 'buttonWhiteBlack',
-                      colorTextButton: 'buttonBlackWhite',
-                      buttonHeight: 0.08,
-                      buttonWidth: 0.5),
-                ],
-              ),
-            ),
-          ))),
+                          ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.03,
+                        ),
+                        ReusableRowLoginSignup(
+                          text1: AppLocalizations.of(context)!.signininsignup1,
+                          text2: AppLocalizations.of(context)!.signininsignup2,
+                          onClick: () {
+                            Navigator.pop(context);
+                            showLoginDialog(context);
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.03,
+                        ),
+                        ReusableButton(
+                            onClick: () async {
+                              await _register();
+                              if (_errorMessage == null) {
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MainApp()));
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(_errorMessage!),
+                                    content: Text(_errorMessage!),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                            textButton: AppLocalizations.of(context)!.register,
+                            colorButton: 'buttonWhiteBlack',
+                            colorTextButton: 'buttonBlackWhite',
+                            buttonHeight: 0.08,
+                            buttonWidth: 0.5),
+                      ],
+                    ),
+                  ),
+                ))),
     );
   }
 
