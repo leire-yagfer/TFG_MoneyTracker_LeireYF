@@ -214,7 +214,7 @@ class _ConfigurationPageState extends State<ConfigurationPage>
                                         ? Column(
                                             children: [
                                               Text(AppLocalizations.of(context)!
-                                                  .selectCurrency),
+                                                  .selectSecondaryCurrency),
                                               SizedBox(
                                                 width: double.infinity,
                                                 child: DropdownButton<Currency>(

@@ -361,7 +361,7 @@ class _CategoryCardState extends State<CategoryCard> {
                           builder: (context) {
                             return AlertDialog(
                               title: Text(
-                                  "Editar categoría"),
+                                  AppLocalizations.of(context)!.editCategory),
                               content: StatefulBuilder(
                                 builder: (context, setStateDialog) {
                                   return Column(
@@ -370,11 +370,11 @@ class _CategoryCardState extends State<CategoryCard> {
                                       TextFormField(
                                         controller: _editCategoryNameController,
                                         decoration: InputDecoration(
-                                          labelText: "Nuevo nombre categoría",
+                                          labelText: AppLocalizations.of(context)!.changeCategoryName,
                                         ),
                                       ),
                                       SizedBox(height: 10),
-                                      Text("Selecciona el color"),
+                                      Text(AppLocalizations.of(context)!.newCategoryColorTitle),
                                       SizedBox(height: 10),
                                       Wrap(
                                         spacing: 8.0,
@@ -451,14 +451,14 @@ class _CategoryCardState extends State<CategoryCard> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
-                                          content: Text("Categoría actualizada correctamente"),
+                                          content: Text(AppLocalizations.of(context)!.correctEditingCategory),
                                           duration: Duration(seconds: 1),
                                         ),
                                       );
                                     }
                                   },
                                   child:
-                                      Text("Guardar cambios"),
+                                      Text(AppLocalizations.of(context)!.saveChanges),
                                 ),
                               ],
                             );
@@ -525,7 +525,7 @@ class _CategoryCardState extends State<CategoryCard> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    "No se pueden quedar a 0 las categorías"),
+                                    AppLocalizations.of(context)!.cannotDeleteCategory),
                                 duration: Duration(seconds: 1),
                               ),
                             );

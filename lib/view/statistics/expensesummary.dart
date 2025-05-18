@@ -95,7 +95,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
     //Compruebo si todos los valores de las transacciones de las categorías es 0 para mostrar que no hay transacciones
     bool allZero = categoryTotalMap.values.every((value) => value == 0);
     return _isLoading
-        ? ReusableCircleProgressIndicator(text: "Cragando datos")
+        ? ReusableCircleProgressIndicator(text: AppLocalizations.of(context)!.loadingData)
         : (allZero || categoryTotalMap.isEmpty)
             ? Padding(
                 padding: EdgeInsets.symmetric(

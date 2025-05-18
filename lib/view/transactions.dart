@@ -78,7 +78,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
     return Scaffold(
       body: _isLoading
           ? ReusableCircleProgressIndicator(
-              text: "cargando transacciones",
+              text: AppLocalizations.of(context)!.loadingTransactions,
           )
           : userTransactions.isEmpty
               ? Center(
@@ -241,7 +241,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                        "Transacción eliminada correctamente"),
+                                        AppLocalizations.of(context)!.correctTransactionDeleting),
                                     duration: Duration(
                                         seconds: 1), //duración del SnackBar
                                   ),
@@ -300,12 +300,12 @@ class _TransactionsPageState extends State<TransactionsPage> {
                 SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                 ReusableTxtFormFieldShowDetailsTransaction(
                   text: importeController,
-                  labelText: "Importe",
+                  labelText: AppLocalizations.of(context)!.amount,
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                 ReusableTxtFormFieldShowDetailsTransaction(
                   text: fechaController,
-                  labelText: "Fecha",
+                  labelText: AppLocalizations.of(context)!.date,
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                 ReusableTxtFormFieldShowDetailsTransaction(
@@ -316,14 +316,14 @@ class _TransactionsPageState extends State<TransactionsPage> {
                 if (descripcionController.text.isNotEmpty)
                   ReusableTxtFormFieldShowDetailsTransaction(
                     text: descripcionController,
-                    labelText: "Descripción",
+                    labelText: AppLocalizations.of(context)!.description,
                   ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text("cerrar"),
+                      child: Text(AppLocalizations.of(context)!.close),
                     ),
                   ],
                 ),

@@ -23,6 +23,11 @@
     "signininsignup1": "¿Ya tienes cuenta?",
     "signininsignup2": "Iniciar sesión",
 
+    "signingIn": "Iniciando sesión...",
+    "loadingData": "Cargando datos",
+    "loadingCategories": "Cargando categorías",
+    "loadingTransactions": "Cargando transacciones",
+
     "home": "Home",
     "movements": "Movimientos",
     "stadistics": "Estadísticas",
@@ -37,11 +42,13 @@
     "selectLanguaje": "Seleccione el idioma de la aplicación",
     "wantToUseSecondCurrency": "¿Quieres trabajar con una segunda moneda?",
     "selectCurrency": "Seleccione la moneda en la que quiere trabajar",
+    "selectSecondaryCurrency": "Seleccione la moneda secundaria en la que quiere trabajar",
     "logout": "Cerrar sesión",
     "logoutdialogtitle": "Confirmar cierre de sesión",
     "logoutdialogcontent": "¿Estás seguro de que deseas cerrar sesión?",
     "cancel": "Cancelar",
     "accept": "Aceptar",
+    "close": "Cerrar",
 
     "addIncome": "Añadir ingreso",
     "addExpense": "Añadir gasto",
@@ -62,6 +69,7 @@
     "dateError": "Por favor, selecciona una fecha",
 
     "correctTransactionAdding": "Transacción creada con éxito",
+    "correctTransactionDeleting": "Transacción eliminada con éxito",
 
     "noTransactions": "No hay transacciones registradas",
 
@@ -98,5 +106,11 @@
     "newCategoryColorTitle": "Seleccione un color",
     "noColorsAvailable": "No hay colores disponibles",
     "correctCategoryAdding": "Categoría creada con éxito",
-    "correctCategoryDeleting": "Categoría eliminada con éxito"
+    "correctCategoryDeleting": "Categoría eliminada con éxito",
+    "correctEditingCategory": "catgeoría actualizada con éxito",
+    "saveChanges": "Guardar cambios",
+
+    "editCategory": "Editar categoría",
+    "changeCategoryName": "Nuevo nombre de la catgeoría",
+    "cannotDeleteCategory": "No se pueden quedar a 0 las categorías"
 }

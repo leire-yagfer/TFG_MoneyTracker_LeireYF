@@ -94,7 +94,7 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
       child: Dialog(
           child: _isLoading
               ? ReusableCircleProgressIndicator(
-                  text: "inciiando sesión",
+                  text: AppLocalizations.of(context)!.signingIn,
               )
               : Container(
                   decoration: BoxDecoration(
@@ -222,7 +222,8 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text("OK"),
+                                          child: Text(
+                                              AppLocalizations.of(context)!.accept),
                                         ),
                                       ],
                                     ),

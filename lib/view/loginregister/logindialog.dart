@@ -38,7 +38,7 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
   Widget build(BuildContext context) {
     return Dialog(
         child: _isLoading
-            ? ReusableCircleProgressIndicator(text: "iniciando sesion")
+            ? ReusableCircleProgressIndicator(text: AppLocalizations.of(context)!.signingIn)
             : Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -119,7 +119,7 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text("OK"),
+                                        child: Text(AppLocalizations.of(context)!.accept),
                                       ),
                                     ],
                                   );

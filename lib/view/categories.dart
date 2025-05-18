@@ -62,7 +62,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
     //Se separan las categorías en dos listas: una para ingresos y otra para gastos
 
     return _isLoading
-        ? ReusableCircleProgressIndicator(text: "Cragando categorías")  
+        ? ReusableCircleProgressIndicator(text: AppLocalizations.of(context)!.loadingCategories)  
         : Scaffold(
             body: SingleChildScrollView(
               child: Column(

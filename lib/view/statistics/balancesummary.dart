@@ -84,7 +84,7 @@ class _BalanceTabState extends State<BalanceTab> {
     double showExpense = totalExpense; //> 0 ? totalExpense : 0.01;
 
     return _isLoading
-        ? ReusableCircleProgressIndicator(text: "cargando datos")
+        ? ReusableCircleProgressIndicator(text: AppLocalizations.of(context)!.loadingData)
         : totalIncome == 0 && totalExpense == 0
             ? Padding(
                 padding: EdgeInsets.symmetric(

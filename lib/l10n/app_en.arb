@@ -22,6 +22,11 @@
     "nocoincidencedpasswords": "Passwords do not match",
     "signininsignup1": "Already have an account?",
     "signininsignup2": "Sign in",
+
+    "signingIn": "Signing in...",
+    "loadingData": "Loading data",
+    "loadingCategories": "Loading categories",
+    "loadingTransactions": "Loading transactions",
     
     "home": "Home",
     "movements": "Movements",
@@ -37,11 +42,13 @@
     "selectLanguaje": "Select the aplication languaje",
     "wantToUseSecondCurrency": "Do you want to use a second currency?",
     "selectCurrency": "Select the currency you want to work with",
+    "selectSecondaryCurrency": "Select the secondary currency you want to work with",
     "logout": "Log out",
     "logoutdialogtitle": "Confirm log out",
     "logoutdialogcontent": "Are you sure you want to log out?",
     "cancel": "Cancel",
     "accept": "Accept",
+    "close": "Close",
 
     "addIncome": "Add income",
     "addExpense": "Add expense",
@@ -62,6 +69,7 @@
     "dateError": "Please select a date",
 
     "correctTransactionAdding": "Transaction successfully created",
+    "correctTransactionDeleting": "Transaction successfully deleted",
 
     "noTransactions": "No transactions recorded",
 
@@ -98,5 +106,11 @@
     "newCategoryColorTitle": "Select a color",
     "noColorsAvailable": "No colors available",
     "correctCategoryAdding": "Category successfully created",
-    "correctCategoryDeleting": "Category successfully eliminated"
+    "correctCategoryDeleting": "Category successfully eliminated",
+    "correctEditingCategory": "Category successfully updated",
+    "saveChanges": "Save changes",
+
+    "editCategory": "Edit category",
+    "changeCategoryName": "New category name",
+    "cannotDeleteCategory": "Categories cannot be reduced to zero"
 }
