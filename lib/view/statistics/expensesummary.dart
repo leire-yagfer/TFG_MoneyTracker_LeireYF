@@ -29,6 +29,21 @@ class _ExpenseTabState extends State<ExpenseTab> {
   void initState() {
     super.initState();
     _loadData(); //Cargo los datos según se inicia la pantalla
+    //escucho cambios en la configuración para detectar cuando se cambia la moneda
+    context.read<ConfigurationProvider>().addListener(_onConfigurationChanged);
+  }
+
+  //función que se ejecuta automáticamente al cambiar la configuración, tras haberle añadido el listener
+  void _onConfigurationChanged() {
+    _loadData(); //recargo las transacciones con la nueva moneda
+  }
+
+  @override
+  void dispose() {
+    context
+        .read<ConfigurationProvider>()
+        .removeListener(_onConfigurationChanged);
+    super.dispose();
   }
 
   ///Cargar los datos desde la base de datos por filtros -> o mostrar todos o por año (seleccionado en un DropDownButton)

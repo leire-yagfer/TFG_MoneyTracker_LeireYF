@@ -28,9 +28,23 @@ class _BalanceTabState extends State<BalanceTab> {
   @override
   void initState() {
     super.initState();
-    if (mounted) {
-      _loadData(); //Cargo los datos según se inicia la pantalla
-    }
+
+    _loadData(); //Cargo los datos según se inicia la pantalla
+    //escucho cambios en la configuración para detectar cuando se cambia la moneda
+    context.read<ConfigurationProvider>().addListener(_onConfigurationChanged);
+  }
+
+  //función que se ejecuta automáticamente al cambiar la configuración, tras haberle añadido el listener
+  void _onConfigurationChanged() {
+    _loadData(); //recargo las transacciones con la nueva moneda
+  }
+
+  @override
+  void dispose() {
+    context
+        .read<ConfigurationProvider>()
+        .removeListener(_onConfigurationChanged);
+    super.dispose();
   }
 
   ///Cargar los datos desde la base de datos
@@ -65,8 +79,8 @@ class _BalanceTabState extends State<BalanceTab> {
   @override
   Widget build(BuildContext context) {
     //Evito que la gráfica desaparezca si los valores son 0
-    double showIncome = totalIncome ;//> 0 ? totalIncome : 0.01;
-    double showExpense = totalExpense ;//> 0 ? totalExpense : 0.01;
+    double showIncome = totalIncome; //> 0 ? totalIncome : 0.01;
+    double showExpense = totalExpense; //> 0 ? totalExpense : 0.01;
 
     return _isLoading
         ? Center(

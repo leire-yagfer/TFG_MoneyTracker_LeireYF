@@ -20,14 +20,30 @@ class TransactionsPage extends StatefulWidget {
 
 class _TransactionsPageState extends State<TransactionsPage> {
   TransactionDao transactionDao = TransactionDao();
-  CategoryDao categoriaDao = CategoryDao();
-  List<TransactionModel> transacciones =
+  CategoryDao categoryDao = CategoryDao();
+  List<TransactionModel> userTransactions =
       []; //creo la lista de transacciones que va a albergar aquellas que sean del usuario logeado
   @override
   void initState() {
     super.initState();
     //llamo a la función que muestra las transacciones de la BD del usuario en el momento en el que se cambia a este página
     _cargarTransacciones();
+
+    //escucho cambios en la configuración para detectar cuando se cambia la moneda
+    context.read<ConfigurationProvider>().addListener(_onConfigurationChanged);
+  }
+
+  //función que se ejecuta automáticamente al cambiar la configuración, tras haberle añadido el listener
+  void _onConfigurationChanged() {
+    _cargarTransacciones(); //recargo las transacciones con la nueva moneda
+  }
+
+  @override
+  void dispose() {
+    context
+        .read<ConfigurationProvider>()
+        .removeListener(_onConfigurationChanged);
+    super.dispose();
   }
 
   bool _isLoading = true;
@@ -68,7 +84,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                 ],
               ),
             )
-          : transacciones.isEmpty
+          : userTransactions.isEmpty
               ? Center(
                   child: Text(
                     AppLocalizations.of(context)!.noTransactions,
@@ -78,9 +94,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   ),
                 )
               : ListView.builder(
-                  itemCount: transacciones.length,
+                  itemCount: userTransactions.length,
                   itemBuilder: (context, index) {
-                    TransactionModel transaccion = transacciones[index];
+                    TransactionModel transaccion = userTransactions[index];
 
                     //obtengo el color de fondo sobre el que voy a ajustar el color rojo y verde para que se vean de manera correcta
                     Color transationCardBackgroundColor =
@@ -233,7 +249,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
         context.read<ConfigurationProvider>().userRegistered!,
         context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode);
     setState(() {
-      transacciones = aux;
+      userTransactions = aux;
       _isLoading = false;
     });
   }
