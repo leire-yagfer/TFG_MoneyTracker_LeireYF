@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusabletxtformfieldshowtransaction.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 import 'package:intl/intl.dart';
@@ -155,12 +156,13 @@ class _TransactionsPageState extends State<TransactionsPage> {
                       color: transaccion.transactionCategory
                           .categoryColor, //Color de fondo de la tarjeta según categoría
                       child: ListTile(
-                        //onTap: () => _mostrarDetalleEditable(transaccion, index),
+                        onTap: () => _showTransactionDetail(transaccion, index),
                         contentPadding: EdgeInsets.all(
                             MediaQuery.of(context).size.width * 0.01),
                         leading: icono, //Flecha hacia arriba o hacia abajo
                         title: Text(
                           transaccion.transactionTittle,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: context
@@ -190,28 +192,31 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Column(children: [
-                              Text(
-                                  '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: MediaQuery.of(context)
-                                        .textScaler
-                                        .scale(14),
-                                    color:
-                                        rowAndImportColor, //Importe con color según tipo
-                                  )),
-                              Text(
-                                  '${transaccion.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa secundaria en uso
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: MediaQuery.of(context)
-                                        .textScaler
-                                        .scale(14),
-                                    color:
-                                        rowAndImportColor, //Importe con color según tipo
-                                  )),
-                            ]),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                    '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: MediaQuery.of(context)
+                                          .textScaler
+                                          .scale(14),
+                                      color:
+                                          rowAndImportColor, //Importe con color según tipo
+                                    )),
+                                Text(
+                                    '${transaccion.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa secundaria en uso
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: MediaQuery.of(context)
+                                          .textScaler
+                                          .scale(14),
+                                      color:
+                                          rowAndImportColor, //Importe con color según tipo
+                                    )),
+                              ],
+                            ),
                             SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * 0.01),
@@ -243,7 +248,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
     );
   }
 
-  //cargar la stransacciones del usuario registradas en la base de datos ordenadas por fecha para mostrarles en orden
+  //cargar las transacciones del usuario registradas en la base de datos ordenadas por fecha para mostrarles en orden
   void _cargarTransacciones() async {
     setState(() {
       _isLoading = true;
@@ -256,5 +261,66 @@ class _TransactionsPageState extends State<TransactionsPage> {
       userTransactions = aux;
       _isLoading = false;
     });
+  }
+
+  void _showTransactionDetail(TransactionModel transaccion, int index) {
+    String tituloController = transaccion.transactionTittle;
+    TextEditingController importeController = TextEditingController(
+        text: transaccion.transactionImport.toStringAsFixed(2));
+    TextEditingController fechaController = TextEditingController(
+        text: _formatearFecha(transaccion.transactionDate));
+    TextEditingController categoriaController = TextEditingController(
+        text: transaccion.transactionCategory.categoryName);
+    TextEditingController? descripcionController =
+        TextEditingController(text: transaccion.transactionDescription);
+
+    showDialog(
+      barrierDismissible: true, //permitir cerrar el diálogo al hacer clic fuera
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(tituloController),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                ReusableTxtFormFieldShowDetailsTransaction(
+                  text: importeController,
+                  labelText: "Importe",
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                ReusableTxtFormFieldShowDetailsTransaction(
+                  text: fechaController,
+                  labelText: "Fecha",
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                ReusableTxtFormFieldShowDetailsTransaction(
+                  text: categoriaController,
+                  labelText: "Categoría",
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                if (descripcionController.text.isNotEmpty)
+                  ReusableTxtFormFieldShowDetailsTransaction(
+                    text: descripcionController,
+                    labelText: "Descripción",
+                  ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("cerrar"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

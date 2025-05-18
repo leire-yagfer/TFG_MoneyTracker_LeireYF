@@ -6,7 +6,7 @@ import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 class ReusableTxtFormFieldNewTransactionCategory extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
-  final String hintText;
+  final String? hintText;
   final TextInputType keyboardType;
   final bool readOnly; //especial para el campo de selección de fecha paraq ue en ese TextFormField no se pueda escribir
   final VoidCallback? onTap; //especial para la selección de fecha
