@@ -8,7 +8,7 @@ import 'package:tfg_monetracker_leireyafer/model/util/firebasedb.dart';
 class CategoryDao {
   CollectionReference data = Firebasedb.data;
 
-  ///Obtener todas las categorías
+  ///Obtener todas las categorías de la BD
   Future<List<Category>> getCategories(UserModel usuario) async {
     //1. sacar el docuemnto del user --> de un usuario en concreto pq se lo paso por parametro
     var userRef = await data.doc(usuario.userId).get();
@@ -29,16 +29,30 @@ class CategoryDao {
           categoryColor: Color.fromARGB(255, categoryData["cr"],
               categoryData["cg"], categoryData["cb"])));
     }
+    userCategoriesList.sort(
+      (a, b) =>
+          a.categoryName.toLowerCase().compareTo(b.categoryName.toLowerCase()),
+    );
     return userCategoriesList;
   }
 
-  ///Obtener categoría por tipo
+  ///Obtener categoría por tipo para mostrarla en el dropDownButton de añadir ingreso/gasto y en la página de categorías
   Future<List<Category>> getCategoriesByType(UserModel u, bool type) async {
     //cojo todas las categorias
     List<Category> userCategories = await getCategories(u);
 
     //me quedo con aquellas que tengan la booleana en el mismo párametro que "tipo"
     userCategories.retainWhere((uc) => uc.categoryIsIncome == type);
+
+    //ordeno alfabéticamente por nombre de categoría
+    userCategories.sort(
+      (a, b) =>
+          a.categoryName.toLowerCase().compareTo(b.categoryName.toLowerCase()),
+    );
+    for (var c in userCategories) {
+      print('"${c.categoryName}"');
+    }
+
     return userCategories;
   }
 
@@ -96,7 +110,7 @@ class CategoryDao {
         .set({"isincome": true, "cr": 245, "cg": 210, "cb": 85});
   }
 
-  //Actualizar categoría 
+  //Actualizar categoría
   Future<void> updateCategory({
     required UserModel u,
     required Category oldCategory,
@@ -110,7 +124,7 @@ class CategoryDao {
     final oldCategoryDoc = categoriesCollection.doc(oldCategory.categoryName);
     final newCategoryDoc = categoriesCollection.doc(newCategory.categoryName);
 
-    //Compruebo si se ha cambiado el nombre 
+    //Compruebo si se ha cambiado el nombre
     if (oldCategory.categoryName == newCategory.categoryName) {
       //si se ha cambiado solo el nombre, unicamnete se actualizan los datos (color, ingreso/gasto, evito errores aunque eso no lo pueda cambair) de la categoría existente
       await oldCategoryDoc.update({

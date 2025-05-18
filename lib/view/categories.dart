@@ -23,65 +23,78 @@ class _CategoriesPageState extends State<CategoriesPage> {
   List<Category> listIncomes = [];
   List<Category> listExpenses = [];
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
     cargarCategorias(); //Cargar categorías
   }
 
-  ///Método para cargar las categorías desde la base de datos
+  ///Método para cargar las categoríaspor tipo desde la base de datos
   Future<void> cargarCategorias() async {
-    List<Category> categoriasDB = await categoriaDao.getCategories(context
-        .read<ConfigurationProvider>()
-        .userRegistered!); //Obtiene las categorías del usuario actual
-    //Se ordenan las categorías por tipo (ingreso o gasto)
-    categoriasDB.sort((a, b) {
-      if (a.categoryIsIncome && !b.categoryIsIncome) {
-        return -1; // a es ingreso y b es gasto
-      } else if (!a.categoryIsIncome && b.categoryIsIncome) {
-        return 1; // a es gasto y b es ingreso
-      } else {
-        return 0; // ambos son ingresos o ambos son gastos
-      }
-    });
     setState(() {
-      categorias = categoriasDB; //Actualiza la lista con los objetos Categoria
-      listIncomes =
-          categorias.where((categoria) => categoria.categoryIsIncome).toList();
-      listExpenses =
-          categorias.where((categoria) => !categoria.categoryIsIncome).toList();
+      _isLoading = true;
     });
+
+    final user = context.read<ConfigurationProvider>().userRegistered!;
+
+    //Obtengo las categorías de tipo ingreso (type = true)
+    List<Category> incomes = await categoriaDao.getCategoriesByType(user, true);
+
+    //Obtengo las categorías de tipo gasto (type = false)
+    List<Category> expenses =
+        await categoriaDao.getCategoriesByType(user, false);
+
+    //actualizo el estado con las listas ya ordenadas y filtradas
+    setState(() {
+      listIncomes = incomes;
+      listExpenses = expenses;
+      _isLoading = false;
+    });
+
+    
   }
 
   @override
   Widget build(BuildContext context) {
     //Se separan las categorías en dos listas: una para ingresos y otra para gastos
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (listIncomes.isNotEmpty)
-              CategoryCard(
-                title: AppLocalizations.of(context)!.income,
-                categoriesList: listIncomes,
-                newCategoryIsIncome: true,
-                categoriesColorMap: StaticData
-                    .incomeCategoriesColorMap, //paso la clase de colores disponibles para las categorías de tipo ingreso
-                listAllCategories: listExpenses + listIncomes,
+    return _isLoading
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                Text("Cargando categorías")
+              ],
+            ),
+          )
+        : Scaffold(
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  if (listIncomes.isNotEmpty)
+                    CategoryCard(
+                      title: AppLocalizations.of(context)!.income,
+                      categoriesList: listIncomes,
+                      newCategoryIsIncome: true,
+                      categoriesColorMap: StaticData
+                          .incomeCategoriesColorMap, //paso la clase de colores disponibles para las categorías de tipo ingreso
+                      listAllCategories: listExpenses + listIncomes,
+                    ),
+                  if (listExpenses.isNotEmpty)
+                    CategoryCard(
+                      title: AppLocalizations.of(context)!.expenses,
+                      categoriesList: listExpenses,
+                      newCategoryIsIncome: false,
+                      categoriesColorMap: StaticData
+                          .expenseCategoriesColorMap, //paso la clase de colores disponibles para las categorías de tipo gasto
+                      listAllCategories: listExpenses + listIncomes,
+                    ),
+                ],
               ),
-            if (listExpenses.isNotEmpty)
-              CategoryCard(
-                title: AppLocalizations.of(context)!.expenses,
-                categoriesList: listExpenses,
-                newCategoryIsIncome: false,
-                categoriesColorMap: StaticData
-                    .expenseCategoriesColorMap, //paso la clase de colores disponibles para las categorías de tipo gasto
-                listAllCategories: listExpenses + listIncomes,
-              ),
-          ],
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

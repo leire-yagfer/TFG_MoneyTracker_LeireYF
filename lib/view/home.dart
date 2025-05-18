@@ -75,7 +75,7 @@ class HomePage extends StatelessWidget {
         context.read<ConfigurationProvider>().userRegistered!,
         color !=
             Provider.of<ThemeProvider>(context, listen: false).palette()[
-                'redButton']!); //Obtener categorías del usuario en función del color. EN este caso le paso el rojo porque si es rojo va a mostrar los que sean de gatsos y sino los verdes.
+                'redButton']!); //Obtener categorías del usuario en función del color. En este caso le paso el rojo porque si es rojo va a mostrar los que sean de gatsos y sino los verdes.
 
     showDialog(
       context: context,
@@ -137,7 +137,8 @@ class HomePage extends StatelessWidget {
                           controller: _cantidadController,
                           keyboardType: TextInputType.number, //solo números
                           labelText: AppLocalizations.of(context)!.quantity,
-                          hintText: "${AppLocalizations.of(context)!.quantityHint} (${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol})",
+                          hintText:
+                              "${AppLocalizations.of(context)!.quantityHint} (${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol})",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return AppLocalizations.of(context)!
@@ -269,7 +270,9 @@ class HomePage extends StatelessWidget {
 
                                 //Insertar transacción en la base de datos
                                 await TransactionDao().insertTransaction(
-                                    context.read<ConfigurationProvider>().userRegistered!,
+                                    context
+                                        .read<ConfigurationProvider>()
+                                        .userRegistered!,
                                     transaccion);
                                 await context
                                     .read<ConfigurationProvider>()

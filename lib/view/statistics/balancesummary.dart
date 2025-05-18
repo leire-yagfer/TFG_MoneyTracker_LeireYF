@@ -43,14 +43,16 @@ class _BalanceTabState extends State<BalanceTab> {
       u: context.read<ConfigurationProvider>().userRegistered!,
       filter: selectedFilter,
       year: selectedYear,
-      actualCurrency: context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode!,
+      actualCurrency:
+          context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
     );
     final totalExpenseResult = await transaccionDao.getTotalByType(
       isIncome: false,
       u: context.read<ConfigurationProvider>().userRegistered!,
       filter: selectedFilter,
       year: selectedYear,
-      actualCurrency: context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode!,
+      actualCurrency:
+          context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
     );
 
     setState(() {
@@ -63,8 +65,8 @@ class _BalanceTabState extends State<BalanceTab> {
   @override
   Widget build(BuildContext context) {
     //Evito que la gráfica desaparezca si los valores son 0
-    double showIncome = totalIncome > 0 ? totalIncome : 0.01;
-    double showExpense = totalExpense > 0 ? totalExpense : 0.01;
+    double showIncome = totalIncome ;//> 0 ? totalIncome : 0.01;
+    double showExpense = totalExpense ;//> 0 ? totalExpense : 0.01;
 
     return _isLoading
         ? Center(
@@ -77,111 +79,130 @@ class _BalanceTabState extends State<BalanceTab> {
               ],
             ),
           )
-        : SingleChildScrollView(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //Filtros (ubicados en la parte superior)
-                  Row(
+        : totalIncome == 0 && totalExpense == 0
+            ? Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.05),
+                child: Center(
+                  child: Text(
+                    AppLocalizations.of(context)!.noTransactions,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).textScaler.scale(30),
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Center(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Radio<String>(
-                        value: 'all',
-                        groupValue: selectedFilter,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedFilter = value!;
-                            selectedYear = null;
-                          });
-                          _loadData();
-                        },
-                      ),
-                      Text(AppLocalizations.of(context)!.all),
-                      Radio<String>(
-                        value: 'year',
-                        groupValue: selectedFilter,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedFilter = value!;
-                          });
-                          _loadData();
-                        },
-                      ),
-                      Text(AppLocalizations.of(context)!.year),
-                    ],
-                  ),
-                  if (selectedFilter == 'year') _buildYearPicker(),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  //Gráfica circular --> no está en un método pq es única
-                  SizedBox(
-                     height: MediaQuery.of(context).size.height * 0.45,
-                    child: PieChart(
-                      PieChartData(
-                        //Solo cuenta con dos secciones: Ingresos y Gastos
-                        sections: [
-                          PieChartSectionData(
-                            value: showIncome,
-                            title:
-                                "${totalIncome.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
-                            color: context
-                                .watch<ThemeProvider>()
-                                .palette()['greenButton']!,
-                            radius: 80,
-                            titleStyle: TextStyle(
-                              fontSize:
-                                  MediaQuery.of(context).textScaler.scale(18),
-                              fontWeight: FontWeight.w600,
-                              color: context
-                                  .watch<ThemeProvider>()
-                                  .palette()['fixedBlack']!,
-                            ),
+                      //Filtros (ubicados en la parte superior)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Radio<String>(
+                            value: 'all',
+                            groupValue: selectedFilter,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedFilter = value!;
+                                selectedYear = null;
+                              });
+                              _loadData();
+                            },
                           ),
-                          PieChartSectionData(
-                            value: showExpense,
-                            title:
-                                "${totalExpense.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
-                            color: context
-                                .watch<ThemeProvider>()
-                                .palette()['redButton']!,
-                            radius: 80,
-                            titleStyle: TextStyle(
-                              fontSize:
-                                  MediaQuery.of(context).textScaler.scale(18),
-                              fontWeight: FontWeight.w600,
-                              color: context
-                                  .watch<ThemeProvider>()
-                                  .palette()['fixedBlack']!,
-                            ),
+                          Text(AppLocalizations.of(context)!.all),
+                          Radio<String>(
+                            value: 'year',
+                            groupValue: selectedFilter,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedFilter = value!;
+                              });
+                              _loadData();
+                            },
                           ),
+                          Text(AppLocalizations.of(context)!.year),
                         ],
                       ),
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-
-                  // Leyenda --> diferente a las otras porque solo cuenta con dos
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildLegendItem(
-                          AppLocalizations.of(context)!.income,
-                          context
-                              .watch<ThemeProvider>()
-                              .palette()['greenButton']!),
+                      if (selectedFilter == 'year') _buildYearPicker(),
                       SizedBox(
-                          width: MediaQuery.of(context).size.height * 0.02),
-                      _buildLegendItem(
-                          AppLocalizations.of(context)!.expenses,
-                          context
-                              .watch<ThemeProvider>()
-                              .palette()['redButton']!),
+                          height: MediaQuery.of(context).size.height * 0.02),
+                      //Gráfica circular --> no está en un método pq es única
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.45,
+                        child: PieChart(
+                          PieChartData(
+                            //Solo cuenta con dos secciones: Ingresos y Gastos
+                            sections: [
+                              PieChartSectionData(
+                                value: showIncome,
+                                title:
+                                    "${totalIncome.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                                color: context
+                                    .watch<ThemeProvider>()
+                                    .palette()['greenButton']!,
+                                radius: 80,
+                                titleStyle: TextStyle(
+                                  fontSize: MediaQuery.of(context)
+                                      .textScaler
+                                      .scale(18),
+                                  fontWeight: FontWeight.w600,
+                                  color: context
+                                      .watch<ThemeProvider>()
+                                      .palette()['fixedBlack']!,
+                                ),
+                              ),
+                              PieChartSectionData(
+                                value: showExpense,
+                                title:
+                                    "${totalExpense.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                                color: context
+                                    .watch<ThemeProvider>()
+                                    .palette()['redButton']!,
+                                radius: 80,
+                                titleStyle: TextStyle(
+                                  fontSize: MediaQuery.of(context)
+                                      .textScaler
+                                      .scale(18),
+                                  fontWeight: FontWeight.w600,
+                                  color: context
+                                      .watch<ThemeProvider>()
+                                      .palette()['fixedBlack']!,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02),
+
+                      // Leyenda --> diferente a las otras porque solo cuenta con dos
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildLegendItem(
+                              AppLocalizations.of(context)!.income,
+                              context
+                                  .watch<ThemeProvider>()
+                                  .palette()['greenButton']!),
+                          SizedBox(
+                              width: MediaQuery.of(context).size.height * 0.02),
+                          _buildLegendItem(
+                              AppLocalizations.of(context)!.expenses,
+                              context
+                                  .watch<ThemeProvider>()
+                                  .palette()['redButton']!),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          );
+                ),
+              );
   }
 
   ///Construir el selector de año

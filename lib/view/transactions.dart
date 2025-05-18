@@ -218,93 +218,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
       _isLoading = true;
     });
     var aux = await transactionDao.getTransactionsByDate(
-        context.read<ConfigurationProvider>().userRegistered!, context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode);
+        context.read<ConfigurationProvider>().userRegistered!,
+        context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode);
     setState(() {
       transacciones = aux;
-    });
-    setState(() {
       _isLoading = false;
     });
   }
-/*
-  void _mostrarDetalleEditable(Transaccion transaccion, int index) {
-    TextEditingController tituloController =
-        TextEditingController(text: transaccion.tituloTransaccion);
-    TextEditingController importeController =
-        TextEditingController(text: transaccion.importe.toStringAsFixed(2));
-    TextEditingController fechaController =
-        TextEditingController(text: transaccion.fecha);
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.editTransaction),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextField(
-                  controller: tituloController,
-                  decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.title),
-                ),
-                TextField(
-                  controller: importeController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.amount),
-                ),
-                TextField(
-                  controller: fechaController,
-                  decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.date),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text(AppLocalizations.of(context)!.cancel),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: Text(AppLocalizations.of(context)!.accept),
-              onPressed: () async {
-                try {
-                  double nuevoImporte = double.parse(importeController.text);
-                  Transaccion transaccionModificada = Transaccion(
-                    id: transaccion.id,
-                    tituloTransaccion: tituloController.text,
-                    categoria: transaccion.categoria,
-                    importe: nuevoImporte,
-                    fecha: fechaController.text,
-                    divisaPrincipal: context
-                        .read()<ProviderAjustes>()
-                        .divisaEnUso
-                        .codigo_divisa,
-                    idUsuario: 1,
-                  );
-
-                  await transaccionCRUD
-                      .actualizarTransaccion(transaccionModificada);
-
-                  context.read<ProviderAjustes>().listaTransacciones[index] =
-                      transaccionModificada;
-                  context.read<ProviderAjustes>().notifyListeners();
-
-                  Navigator.of(context).pop();
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(AppLocalizations.of(context)!
-                            .errorUpdatingTransaction)),
-                  );
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }*/
 }
