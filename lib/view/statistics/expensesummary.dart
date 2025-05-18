@@ -60,8 +60,10 @@ class _ExpenseTabState extends State<ExpenseTab> {
       filter: selectedFilter,
       year: selectedYear,
       u: context.read<ConfigurationProvider>().userRegistered!,
-      actualCode:
+      primaryCurrencyCode:
           context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
+      secondaryCurrencyCode:
+          context.read<ConfigurationProvider>().currencyCodeInUse2.currencyCode,
       isIncome: false,
     );
 

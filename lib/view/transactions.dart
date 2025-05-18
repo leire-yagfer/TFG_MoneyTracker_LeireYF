@@ -201,8 +201,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                     color:
                                         rowAndImportColor, //Importe con color según tipo
                                   )),
-                              /*Text(
-                                  '${transaccion.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa en uso
+                              Text(
+                                  '${transaccion.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa secundaria en uso
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: MediaQuery.of(context)
@@ -210,7 +210,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                         .scale(14),
                                     color:
                                         rowAndImportColor, //Importe con color según tipo
-                                  )),*/
+                                  )),
                             ]),
                             SizedBox(
                                 width:
@@ -250,7 +250,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
     });
     var aux = await transactionDao.getTransactionsByDate(
         context.read<ConfigurationProvider>().userRegistered!,
-        context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode);
+        context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
+        context.read<ConfigurationProvider>().currencyCodeInUse2.currencyCode);
     setState(() {
       userTransactions = aux;
       _isLoading = false;

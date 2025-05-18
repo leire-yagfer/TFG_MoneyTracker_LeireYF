@@ -142,9 +142,11 @@ class _ConfigurationPageState extends State<ConfigurationPage>
                                       }
                                     },
                                     items: List.generate(
-                                        APIUtils.allCurrenciesList.length, (index) {
+                                        APIUtils.allCurrenciesList.length,
+                                        (index) {
                                       return DropdownMenuItem<Currency>(
-                                        value: APIUtils.allCurrenciesList[index],
+                                        value:
+                                            APIUtils.allCurrenciesList[index],
                                         child: Text(
                                           "${APIUtils.allCurrenciesList[index].currencyName} (${APIUtils.allCurrenciesList[index].currencySymbol})", //lista de monedas junto con su símbolo
                                           overflow: TextOverflow
@@ -161,12 +163,47 @@ class _ConfigurationPageState extends State<ConfigurationPage>
                       ),
                       TableRow(
                         children: <Widget>[
+                          //DropDown para cambiar la divisa secundaria
                           Padding(
                               padding: EdgeInsets.all(
                                   MediaQuery.of(context).size.width * 0.05),
-                              child: Container(
-                                child: Text("LA OTRA MONEDA SECUNDARIA"),
-                              )),
+                              child: Column(children: [
+                                Text(AppLocalizations.of(context)!
+                                    .selectCurrency),
+
+                                //Text(ajustesProvider.currency),
+                                SizedBox(
+                                  width: double
+                                      .infinity, //ocupamos todo el ancho disponible
+                                  child: DropdownButton<Currency>(
+                                    value: ajustesProvider
+                                        .currencyCodeInUse2, //divisa actual
+                                    isExpanded:
+                                        true, //permite que el botón use todo el ancho disponible
+                                    onChanged: (Currency? nuevaDivisaSecundaria) {
+                                      if (nuevaDivisaSecundaria != null) {
+                                        ajustesProvider.changeCurrency2(
+                                            nuevaDivisaSecundaria); //cambiar divisa secundaria
+                                      }
+                                    },
+                                    items: List.generate(
+                                        APIUtils.allCurrenciesList.length,
+                                        (index) {
+                                      return DropdownMenuItem<Currency>(
+                                        value:
+                                            APIUtils.allCurrenciesList[index],
+                                        child: Text(
+                                          "${APIUtils.allCurrenciesList[index].currencyName} (${APIUtils.allCurrenciesList[index].currencySymbol})", //lista de monedas junto con su símbolo
+                                          overflow: TextOverflow
+                                              .ellipsis, //puntos suspensivos si se desborda
+                                          maxLines: 1, //solo una línea
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                              ]))
                         ],
                       ),
                       TableRow(

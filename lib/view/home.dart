@@ -257,18 +257,21 @@ class HomePage extends StatelessWidget {
 
                                 //Crear la transacción
                                 //no paso el ID porque es autoincremental en el propio FireBase
-                                TransactionModel newTransaction = TransactionModel(
-                                    transactionId: "",
-                                    transactionTittle: titulo,
-                                    transactionDate: DateTime.parse(fecha),
-                                    transactionCategory: selectedCategoria!,
-                                    transactionImport: cantidad,
-                                    //transactionSecondImport: cantidad,
-                                    transactionCurrency: context
-                                        .read<ConfigurationProvider>()
-                                        .currencyCodeInUse,
-                                    //transactionSecondCurrency: context.read<ConfigurationProvider>().currencyCodeInUse2,
-                                    transactionDescription: descripcion);
+                                TransactionModel newTransaction =
+                                    TransactionModel(
+                                        transactionId: "",
+                                        transactionTittle: titulo,
+                                        transactionDate: DateTime.parse(fecha),
+                                        transactionCategory: selectedCategoria!,
+                                        transactionImport: cantidad,
+                                        transactionSecondImport: cantidad,
+                                        transactionCurrency: context
+                                            .read<ConfigurationProvider>()
+                                            .currencyCodeInUse,
+                                        transactionSecondCurrency: context
+                                            .read<ConfigurationProvider>()
+                                            .currencyCodeInUse,
+                                        transactionDescription: descripcion);
 
                                 //Insertar transacción en la base de datos
                                 await TransactionDao().insertTransaction(

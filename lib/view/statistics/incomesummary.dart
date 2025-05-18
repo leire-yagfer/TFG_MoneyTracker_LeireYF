@@ -61,8 +61,10 @@ class _IncomeTabState extends State<IncomeTab> {
       filter: selectedFilter,
       year: selectedYear,
       u: context.read<ConfigurationProvider>().userRegistered!,
-      actualCode:
+      primaryCurrencyCode:
           context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
+      secondaryCurrencyCode:
+          context.read<ConfigurationProvider>().currencyCodeInUse2.currencyCode,
       isIncome: true,
     );
 
