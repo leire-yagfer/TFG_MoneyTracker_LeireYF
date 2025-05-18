@@ -192,10 +192,36 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
+                            //si el usuario quiere usar la segunda divisa (en función del switch de ajustes), los datos de la segunda divisa se muestran en una columna con los dos importes y sino únicamnete el de la divisa en uso
+                            context
+                                    .read<ConfigurationProvider>()
+                                    .switchUseSecondCurrency
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                          '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: MediaQuery.of(context)
+                                                .textScaler
+                                                .scale(14),
+                                            color:
+                                                rowAndImportColor, //Importe con color según tipo
+                                          )),
+                                      Text(
+                                          '${transaccion.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa secundaria en uso
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: MediaQuery.of(context)
+                                                .textScaler
+                                                .scale(14),
+                                            color:
+                                                rowAndImportColor, //Importe con color según tipo
+                                          )),
+                                    ],
+                                  )
+                                : Text(
                                     '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
@@ -205,18 +231,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                       color:
                                           rowAndImportColor, //Importe con color según tipo
                                     )),
-                                Text(
-                                    '${transaccion.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa secundaria en uso
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: MediaQuery.of(context)
-                                          .textScaler
-                                          .scale(14),
-                                      color:
-                                          rowAndImportColor, //Importe con color según tipo
-                                    )),
-                              ],
-                            ),
                             SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * 0.01),
