@@ -94,15 +94,13 @@ class ConfigurationProvider extends ChangeNotifier {
         //reemplazo el importe con el convertido a la moneda en uso
         t.transactionImport *= changesRates[currencyCodeInUse.currencyCode]!;
       }
-      if (t.transactionSecondCurrency != null) {
-        String secondaryCurrencyCode = t.transactionSecondCurrency.currencyCode;
-        Map<String, double> secondaryChangesRates =
-            await APIUtils.getChangesBasedOnCurrencyCode(secondaryCurrencyCode);
+      String secondaryCurrencyCode = t.transactionSecondCurrency.currencyCode;
+      Map<String, double> secondaryChangesRates =
+          await APIUtils.getChangesBasedOnCurrencyCode(secondaryCurrencyCode);
 
-        t.transactionSecondImport = t.transactionSecondImport *
-            secondaryChangesRates[t.transactionSecondCurrency.currencyCode]!;
-      }
-    }
+      t.transactionSecondImport = t.transactionSecondImport *
+          secondaryChangesRates[t.transactionSecondCurrency.currencyCode]!;
+        }
     notifyListeners();
   }
 

@@ -220,12 +220,10 @@ class TransactionDao {
                 .transactionCurrency.currencyCode))[primaryCurrency]!;
       }
       // Agregar la conversión para la moneda secundaria
-      if (transaction.transactionSecondCurrency != null) {
-        transaction.transactionSecondImport *=
-            (await APIUtils.getChangesBasedOnCurrencyCode(transaction
-                .transactionSecondCurrency.currencyCode))[secondaryCurrency]!;
-      }
-    }
+      transaction.transactionSecondImport *=
+          (await APIUtils.getChangesBasedOnCurrencyCode(transaction
+              .transactionSecondCurrency.currencyCode))[secondaryCurrency]!;
+        }
     return transactions;
   }
 }
