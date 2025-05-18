@@ -33,8 +33,8 @@ class TransactionDao {
   }
 
   ///Obtener las transacciones ordenadas por fecha de un usuario
-  Future<List<TransactionModel>> getTransactionsByDate(
-      UserModel u, String primaryCurrencyCode, String secondaryCurrencyCode) async {
+  Future<List<TransactionModel>> getTransactionsByDate(UserModel u,
+      String primaryCurrencyCode, String secondaryCurrencyCode) async {
     List<TransactionModel> allTransacciones = [];
     var userdata =
         await Firebasedb.data.doc(u.userId).get(); //obtengo el usuario
@@ -62,8 +62,8 @@ class TransactionDao {
     allTransacciones
         .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
 
-    allTransacciones =
-        await getTransactionsOnCurrency(allTransacciones, primaryCurrencyCode, secondaryCurrencyCode);
+    allTransacciones = await getTransactionsOnCurrency(
+        allTransacciones, primaryCurrencyCode, secondaryCurrencyCode);
     return allTransacciones;
   }
 
@@ -143,8 +143,8 @@ class TransactionDao {
         //añadir la transacción a la lista
         transacciones.add(transaccion);
       }
-      transacciones =
-          await getTransactionsOnCurrency(transacciones, primaryCurrencyCode, secondaryCurrencyCode);
+      transacciones = await getTransactionsOnCurrency(
+          transacciones, primaryCurrencyCode, secondaryCurrencyCode);
       //añadir la categoría y sus transacciones a la lista
       mapaCategoriesWithTransactions[categoria] = transacciones;
     }
@@ -210,18 +210,20 @@ class TransactionDao {
 
   ///Función para convertir la divisa de todas las transacciones a la moneda actual
   Future<List<TransactionModel>> getTransactionsOnCurrency(
-      List<TransactionModel> transactions, String primaryCurrency, String secondaryCurrency) async {
+      List<TransactionModel> transactions,
+      String primaryCurrency,
+      String secondaryCurrency) async {
     for (TransactionModel transaction in transactions) {
       if (transaction.transactionCurrency.currencyCode != primaryCurrency) {
         transaction.transactionImport *=
-            (await APIUtils.getChangesBasedOnCurrencyCode(
-                transaction.transactionCurrency.currencyCode))[primaryCurrency]!;
-        // Agregar la conversión para la moneda secundaria
-        if (transaction.transactionSecondCurrency != null) {
-          transaction.transactionSecondImport *=
-              (await APIUtils.getChangesBasedOnCurrencyCode(transaction
-                  .transactionSecondCurrency.currencyCode))[secondaryCurrency]!;
-        }
+            (await APIUtils.getChangesBasedOnCurrencyCode(transaction
+                .transactionCurrency.currencyCode))[primaryCurrency]!;
+      }
+      // Agregar la conversión para la moneda secundaria
+      if (transaction.transactionSecondCurrency != null) {
+        transaction.transactionSecondImport *=
+            (await APIUtils.getChangesBasedOnCurrencyCode(transaction
+                .transactionSecondCurrency.currencyCode))[secondaryCurrency]!;
       }
     }
     return transactions;
