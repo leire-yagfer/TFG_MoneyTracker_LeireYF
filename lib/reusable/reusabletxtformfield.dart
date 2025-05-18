@@ -31,7 +31,7 @@ class ReusableTxtFormFieldNewTransactionCategory extends StatelessWidget {
         labelText: labelText,
         hintText: hintText,
         filled: true,
-        fillColor: context.watch<ThemeProvider>().palette()['fixedLightGrey']!,
+        fillColor: context.watch<ThemeProvider>().palette()['filledTextField']!,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),

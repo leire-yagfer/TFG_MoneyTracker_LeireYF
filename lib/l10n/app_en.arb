@@ -1,4 +1,6 @@
 {
+    "appName": "MONEYTRACKER",
+    
     "signin": "Sign in",
     "email": "Email",
     "emailhint": "Enter your email",
@@ -33,7 +35,8 @@
     "darkMode": "Change to dark mode",
     "lightMode": "Change to light mode",
     "selectLanguaje": "Select the aplication languaje",
-     "selectCurrency": "Select the currency you want to work with",
+    "wantToUseSecondCurrency": "Do you want to use a second currency?",
+    "selectCurrency": "Select the currency you want to work with",
     "logout": "Log out",
     "logoutdialogtitle": "Confirm log out",
     "logoutdialogcontent": "Are you sure you want to log out?",

@@ -20,7 +20,9 @@ class ThemeProvider extends ChangeNotifier {
             : Color.fromARGB(222, 0, 0, 0),
         "fixedBlack": Color.fromARGB(222, 0, 0, 0),
         "fixedWhite": Color.fromARGB(255, 229, 229, 234),
-        "fixedLightGrey": Colors.grey,
+        "filledTextField": (isLightModeActive)
+            ? Color.fromARGB(255, 229, 229, 234)
+            : Color.fromARGB(255, 22, 28, 33),
         //Navegación inferior y pestañas
         "selectedItem": Colors.pink,
         "unselectedItem": (isLightModeActive)

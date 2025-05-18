@@ -1,4 +1,6 @@
 {   
+    "appName": "MONEYTRACKER",
+    
     "signin": "Iniciar sesión",
     "email": "Correo electrónico",
     "emailhint": "Introduce tu correo electrónico",
@@ -33,6 +35,7 @@
     "darkMode": "Cambiar a modo oscuro",
     "lightMode": "Cambair a modo claro",
     "selectLanguaje": "Seleccione el idioma de la aplicación",
+    "wantToUseSecondCurrency": "¿Quieres trabajar con una segunda moneda?",
     "selectCurrency": "Seleccione la moneda en la que quiere trabajar",
     "logout": "Cerrar sesión",
     "logoutdialogtitle": "Confirmar cierre de sesión",

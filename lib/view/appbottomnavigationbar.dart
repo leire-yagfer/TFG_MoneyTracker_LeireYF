@@ -35,11 +35,11 @@ class _MainAppState extends State<MainApp> {
       appBar: AppBar(
         forceMaterialTransparency:
             true, //evita que se cambie de color del appBar cuando s ehace scroll
-        title: const Text(
-          'MONEYTRACKER',
+        title: Text(
+          AppLocalizations.of(context)!.appName,
           style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
+            fontSize: MediaQuery.of(context).textScaler.scale(26),
+            fontWeight: FontWeight.w900,
           ),
         ),
         actions: [

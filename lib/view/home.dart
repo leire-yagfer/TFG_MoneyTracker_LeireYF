@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
             //Botón para agregar un ingreso
             ReusableButton(
                 onClick: () {
-                  _showOverlay(
+                  _addIncomeExpenseTransaction(
                       context,
                       AppLocalizations.of(context)!.addIncome,
                       Provider.of<ThemeProvider>(context, listen: false)
@@ -37,12 +37,12 @@ class HomePage extends StatelessWidget {
                 textButton: AppLocalizations.of(context)!.addIncome,
                 colorTextButton: 'buttonBlackWhite',
                 buttonHeight: 0.1,
-                buttonWidth: 0.6),
+                buttonWidth: 0.4),
             SizedBox(height: MediaQuery.of(context).size.height * 0.04),
             //Botón para agregar un gasto
             ReusableButton(
                 onClick: () {
-                  _showOverlay(
+                  _addIncomeExpenseTransaction(
                       context,
                       AppLocalizations.of(context)!.addExpense,
                       Provider.of<ThemeProvider>(context, listen: false)
@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
                 textButton: AppLocalizations.of(context)!.addExpense,
                 colorTextButton: 'buttonBlackWhite',
                 buttonHeight: 0.1,
-                buttonWidth: 0.6),
+                buttonWidth: 0.4),
           ],
         ),
       ),
@@ -60,22 +60,23 @@ class HomePage extends StatelessWidget {
   }
 
   //Método para mostrar el overlay del formulario de nueva transacción
-  void _showOverlay(BuildContext context, String title, Color color) async {
+  void _addIncomeExpenseTransaction(
+      BuildContext context, String title, Color backgroundColor) async {
     final _formKey = GlobalKey<FormState>();
-    final TextEditingController _tituloController = TextEditingController();
-    final TextEditingController _cantidadController = TextEditingController();
+    final TextEditingController _titleController = TextEditingController();
+    final TextEditingController _importController = TextEditingController();
     final TextEditingController _dateController = TextEditingController();
-    final TextEditingController _descripcionController =
+    final TextEditingController _descriptionController =
         TextEditingController();
-    List<Category> categorias =
+    List<Category> listCategoriesIncomeOrExpense =
         []; //Lista de categorías -> se cargará con las categorías de ingreso o gasto según lo que se haya elegido
-    Category? selectedCategoria; //Categoría seleccionada
+    Category? categorySelected; //Categoría seleccionada
 
-    categorias = await CategoryDao().getCategoriesByType(
+    listCategoriesIncomeOrExpense = await CategoryDao().getCategoriesByType(
         context.read<ConfigurationProvider>().userRegistered!,
-        color !=
+        backgroundColor !=
             Provider.of<ThemeProvider>(context, listen: false).palette()[
-                'redButton']!); //Obtener categorías del usuario en función del color. En este caso le paso el rojo porque si es rojo va a mostrar los que sean de gatsos y sino los verdes.
+                'redButton']!); //Obtener categorías del usuario en función del color. En este caso le paso el rojo porque si es rojo va a mostrar los que sean de gastos y sino los verdes.
 
     showDialog(
       context: context,
@@ -83,34 +84,42 @@ class HomePage extends StatelessWidget {
           true, //Permitir cerrar el diálogo al hacer clic fuera de él
       builder: (BuildContext context) {
         return Dialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: SingleChildScrollView(
-                child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height * 0.01,
-                  horizontal: MediaQuery.of(context).size.width * 0.01),
-              child: Center(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: BorderSide(
+                color: context
+                    .watch<ThemeProvider>()
+                    .palette()['buttonBlackWhite']!,
+                width: 1,
+              ),
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: SingleChildScrollView(
+                  child: Center(
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
                   padding:
                       EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
                   decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(15),
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01),
                         Text(
                           title,
                           style: TextStyle(
                             fontSize:
                                 MediaQuery.of(context).textScaler.scale(30),
                             fontWeight: FontWeight.w600,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                            color: context
+                                .watch<ThemeProvider>()
+                                .palette()['textBlackWhite']!,
                           ),
                         ),
                         SizedBox(
@@ -118,7 +127,7 @@ class HomePage extends StatelessWidget {
 
                         //Campo para el título de la transacción
                         ReusableTxtFormFieldNewTransactionCategory(
-                          controller: _tituloController,
+                          controller: _titleController,
                           labelText: AppLocalizations.of(context)!.title,
                           hintText: AppLocalizations.of(context)!.titleHint,
                           validator: (x) {
@@ -134,17 +143,18 @@ class HomePage extends StatelessWidget {
 
                         //Campo para la cantidad de la transacción
                         ReusableTxtFormFieldNewTransactionCategory(
-                          controller: _cantidadController,
+                          controller: _importController,
                           keyboardType: TextInputType.number, //solo números
                           labelText: AppLocalizations.of(context)!.quantity,
                           hintText:
                               "${AppLocalizations.of(context)!.quantityHint} (${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol})",
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
+                          //compruebo si el campo está vacío y si es posible pasarlo a double. Si falla, devuelvo mensaje de error
+                          validator: (x) {
+                            if (x == null || x.isEmpty) {
                               return AppLocalizations.of(context)!
                                   .quantityError;
                             }
-                            if (double.tryParse(value) == null) {
+                            if (double.tryParse(x) == null) {
                               return AppLocalizations.of(context)!
                                   .quantityError;
                             }
@@ -166,27 +176,29 @@ class HomePage extends StatelessWidget {
                                 filled: true,
                                 fillColor: context
                                     .watch<ThemeProvider>()
-                                    .palette()['fixedLightGrey']!,
+                                    .palette()['filledTextField']!,
                                 border: OutlineInputBorder(),
                               ),
-                              value: selectedCategoria,
-                              onChanged: (Category? newValue) {
+                              value: categorySelected,
+                              onChanged: (Category? cSelected) {
                                 setState(() {
-                                  selectedCategoria =
-                                      newValue; //Actualizar categoría seleccionada
+                                  categorySelected =
+                                      cSelected; //Actualizar categoría seleccionada
                                 });
                               },
-                              items: categorias.map((Category categoria) {
+                              items: listCategoriesIncomeOrExpense
+                                  .map((Category categoria) {
                                 return DropdownMenuItem<Category>(
                                   value: categoria,
                                   child: Text(categoria
                                       .categoryName), //Nombre de la categoría
                                 );
                               }).toList(),
-                              validator: (value) {
-                                if (value == null) {
+                              //valido si ha sido seleccionada alguna categoría
+                              validator: (x) {
+                                if (x == null) {
                                   return AppLocalizations.of(context)!
-                                      .categoryError; //Validación para categoría
+                                      .categoryError;
                                 }
                                 return null;
                               },
@@ -207,9 +219,9 @@ class HomePage extends StatelessWidget {
                             //Mostrar el selector de fecha
                             DateTime? pickedDate = await showDatePicker(
                               context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2101),
+                              initialDate: DateTime.now(), //muestra el inicial
+                              firstDate: DateTime(2000), //primer día
+                              lastDate: DateTime(2101), //último día
                             );
 
                             if (pickedDate != null) {
@@ -219,10 +231,11 @@ class HomePage extends StatelessWidget {
                                   .split(' ')[0]; //Mostrar fecha seleccionada
                             }
                           },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!
-                                  .dateError; // Validación para fecha
+
+                          //valido que no se haya dejado el campo vacío
+                          validator: (x) {
+                            if (x == null || x.isEmpty) {
+                              return AppLocalizations.of(context)!.dateError;
                             }
                             return null;
                           },
@@ -231,9 +244,9 @@ class HomePage extends StatelessWidget {
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.02),
 
-                        // Campo para la descripción de la transacción
+                        //Campo para la descripción de la transacción
                         ReusableTxtFormFieldNewTransactionCategory(
-                          controller: _descripcionController,
+                          controller: _descriptionController,
                           labelText: AppLocalizations.of(context)!.description,
                           hintText:
                               AppLocalizations.of(context)!.descriptionHint,
@@ -245,24 +258,24 @@ class HomePage extends StatelessWidget {
                         //Botón para agregar la transacción
                         ReusableButton(
                             onClick: () async {
+                              //Compruebo si el formulario es válido
                               if (_formKey.currentState!.validate()) {
-                                //Si el formulario es válido, proceder con la transacción
+                                //si es válido --> creo la transacción
                                 //Recoger los datos
-                                String titulo = _tituloController.text;
+                                String titulo = _titleController.text;
                                 double cantidad =
-                                    double.parse(_cantidadController.text);
+                                    double.parse(_importController.text);
                                 String fecha = _dateController.text;
                                 String descripcion =
-                                    _descripcionController.text;
+                                    _descriptionController.text;
 
-                                //Crear la transacción
-                                //no paso el ID porque es autoincremental en el propio FireBase
+                                //Crear la transacción --> no paso el ID porque es autoincremental en el propio FireBase
                                 TransactionModel newTransaction =
                                     TransactionModel(
                                         transactionId: "",
                                         transactionTittle: titulo,
                                         transactionDate: DateTime.parse(fecha),
-                                        transactionCategory: selectedCategoria!,
+                                        transactionCategory: categorySelected!,
                                         transactionImport: cantidad,
                                         transactionSecondImport: cantidad,
                                         transactionCurrency: context
@@ -292,22 +305,24 @@ class HomePage extends StatelessWidget {
                                     content: Text(AppLocalizations.of(context)!
                                         .correctTransactionAdding),
                                     duration: Duration(
-                                        seconds: 3), //duración del SnackBar
+                                        seconds: 2), //duración del SnackBar
                                   ),
                                 );
                               }
                             },
-                            colorButton: 'fixedWhite',
+                            colorButton: 'filledTextField',
                             textButton: AppLocalizations.of(context)!.add,
-                            colorTextButton: 'buttonBlackWhite',
-                            buttonHeight: 0.09,
-                            buttonWidth: 0.5),
+                            colorTextButton: 'textBlackWhite',
+                            buttonHeight: 0.075,
+                            buttonWidth: 0.3),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01),
                       ],
                     ),
                   ),
                 ),
-              ),
-            )));
+              )),
+            ));
       },
     );
   }

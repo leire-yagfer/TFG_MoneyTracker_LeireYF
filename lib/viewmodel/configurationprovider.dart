@@ -13,6 +13,7 @@ class ConfigurationProvider extends ChangeNotifier {
   Locale _languaje = Locale('es');
   Currency _currencyCodeInUse = APIUtils.getFromList('EUR')!;
   Currency _currencyCodeInUse2 = APIUtils.getFromList('EUR')!;
+  bool _switchUseSecondCurrency = false;
   //lista de transacciones
   List<TransactionModel> listAllUserTransactions = [];
 
@@ -30,6 +31,9 @@ class ConfigurationProvider extends ChangeNotifier {
 
   //Obetener la segunda divisa en la que se está trabajando
   Currency get currencyCodeInUse2 => _currencyCodeInUse2;
+
+  //Obetener el estado del switch en función de si se quiere trabajar o no con la segunda divisa
+  bool get switchUseSecondCurrency => _switchUseSecondCurrency;
 
   //Obtener el usuario
   UserModel?
@@ -60,6 +64,14 @@ class ConfigurationProvider extends ChangeNotifier {
     await prefs.setString('currencyCodeInUse2', newCurrencyCode.currencyCode);
   }
 
+  ///Cambiar el estado del switch y guardar la preferencia
+  Future<void> changeSwitchUseSecondCurrency(bool value) async {
+    _switchUseSecondCurrency = value;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('switchUseSecondCurrency', value);
+  }
+
   ///Cargar las preferencias guardadas en el dispositivo
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -69,6 +81,9 @@ class ConfigurationProvider extends ChangeNotifier {
         APIUtils.getFromList(prefs.getString('currencyCodeInUse') ?? 'EUR')!;
     _currencyCodeInUse2 =
         APIUtils.getFromList(prefs.getString('currencyCodeInUse2') ?? 'EUR')!;
+    _switchUseSecondCurrency =
+        prefs.getBool('switchUseSecondCurrency') ?? false;
+
     //Cargar las transacciones desde la base de datos
     await loadTransactions();
     notifyListeners();
@@ -100,7 +115,7 @@ class ConfigurationProvider extends ChangeNotifier {
 
       t.transactionSecondImport = t.transactionSecondImport *
           secondaryChangesRates[t.transactionSecondCurrency.currencyCode]!;
-        }
+    }
     notifyListeners();
   }
 
