@@ -7,6 +7,7 @@ import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusabletxtformfield.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusabletxtformfieldshowtransaction.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -84,16 +85,19 @@ class _CategoryCardState extends State<CategoryCard> {
                             builder: (BuildContext context) {
                               return Dialog(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: SingleChildScrollView(
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            MediaQuery.of(context).size.height *
-                                                0.01,
-                                        horizontal:
-                                            MediaQuery.of(context).size.width *
-                                                0.01),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: context
+                                        .watch<ThemeProvider>()
+                                        .palette()['backgroundDialog']!,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    padding: EdgeInsets.all(
+                                        MediaQuery.of(context).size.height *
+                                            0.02),
                                     child: Center(
                                       child: Form(
                                         key: _formKey,
@@ -108,9 +112,9 @@ class _CategoryCardState extends State<CategoryCard> {
                                               hintText:
                                                   AppLocalizations.of(context)!
                                                       .newCategoryNameLabelHint,
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty) {
+                                              //compruebo que no se haya dejado vacío el campo
+                                              validator: (x) {
+                                                if (x == null || x.isEmpty) {
                                                   return AppLocalizations.of(
                                                           context)!
                                                       .newCategoryNameLabelError;
@@ -122,54 +126,79 @@ class _CategoryCardState extends State<CategoryCard> {
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height *
-                                                    0.008),
-                                            //color picker para seleccionar el color de la categorí
-                                            GestureDetector(
-                                              onTap: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .newCategoryColorTitle,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                      //si hay colores disponibles, les muestro, sino muestra mensaje de que no hay colores disponibles. Es útil para que si se sambia el número de categorías permitidas, pues no haya errores --> Control de error
-                                                      content: availableColors()
-                                                              .isNotEmpty
-                                                          ? SingleChildScrollView(
-                                                              child:
-                                                                  BlockPicker(
-                                                                pickerColor:
-                                                                    categoryColorSelected,
-                                                                availableColors:
-                                                                    availableColors(),
-                                                                onColorChanged:
-                                                                    (Color
-                                                                        color) {
-                                                                  setState(() {
-                                                                    categoryColorSelected =
-                                                                        color;
-                                                                  });
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                              ),
-                                                            )
-                                                          : Text(AppLocalizations
-                                                                  .of(context)!
-                                                              .noColorsAvailable),
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
+                                                    0.02),
+                                            //color picker para seleccionar el color de la categoría
+                                            SizedBox(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .newCategoryColorTitle,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                        content: availableColors()
+                                                                .isNotEmpty
+                                                            ? SingleChildScrollView(
+                                                                child:
+                                                                    ConstrainedBox(
+                                                                  constraints:
+                                                                      BoxConstraints(
+                                                                    //restrinjo el ancho del selector de colores
+                                                                    maxWidth: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width *
+                                                                        0.8,
+                                                                    maxHeight: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width *
+                                                                        0.4,
+                                                                  ),
+                                                                  child:
+                                                                      ConstrainedBox(
+                                                                          constraints:
+                                                                              BoxConstraints(
+                                                                            //restrinjo el ancho del selector de colores
+                                                                            maxWidth:
+                                                                                MediaQuery.of(context).size.width * 0.8,
+                                                                            maxHeight:
+                                                                                MediaQuery.of(context).size.width * 0.4,
+                                                                          ),
+                                                                          child:
+                                                                              BlockPicker(
+                                                                            pickerColor:
+                                                                                categoryColorSelected,
+                                                                            availableColors:
+                                                                                availableColors(),
+                                                                            onColorChanged:
+                                                                                (Color color) {
+                                                                              setState(() {
+                                                                                categoryColorSelected = color;
+                                                                              });
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                          )),
+                                                                ),
+                                                              )
+                                                            : Text(AppLocalizations
+                                                                    .of(context)!
+                                                                .noColorsAvailable),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.9,
+                                                  padding: EdgeInsets.symmetric(
                                                     horizontal:
                                                         MediaQuery.of(context)
                                                                 .size
@@ -179,47 +208,63 @@ class _CategoryCardState extends State<CategoryCard> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .height *
-                                                            0.02),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: Colors.grey),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Container(
-                                                      width:
-                                                          MediaQuery.of(context)
+                                                            0.02,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: context
+                                                              .watch<
+                                                                  ThemeProvider>()
+                                                              .palette()[
+                                                          'textBlackWhite']!,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.05,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.025,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              categoryColorSelected,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          border: Border.all(),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 12),
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .newCategoryColorLabel,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .width *
-                                                              0.05,
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.025,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            categoryColorSelected,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                        border: Border.all(),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 12),
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .newCategoryColorLabel,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    Icon(Icons.arrow_drop_down),
-                                                  ],
+                                                              0.01),
+                                                      Icon(Icons
+                                                          .arrow_drop_down),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -227,7 +272,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height *
-                                                    0.008),
+                                                    0.02),
                                             //Botón para agregar la categoría
                                             ReusableButton(
                                                 onClick: () async {
@@ -283,14 +328,14 @@ class _CategoryCardState extends State<CategoryCard> {
                                                     );
                                                   }
                                                 },
-                                                colorButton: 'fixedWhite',
+                                                colorButton: 'buttonWhiteBlack',
                                                 textButton: AppLocalizations.of(
                                                         context)!
                                                     .add,
                                                 colorTextButton:
                                                     'buttonBlackWhite',
-                                                buttonHeight: 0.09,
-                                                buttonWidth: 0.5),
+                                                buttonHeight: 0.075,
+                                                buttonWidth: 0.3),
                                           ],
                                         ),
                                       ),
@@ -331,7 +376,7 @@ class _CategoryCardState extends State<CategoryCard> {
                         })
               ],
             )),
-        (widget.categoriesList.length == 0)
+        (widget.categoriesList.isEmpty)
             ? SizedBox()
             : ListView.builder(
                 shrinkWrap:
@@ -349,7 +394,7 @@ class _CategoryCardState extends State<CategoryCard> {
                     child: ListTile(
                       onTap: () async {
                         //controlador con el nombre actual
-                        TextEditingController _editCategoryNameController =
+                        TextEditingController editCategoryNameController =
                             TextEditingController(
                                 text: categoryPointer.categoryName);
                         //color actual
@@ -367,18 +412,91 @@ class _CategoryCardState extends State<CategoryCard> {
                                   return Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      TextFormField(
-                                        controller: _editCategoryNameController,
-                                        decoration: InputDecoration(
-                                          labelText: AppLocalizations.of(context)!.changeCategoryName,
-                                        ),
+                                      ReusableTxtFormFieldShowDetailsTransactionAndEditCategory(
+                                        text: editCategoryNameController,
+                                        labelText: AppLocalizations.of(context)!
+                                            .changeCategoryName,
+                                        readOnly: false,
                                       ),
                                       SizedBox(height: 10),
-                                      Text(AppLocalizations.of(context)!.newCategoryColorTitle),
+                                      SizedBox(
+  child: GestureDetector(
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              AppLocalizations.of(context)!.newCategoryColorTitle,
+              overflow: TextOverflow.ellipsis,
+            ),
+            content: availableColors().isNotEmpty
+                ? SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.2, // 20% altura
+                    child: SingleChildScrollView(
+                      child: BlockPicker(
+                        pickerColor: categoryColorSelected,
+                        availableColors: availableColors(),
+                        onColorChanged: (Color color) {
+                          setStateDialog(() {
+                            updatedColor = color;
+                            categoryColorSelected = color;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  )
+                : Text(AppLocalizations.of(context)!.noColorsAvailable),
+          );
+        },
+      );
+    },
+    child: Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width * 0.02,
+        vertical: MediaQuery.of(context).size.height * 0.02,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: context.watch<ThemeProvider>().palette()['textBlackWhite']!,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * 0.05,
+            height: MediaQuery.of(context).size.height * 0.025,
+            decoration: BoxDecoration(
+              color: categoryColorSelected,
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(),
+            ),
+          ),
+          SizedBox(width: 12),
+          Text(
+            AppLocalizations.of(context)!.newCategoryColorLabel,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+          Icon(Icons.arrow_drop_down),
+        ],
+      ),
+    ),
+  ),
+)
+
+
+                                      /*Text(AppLocalizations.of(context)!
+                                          .newCategoryColorTitle),
                                       SizedBox(height: 10),
                                       Wrap(
                                         spacing: 8.0,
-                                        children: availableColors().map((color) {
+                                        children:
+                                            availableColors().map((color) {
                                           return GestureDetector(
                                             onTap: () {
                                               setStateDialog(() {
@@ -394,7 +512,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                             ),
                                           );
                                         }).toList(),
-                                      ),
+                                      ),*/
                                     ],
                                   );
                                 },
@@ -411,7 +529,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                 TextButton(
                                   onPressed: () async {
                                     String updatedName =
-                                        _editCategoryNameController.text.trim();
+                                        editCategoryNameController.text.trim();
 
                                     if (updatedName.isNotEmpty) {
                                       //crear nueva categoría con los datos actualizados
@@ -424,7 +542,9 @@ class _CategoryCardState extends State<CategoryCard> {
 
                                       //actualizar en la base de datos
                                       await CategoryDao().updateCategory(
-                                        u : context.read<ConfigurationProvider>().userRegistered!,
+                                        u: context
+                                            .read<ConfigurationProvider>()
+                                            .userRegistered!,
                                         oldCategory: categoryPointer,
                                         newCategory: updatedCategory,
                                       );
@@ -451,14 +571,16 @@ class _CategoryCardState extends State<CategoryCard> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
-                                          content: Text(AppLocalizations.of(context)!.correctEditingCategory),
+                                          content: Text(
+                                              AppLocalizations.of(context)!
+                                                  .correctEditingCategory),
                                           duration: Duration(seconds: 1),
                                         ),
                                       );
                                     }
                                   },
-                                  child:
-                                      Text(AppLocalizations.of(context)!.saveChanges),
+                                  child: Text(AppLocalizations.of(context)!
+                                      .saveChanges),
                                 ),
                               ],
                             );
@@ -519,13 +641,12 @@ class _CategoryCardState extends State<CategoryCard> {
                             setState(() {
                               widget.categoriesList.removeAt(index);
                             });
-                            
                           } else {
                             //Si no se puede eliminar, mostrar mensaje
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                    AppLocalizations.of(context)!.cannotDeleteCategory),
+                                content: Text(AppLocalizations.of(context)!
+                                    .cannotDeleteCategory),
                                 duration: Duration(seconds: 1),
                               ),
                             );

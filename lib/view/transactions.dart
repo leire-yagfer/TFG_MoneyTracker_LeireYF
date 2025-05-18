@@ -29,7 +29,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   void initState() {
     super.initState();
     //llamo a la función que muestra las transacciones de la BD del usuario en el momento en el que se cambia a este página
-    _cargarTransacciones();
+    _loadTransactions();
 
     //escucho cambios en la configuración para detectar cuando se cambia la moneda
     context.read<ConfigurationProvider>().addListener(_onConfigurationChanged);
@@ -37,7 +37,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
   //función que se ejecuta automáticamente al cambiar la configuración, tras haberle añadido el listener
   void _onConfigurationChanged() {
-    _cargarTransacciones(); //recargo las transacciones con la nueva moneda
+    _loadTransactions(); //recargo las transacciones con la nueva moneda
   }
 
   @override
@@ -79,7 +79,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
       body: _isLoading
           ? ReusableCircleProgressIndicator(
               text: AppLocalizations.of(context)!.loadingTransactions,
-          )
+            )
           : userTransactions.isEmpty
               ? Center(
                   child: Text(
@@ -240,8 +240,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                 //Muestro SnackBar indicando que se ha eliminado correctamente
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(
-                                        AppLocalizations.of(context)!.correctTransactionDeleting),
+                                    content: Text(AppLocalizations.of(context)!
+                                        .correctTransactionDeleting),
                                     duration: Duration(
                                         seconds: 1), //duración del SnackBar
                                   ),
@@ -258,7 +258,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
   }
 
   //cargar las transacciones del usuario registradas en la base de datos ordenadas por fecha para mostrarles en orden
-  void _cargarTransacciones() async {
+  void _loadTransactions() async {
     setState(() {
       _isLoading = true;
     });
@@ -291,43 +291,51 @@ class _TransactionsPageState extends State<TransactionsPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(tituloController),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-                ReusableTxtFormFieldShowDetailsTransaction(
-                  text: importeController,
-                  labelText: AppLocalizations.of(context)!.amount,
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-                ReusableTxtFormFieldShowDetailsTransaction(
-                  text: fechaController,
-                  labelText: AppLocalizations.of(context)!.date,
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-                ReusableTxtFormFieldShowDetailsTransaction(
-                  text: categoriaController,
-                  labelText: "Categoría",
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-                if (descripcionController.text.isNotEmpty)
-                  ReusableTxtFormFieldShowDetailsTransaction(
-                    text: descripcionController,
-                    labelText: AppLocalizations.of(context)!.description,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color:
+                  context.watch<ThemeProvider>().palette()['backgroundDialog']!,
+            ),
+            child: SingleChildScrollView(
+              padding:
+                  EdgeInsets.all(MediaQuery.of(context).size.height * 0.02),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(tituloController, style: TextStyle(fontSize: MediaQuery.of(context).textScaler.scale(20), fontWeight: FontWeight.w600)),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                  ReusableTxtFormFieldShowDetailsTransactionAndEditCategory(
+                    text: importeController,
+                    labelText: AppLocalizations.of(context)!.amount,
                   ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(AppLocalizations.of(context)!.close),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                  ReusableTxtFormFieldShowDetailsTransactionAndEditCategory(
+                    text: fechaController,
+                    labelText: AppLocalizations.of(context)!.date,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                  ReusableTxtFormFieldShowDetailsTransactionAndEditCategory(
+                    text: categoriaController,
+                    labelText: AppLocalizations.of(context)!.category,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                  if (descripcionController.text.isNotEmpty)
+                    ReusableTxtFormFieldShowDetailsTransactionAndEditCategory(
+                      text: descripcionController,
+                      labelText: AppLocalizations.of(context)!.description,
                     ),
-                  ],
-                ),
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(AppLocalizations.of(context)!.close),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

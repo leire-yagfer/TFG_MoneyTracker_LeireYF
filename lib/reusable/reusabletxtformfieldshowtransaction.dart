@@ -3,13 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 //Clase que crea un TextFormField reutilizable para el formulario de nueva transacción
-class ReusableTxtFormFieldShowDetailsTransaction extends StatelessWidget {
+class ReusableTxtFormFieldShowDetailsTransactionAndEditCategory extends StatelessWidget {
   final TextEditingController text;
   final String labelText;
+  final bool readOnly;
 
-  const ReusableTxtFormFieldShowDetailsTransaction({
+  const ReusableTxtFormFieldShowDetailsTransactionAndEditCategory({
     required this.text,
     required this.labelText,
+    this.readOnly = true,
     super.key,
   });
 
@@ -25,7 +27,7 @@ class ReusableTxtFormFieldShowDetailsTransaction extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      readOnly: true,
+      readOnly: readOnly,
     );
   }
 }
