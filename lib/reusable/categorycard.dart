@@ -347,7 +347,7 @@ class _CategoryCardState extends State<CategoryCard> {
                         vertical: MediaQuery.of(context).size.height * 0.008,
                         horizontal: MediaQuery.of(context).size.width * 0.015),
                     child: ListTile(
-                      /*onTap: () async {
+                      onTap: () async {
                         //controlador con el nombre actual
                         TextEditingController _editCategoryNameController =
                             TextEditingController(
@@ -464,7 +464,7 @@ class _CategoryCardState extends State<CategoryCard> {
                             );
                           },
                         );
-                      },*/
+                      },
                       contentPadding: EdgeInsets.all(
                           MediaQuery.of(context).size.width * 0.01),
                       title: Text(

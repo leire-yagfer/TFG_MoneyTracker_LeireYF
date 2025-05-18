@@ -96,8 +96,7 @@ class CategoryDao {
         .set({"isincome": true, "cr": 245, "cg": 210, "cb": 85});
   }
 
-  /*
-  //Actualizar categoría
+  //Actualizar categoría 
   Future<void> updateCategory({
     required UserModel u,
     required Category oldCategory,
@@ -105,28 +104,49 @@ class CategoryDao {
   }) async {
     final firestore = FirebaseFirestore.instance;
 
-    final collection =
+    final categoriesCollection =
         firestore.collection('users').doc(u.userId).collection('categories');
 
-    final oldCategoryDoc = collection.doc(oldCategory.categoryName);
-    final newCategoryDoc = collection.doc(newCategory.categoryName);
+    final oldCategoryDoc = categoriesCollection.doc(oldCategory.categoryName);
+    final newCategoryDoc = categoriesCollection.doc(newCategory.categoryName);
 
-    //si el nombre no ha cambiado, solo actualizamos los datos (color, etc)
+    //Compruebo si se ha cambiado el nombre 
     if (oldCategory.categoryName == newCategory.categoryName) {
+      //si se ha cambiado solo el nombre, unicamnete se actualizan los datos (color, ingreso/gasto, evito errores aunque eso no lo pueda cambair) de la categoría existente
       await oldCategoryDoc.update({
-        'categoryColor': newCategory.categoryColor.value,
-        'categoryIsIncome': newCategory.categoryIsIncome,
+        'isincome': newCategory.categoryIsIncome, //evito errores
+        'cr': newCategory.categoryColor.red,
+        'cg': newCategory.categoryColor.green,
+        'cb': newCategory.categoryColor.blue,
       });
     } else {
-      //si el nombre ha cambiado, Firestore no permite renombrar un doc, así que:
-      //1. creamos nuevo doc
+      /*crear nueva categoría --> porque FireBase no permite cambiar el nombre de un documento directamente, así que creo una nueva con el nombre actualizado y copio las transacciones para mantener la estructura*/
       await newCategoryDoc.set({
-        'categoryColor': newCategory.categoryColor.value,
-        'categoryIsIncome': newCategory.categoryIsIncome,
+        'isincome': newCategory.categoryIsIncome, //evito errores
+        'cr': newCategory.categoryColor.red,
+        'cg': newCategory.categoryColor.green,
+        'cb': newCategory.categoryColor.blue,
       });
 
-      //2. eliminamos el anterior
+      //Mover transacciones de la categoría antigua a la nueva --> esto se debe a que cada transacción tiene un id y está almacenada dentro de la subcolección de una categoría concreta, por lo que no se puede simplemente cambiar el nombre de la categoría, hay que copiarla manualmente a la nueva subcolección con el nuevo nombre de documento
+      var oldTransactionsSnapshot =
+          await oldCategoryDoc.collection('transactions').get();
+
+      //Por cada transacción, copiarla a la nueva categoría
+      for (var transactionDoc in oldTransactionsSnapshot.docs) {
+        var transactionData = transactionDoc.data();
+        await newCategoryDoc
+            .collection('transactions')
+            .doc(transactionDoc.id)
+            .set(transactionData);
+        await oldCategoryDoc
+            .collection('transactions')
+            .doc(transactionDoc.id)
+            .delete();
+      }
+
+      // Borrar la categoría antigua
       await oldCategoryDoc.delete();
     }
-  }*/
+  }
 }
