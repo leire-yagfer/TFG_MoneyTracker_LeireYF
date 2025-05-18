@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablecircleprogressindicator.dart';
 import 'package:tfg_monetracker_leireyafer/view/statistics/icomeexpensechart.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 
@@ -95,16 +96,7 @@ class _IncomeTabState extends State<IncomeTab> {
     //Compruebo si todos los valores de las transacciones de las categorías es 0 para mostrar que no hay transacciones
     bool allZero = categoryTotalMap.values.every((value) => value == 0);
     return _isLoading
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text("Cargando datos"),
-              ],
-            ),
-          )
+        ? ReusableCircleProgressIndicator(text: "Cragando datos")
         : allZero || categoryTotalMap.isEmpty
             ? Padding(
                 padding: EdgeInsets.symmetric(

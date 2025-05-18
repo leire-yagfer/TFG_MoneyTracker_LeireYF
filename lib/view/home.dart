@@ -305,7 +305,7 @@ class HomePage extends StatelessWidget {
                                     content: Text(AppLocalizations.of(context)!
                                         .correctTransactionAdding),
                                     duration: Duration(
-                                        seconds: 2), //duración del SnackBar
+                                        seconds: 1), //duración del SnackBar
                                   ),
                                 );
                               }

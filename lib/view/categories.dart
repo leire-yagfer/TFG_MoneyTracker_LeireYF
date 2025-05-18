@@ -5,6 +5,7 @@ import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/staticdata.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/categorycard.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablecircleprogressindicator.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 
 ///Clase que muestra las categorías almacenadas en la base de datos de cada usuario separadas pòr ingresos y gastos
@@ -61,15 +62,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
     //Se separan las categorías en dos listas: una para ingresos y otra para gastos
 
     return _isLoading
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                Text("Cargando categorías")
-              ],
-            ),
-          )
+        ? ReusableCircleProgressIndicator(text: "Cragando categorías")  
         : Scaffold(
             body: SingleChildScrollView(
               child: Column(

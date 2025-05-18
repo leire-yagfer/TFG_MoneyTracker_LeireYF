@@ -31,11 +31,11 @@ class ReusableRowLoginSignup extends StatelessWidget {
             child: Text(
               text2,
               style: TextStyle(
-                fontSize: MediaQuery.of(context).textScaler.scale(16),
+                fontSize: MediaQuery.of(context).textScaler.scale(14),
                 fontWeight: FontWeight.w600,
                 color: context
                     .watch<ThemeProvider>()
-                    .palette()['fixedLightGrey']!,
+                    .palette()['textBlackWhite']!,
               ),
             ),
           ),

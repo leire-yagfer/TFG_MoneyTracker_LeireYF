@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -84,7 +84,7 @@ class _CategoryCardState extends State<CategoryCard> {
                             builder: (BuildContext context) {
                               return Dialog(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
+                                    borderRadius: BorderRadius.circular(10)),
                                 child: SingleChildScrollView(
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
@@ -278,7 +278,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                                                 .correctCategoryAdding),
                                                         duration: Duration(
                                                             seconds:
-                                                                3), //duración del SnackBar
+                                                                1), //duración del SnackBar
                                                       ),
                                                     );
                                                   }
@@ -451,8 +451,8 @@ class _CategoryCardState extends State<CategoryCard> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
-                                          content: Text("Actualizado correctamente"),
-                                          duration: Duration(seconds: 3),
+                                          content: Text("Categoría actualizada correctamente"),
+                                          duration: Duration(seconds: 1),
                                         ),
                                       );
                                     }
@@ -507,25 +507,26 @@ class _CategoryCardState extends State<CategoryCard> {
                                   .userRegistered!,
                               categoryPointer,
                             );
-                            //elimino la categoría también de la lista local
-                            setState(() {
-                              widget.categoriesList.removeAt(index);
-                            });
                             //muestro un mensaje de confirmación
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(AppLocalizations.of(context)!
                                     .correctCategoryDeleting),
-                                duration: Duration(seconds: 3),
+                                duration: Duration(seconds: 1),
                               ),
                             );
+                            //elimino la categoría también de la lista local
+                            setState(() {
+                              widget.categoriesList.removeAt(index);
+                            });
+                            
                           } else {
                             //Si no se puede eliminar, mostrar mensaje
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
                                     "No se pueden quedar a 0 las categorías"),
-                                duration: Duration(seconds: 3),
+                                duration: Duration(seconds: 1),
                               ),
                             );
                           }

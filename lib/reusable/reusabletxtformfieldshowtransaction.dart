@@ -20,7 +20,7 @@ class ReusableTxtFormFieldShowDetailsTransaction extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         filled: true,
-        fillColor: context.watch<ThemeProvider>().palette()['fixedLightGrey']!,
+        fillColor: context.watch<ThemeProvider>().palette()['filledTextField']!,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),

@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusableTxtFormFieldLoginRegister.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablecircleprogressindicator.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablerowloginregister.dart';
 import 'package:tfg_monetracker_leireyafer/model/util/firebaseauthentication.dart';
 import 'package:tfg_monetracker_leireyafer/view/appbottomnavigationbar.dart';
 import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 import '../../main.dart' show firestore;
 
 class LogInDialog extends StatefulWidget {
@@ -35,21 +37,16 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: _isLoading
-            ? Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text("Cargando"),
-                  ],
+            ? ReusableCircleProgressIndicator(text: "iniciando sesion")
+            : Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: context
+                      .watch<ThemeProvider>()
+                      .palette()['backgroundDialog']!,
                 ),
-              )
-            : SingleChildScrollView(
-                child: Padding(
+                child: SingleChildScrollView(
                   padding:
                       EdgeInsets.all(MediaQuery.of(context).size.height * 0.02),
                   child: Form(
@@ -97,6 +94,9 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
                             Navigator.pop(context);
                             showRegisterDialog(context);
                           },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
                         ),
                         ReusableButton(
                           onClick: () async {

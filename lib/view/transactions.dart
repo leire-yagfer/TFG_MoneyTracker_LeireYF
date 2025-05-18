@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
+import 'package:tfg_monetracker_leireyafer/reusable/reusablecircleprogressindicator.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusabletxtformfieldshowtransaction.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
@@ -76,15 +77,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  Text("Cargando transacciones")
-                ],
-              ),
-            )
+          ? ReusableCircleProgressIndicator(
+              text: "cargando transacciones",
+          )
           : userTransactions.isEmpty
               ? Center(
                   child: Text(
@@ -248,7 +243,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                     content: Text(
                                         "Transacción eliminada correctamente"),
                                     duration: Duration(
-                                        seconds: 3), //duración del SnackBar
+                                        seconds: 1), //duración del SnackBar
                                   ),
                                 );
                               },
@@ -293,6 +288,9 @@ class _TransactionsPageState extends State<TransactionsPage> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -320,7 +318,6 @@ class _TransactionsPageState extends State<TransactionsPage> {
                     text: descripcionController,
                     labelText: "Descripción",
                   ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

@@ -19,8 +19,15 @@ class _LoginSignupPageState extends State<LoginSignupPage>
     return Scaffold(
         body: Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+          Text(
+            AppLocalizations.of(context)!.appName,
+            style: TextStyle(
+                fontSize: MediaQuery.of(context).textScaler.scale(36),
+                fontWeight: FontWeight.w900),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.2),
           ReusableButton(
               onClick: () {
                 showLoginDialog(context);
@@ -29,7 +36,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>
               colorButton: 'buttonWhiteBlack',
               colorTextButton: 'buttonBlackWhite',
               buttonHeight: 0.1,
-              buttonWidth: 0.6),
+              buttonWidth: 0.4),
           SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           ReusableButton(
               onClick: () {
@@ -39,7 +46,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>
               colorButton: 'buttonBlackWhite',
               colorTextButton: 'buttonWhiteBlack',
               buttonHeight: 0.1,
-              buttonWidth: 0.6),
+              buttonWidth: 0.4),
         ],
       ),
     ));
