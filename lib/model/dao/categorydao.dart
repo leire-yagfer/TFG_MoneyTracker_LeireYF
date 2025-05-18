@@ -14,8 +14,7 @@ class CategoryDao {
     var userRef = await data.doc(usuario.userId).get();
 
     //2. coger categ asignadas a ese usuario
-    var userCategories =
-        await userRef.reference.collection("categories").get();
+    var userCategories = await userRef.reference.collection("categories").get();
 
     //3. guardar todos los datos
     List<Category> userCategoriesList = [];
@@ -26,7 +25,6 @@ class CategoryDao {
       var categoryName = c.id;
       userCategoriesList.add(Category(
           categoryName: categoryName,
-          
           categoryIsIncome: categoryData["isincome"],
           categoryColor: Color.fromARGB(255, categoryData["cr"],
               categoryData["cg"], categoryData["cb"])));
@@ -35,8 +33,7 @@ class CategoryDao {
   }
 
   ///Obtener categoría por tipo
-  Future<List<Category>> getCategoriesByType(
-      UserModel u, bool type) async {
+  Future<List<Category>> getCategoriesByType(UserModel u, bool type) async {
     //cojo todas las categorias
     List<Category> userCategories = await getCategories(u);
 
@@ -51,9 +48,10 @@ class CategoryDao {
     var userRef = await data.doc(u.userId);
 
     //añado la categoría a la colección
-    await userRef.collection("categories").doc(c.categoryName).set(c.toMap()); //creo el documento con el nombre de la categoría (doc(c.categoryName)) y le meto los datos propios (.set(c.toMap()))
+    await userRef.collection("categories").doc(c.categoryName).set(c
+        .toMap()); //creo el documento con el nombre de la categoría (doc(c.categoryName)) y le meto los datos propios (.set(c.toMap()))
   }
-  
+
   /*
   Future<void> insertarCategoria(UserModel u, Category c) async {
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
@@ -82,14 +80,53 @@ class CategoryDao {
   }
 
   ///Insertar varias categorías de primeras al registrarse un usuario
-  Future<void> insertarCategoriasRegistro(String uid) async { //le paso el uid del usuario proporcionaod por firebase que se genera al registrarse
+  Future<void> insertarCategoriasRegistro(String uid) async {
+    //le paso el uid del usuario proporcionaod por firebase que se genera al registrarse
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
     var userRef = await data.doc(uid).get();
 
     //2. guardar los datos de la categoria
-    await userRef.reference.collection("categories").doc('Housing').set(
-        {"isincome": false, "cr": 242, "cg": 153, "cb": 74});
-    await userRef.reference.collection("categories").doc("Salary").set(
-        {"isincome": true, "cr": 245, "cg": 210, "cb": 85});
+    await userRef.reference
+        .collection("categories")
+        .doc('Housing')
+        .set({"isincome": false, "cr": 242, "cg": 153, "cb": 74});
+    await userRef.reference
+        .collection("categories")
+        .doc("Salary")
+        .set({"isincome": true, "cr": 245, "cg": 210, "cb": 85});
   }
+
+  /*
+  //Actualizar categoría
+  Future<void> updateCategory({
+    required UserModel u,
+    required Category oldCategory,
+    required Category newCategory,
+  }) async {
+    final firestore = FirebaseFirestore.instance;
+
+    final collection =
+        firestore.collection('users').doc(u.userId).collection('categories');
+
+    final oldCategoryDoc = collection.doc(oldCategory.categoryName);
+    final newCategoryDoc = collection.doc(newCategory.categoryName);
+
+    //si el nombre no ha cambiado, solo actualizamos los datos (color, etc)
+    if (oldCategory.categoryName == newCategory.categoryName) {
+      await oldCategoryDoc.update({
+        'categoryColor': newCategory.categoryColor.value,
+        'categoryIsIncome': newCategory.categoryIsIncome,
+      });
+    } else {
+      //si el nombre ha cambiado, Firestore no permite renombrar un doc, así que:
+      //1. creamos nuevo doc
+      await newCategoryDoc.set({
+        'categoryColor': newCategory.categoryColor.value,
+        'categoryIsIncome': newCategory.categoryIsIncome,
+      });
+
+      //2. eliminamos el anterior
+      await oldCategoryDoc.delete();
+    }
+  }*/
 }

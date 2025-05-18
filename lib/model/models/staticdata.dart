@@ -4,21 +4,25 @@ import 'package:flutter/material.dart';
 
 ///Clase de colores disponibles para el color único representativo de las categorías
 class StaticData {
-  static const Map<String, Color> categoriesColorMap = {
-    "warmOrange": Color.fromARGB(255, 235, 135, 70), // naranja cálido
-    "sunnyYellow": Color.fromARGB(255, 240, 200, 70), // amarillo suave y alegre
-    "royalPurple": Color.fromARGB(255, 125, 75, 180), // púrpura elegante
-    "deepBlue": Color.fromARGB(255, 40, 100, 180), // azul profundo y sereno
-    "coralPink": Color.fromARGB(255, 235, 110, 130), // rosa coral vivo
-    "tealGreen": Color.fromARGB(255, 45, 140, 130), // verde azulado fresco
-    "skyBlue": Color.fromARGB(255, 90, 180, 230), // azul cielo luminoso
-    "plum": Color.fromARGB(255, 160, 70, 150), // ciruela vibrante
-    "limeGreen": Color.fromARGB(255, 165, 210, 70), // lima natural
-    "amber": Color.fromARGB(255, 220, 160, 40), // ámbar dorado
-    "salmon": Color.fromARGB(255, 240, 130, 100), // salmón suave
-    "lavender": Color.fromARGB(255, 180, 160, 210), // lavanda delicada
-    "peach": Color.fromARGB(255, 255, 165, 110), // melocotón cálido
-    "mint": Color.fromARGB(255, 120, 200, 140), // menta fresca
-    "cerulean": Color.fromARGB(255, 70, 150, 220), // cerúleo brillante
+  static const Map<String, Color> incomeCategoriesColorMap = {
+    "softMint": Color.fromARGB(255, 180, 235, 200), //menta suave
+    "earthyOlive": Color.fromARGB(255, 150, 170, 100), //oliva terrosa
+    "mutedTeal": Color.fromARGB(255, 100, 180, 170), //verde azulado apagado
+    "pastelYellow": Color.fromARGB(255, 245, 230, 140), //amarillo pastel
+    "warmBeige": Color.fromARGB(255, 220, 200, 170), //beige cálido
+    "foggyGray": Color.fromARGB(255, 190, 195, 190), //gris brumoso
+    "calmSky": Color.fromARGB(255, 155, 200, 230), //celeste calmado
+    "softLilac": Color.fromARGB(255, 200, 180, 230), //lila suave
+  };
+
+  static const Map<String, Color> expenseCategoriesColorMap = {
+    "clayOrange": Color.fromARGB(255, 225, 145, 100), //naranja arcilla
+    "blushPink": Color.fromARGB(255, 235, 170, 180), //rosado rubor
+    "desertSand": Color.fromARGB(255, 230, 200, 180), //arena del desierto
+    "warmTaupe": Color.fromARGB(255, 170, 140, 130), //topo cálido
+    "mutedLavender": Color.fromARGB(255, 210, 180, 210), //lavanda apagada
+    "moodyPlum": Color.fromARGB(255, 140, 100, 130), //ciruela apagada
+    "mistyBlue": Color.fromARGB(255, 170, 190, 210), //azul neblinoso
+    "softCopper": Color.fromARGB(255, 200, 130, 100), //cobre suave
   };
 }

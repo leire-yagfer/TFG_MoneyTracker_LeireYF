@@ -67,7 +67,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 categoriesList: listIncomes,
                 newCategoryIsIncome: true,
                 categoriesColorMap: StaticData
-                    .categoriesColorMap, //paso la clase de colores disponibles para las categorías
+                    .incomeCategoriesColorMap, //paso la clase de colores disponibles para las categorías de tipo ingreso
                 listAllCategories: listExpenses + listIncomes,
               ),
             if (listExpenses.isNotEmpty)
@@ -76,7 +76,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 categoriesList: listExpenses,
                 newCategoryIsIncome: false,
                 categoriesColorMap: StaticData
-                    .categoriesColorMap, //paso la clase de colores disponibles para las categorías
+                    .expenseCategoriesColorMap, //paso la clase de colores disponibles para las categorías de tipo gasto
                 listAllCategories: listExpenses + listIncomes,
               ),
           ],

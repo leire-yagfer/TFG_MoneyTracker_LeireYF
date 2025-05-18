@@ -5,7 +5,6 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
-import 'package:tfg_monetracker_leireyafer/model/models/staticdata.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablebutton.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusabletxtformfield.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
@@ -18,7 +17,8 @@ class CategoryCard extends StatefulWidget {
   List<Category> categoriesList; //Lista de categorías a mostrar
   bool newCategoryIsIncome;
   Map<String, Color> categoriesColorMap;
-  List<Category> listAllCategories; //lista que almacena todas las categorías
+  List<Category>
+      listAllCategories; //lista que almacena todas las categorías que se muestran en la página
 
   //Constructor de la clase
   CategoryCard({
@@ -38,42 +38,24 @@ class _CategoryCardState extends State<CategoryCard> {
 
   final TextEditingController _newCategoryNameController =
       TextEditingController();
-  /* ---------------------------------------------------------------------------------- */
-  //EXPLICACION RAPIDA DE LO QUE HE HECHO PARA QUE FUNCIONE
-  // Antes tenías en el principio del método build la declaración de dos variables: usedColors y availableColors
-  // No funcionaban bien porque, cuando alterabas el estado, no se actualizaban estas dos variables correctamente, asi que no servían de nada.
-  // Lo que he hecho ha sido declararlas como "funciones getter" por así decirlo.
-  // Estas funciones se llaman cada vez que se quiere acceder a la variable, es decir, cada vez que llamemos a usedColors() o availableColors() nos devolverá su valor actualizado.
-  // Cuando se actualice la lista de categorias y, por ello, los colores que usan, cuando se llamen a estas "funciones" nos devolverán los datos actualizados.
-  /* ---------------------------------------------------------------------------------- */
 
-  //Color de la categoría seleccionada
-  //EXPLICACION: Va a recoger el color seleccionado de la lista disponible.
-  //Como la lista de colores es una función getter, se tiene que dar primero un tipo a este parámetro, por defecto el negro.
-  Color categoryColorSelected = StaticData.categoriesColorMap.values
-      .first; //Color seleccionado por el usuario para la categoría --> lo inicializo en el primer valor del mapa de colores para categorías
+  //variables declaradas como "funciones getter" que me permiten cuando las llame tener los colores actualizados
+  //colores ya usados por categorías de un tipo (va en función del + seleccionado que coge si es ingreso o gasto)
+  Set<Color> usedColorsByType() => widget.listAllCategories
+      .where((c) => c.categoryIsIncome == widget.newCategoryIsIncome)
+      .map((c) => c.categoryColor)
+      .toSet();
 
-  //obtengo los colores ya usados por otras categorías, independientemente del tipo
-  Set<Color> usedColors() =>
-      widget.listAllCategories.map((c) => c.categoryColor).toSet();
-
-  //excluyo los colores usados para quedarme solo con los disponibles
+  //colores disponibles para el tipo actual (el elegido para añadir nueva categoría)
   List<Color> availableColors() => widget.categoriesColorMap.values
-      .where((c) => !usedColors().contains(c))
+      .where((color) => !usedColorsByType().contains(color))
       .toList();
 
   @override
   Widget build(BuildContext context) {
-    //Si el color es negro (el que viene por defecto al iniciar la vista), o el color no se encuentra en la lista de colores disponibles, se cambia por el primero disponible.
-    //Si no hay ninguno disponible, se cambia por el blanco.
-    if (categoryColorSelected == Colors.black ||
-        !availableColors().contains(categoryColorSelected)) {
-      setState(() {
-        categoryColorSelected = (availableColors().isNotEmpty)
-            ? availableColors()[0]
-            : Colors.white;
-      });
-    }
+    Color categoryColorSelected = availableColors()
+        .first; //Color seleccionado por el usuario para la categoría --> lo inicializo en el primer color libre disponible del mapa de colores del tipo seleccionado
+
     return Column(
       children: [
         //Row para el titulo y el icono de añadir categoría
@@ -365,6 +347,124 @@ class _CategoryCardState extends State<CategoryCard> {
                         vertical: MediaQuery.of(context).size.height * 0.008,
                         horizontal: MediaQuery.of(context).size.width * 0.015),
                     child: ListTile(
+                      /*onTap: () async {
+                        //controlador con el nombre actual
+                        TextEditingController _editCategoryNameController =
+                            TextEditingController(
+                                text: categoryPointer.categoryName);
+                        //color actual
+                        Color updatedColor = categoryPointer.categoryColor;
+
+                        //abrir diálogo para editar
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text(
+                                  "Editar categoría"),
+                              content: StatefulBuilder(
+                                builder: (context, setStateDialog) {
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextFormField(
+                                        controller: _editCategoryNameController,
+                                        decoration: InputDecoration(
+                                          labelText: "Nuevo nombre categoría",
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text("Selecciona el color"),
+                                      SizedBox(height: 10),
+                                      Wrap(
+                                        spacing: 8.0,
+                                        children: availableColors().map((color) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              setStateDialog(() {
+                                                updatedColor = color;
+                                              });
+                                            },
+                                            child: CircleAvatar(
+                                              backgroundColor: color,
+                                              child: updatedColor == color
+                                                  ? Icon(Icons.check,
+                                                      color: Colors.white)
+                                                  : null,
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); //cancelar edición
+                                  },
+                                  child: Text(
+                                      AppLocalizations.of(context)!.cancel),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    String updatedName =
+                                        _editCategoryNameController.text.trim();
+
+                                    if (updatedName.isNotEmpty) {
+                                      //crear nueva categoría con los datos actualizados
+                                      Category updatedCategory = Category(
+                                        categoryName: updatedName,
+                                        categoryIsIncome:
+                                            categoryPointer.categoryIsIncome,
+                                        categoryColor: updatedColor,
+                                      );
+
+                                      //actualizar en la base de datos
+                                      await CategoryDao().updateCategory(
+                                        u : context.read<ConfigurationProvider>().userRegistered!,
+                                        oldCategory: categoryPointer,
+                                        newCategory: updatedCategory,
+                                      );
+
+                                      //actualizar en la UI
+                                      setState(() {
+                                        widget.categoriesList[index] =
+                                            updatedCategory;
+                                        //opcionalmente también actualizar listAllCategories si la usas
+                                        int allIndex =
+                                            widget.listAllCategories.indexWhere(
+                                          (cat) =>
+                                              cat.categoryName ==
+                                              categoryPointer.categoryName,
+                                        );
+                                        if (allIndex != -1) {
+                                          widget.listAllCategories[allIndex] =
+                                              updatedCategory;
+                                        }
+                                      });
+
+                                      Navigator.of(context)
+                                          .pop(); //cerrar el diálogo
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text("Actualizado correctamente"),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child:
+                                      Text("Guardar cambios"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },*/
                       contentPadding: EdgeInsets.all(
                           MediaQuery.of(context).size.width * 0.01),
                       title: Text(
