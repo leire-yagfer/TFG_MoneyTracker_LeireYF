@@ -257,15 +257,17 @@ class HomePage extends StatelessWidget {
 
                                 //Crear la transacción
                                 //no paso el ID porque es autoincremental en el propio FireBase
-                                TransactionModel transaccion = TransactionModel(
+                                TransactionModel newTransaction = TransactionModel(
                                     transactionId: "",
                                     transactionTittle: titulo,
                                     transactionDate: DateTime.parse(fecha),
                                     transactionCategory: selectedCategoria!,
                                     transactionImport: cantidad,
+                                    //transactionSecondImport: cantidad,
                                     transactionCurrency: context
                                         .read<ConfigurationProvider>()
                                         .currencyCodeInUse,
+                                    //transactionSecondCurrency: context.read<ConfigurationProvider>().currencyCodeInUse2,
                                     transactionDescription: descripcion);
 
                                 //Insertar transacción en la base de datos
@@ -273,7 +275,7 @@ class HomePage extends StatelessWidget {
                                     context
                                         .read<ConfigurationProvider>()
                                         .userRegistered!,
-                                    transaccion);
+                                    newTransaction);
                                 await context
                                     .read<ConfigurationProvider>()
                                     .loadTransactions();

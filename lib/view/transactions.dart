@@ -171,16 +171,28 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize:
-                                    MediaQuery.of(context).textScaler.scale(14),
-                                color:
-                                    rowAndImportColor, //Importe con color según tipo
-                              ),
-                            ),
+                            Column(children: [
+                              Text(
+                                  '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: MediaQuery.of(context)
+                                        .textScaler
+                                        .scale(14),
+                                    color:
+                                        rowAndImportColor, //Importe con color según tipo
+                                  )),
+                              /*Text(
+                                  '${transaccion.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa en uso
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: MediaQuery.of(context)
+                                        .textScaler
+                                        .scale(14),
+                                    color:
+                                        rowAndImportColor, //Importe con color según tipo
+                                  )),*/
+                            ]),
                             SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * 0.01),

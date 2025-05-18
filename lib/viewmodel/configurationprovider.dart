@@ -12,6 +12,7 @@ import 'package:tfg_monetracker_leireyafer/model/util/changecurrencyapi.dart';
 class ConfigurationProvider extends ChangeNotifier {
   Locale _languaje = Locale('es');
   Currency _currencyCodeInUse = APIUtils.getFromList('EUR')!;
+  //Currency _currencyCodeInUse2 = APIUtils.getFromList('EUR')!;
   //lista de transacciones
   List<TransactionModel> listAllTransactions = [];
 
@@ -26,6 +27,9 @@ class ConfigurationProvider extends ChangeNotifier {
 
   //Obetener la divisa en la que se está trabajando
   Currency get currencyCodeInUse => _currencyCodeInUse;
+
+  //Obetener la segunda divisa en la que se está trabajando
+  //Currency get currencyCodeInUse2 => _currencyCodeInUse2;
 
   //Obtener el usuario
   UserModel?
@@ -48,6 +52,15 @@ class ConfigurationProvider extends ChangeNotifier {
     await prefs.setString('currencyCodeInUse', newCurrencyCode.currencyCode);
   }
 
+  /*
+  ///Cambiar la divisa secundaria y guardar la preferencia
+  Future<void> changeCurrency2(Currency newCurrencyCode) async {
+    _currencyCodeInUse2 = newCurrencyCode;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('currencyCodeInUse2', newCurrencyCode.currencyCode);
+  }*/
+
   ///Cargar las preferencias guardadas en el dispositivo
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -55,6 +68,7 @@ class ConfigurationProvider extends ChangeNotifier {
     _languaje = Locale(prefs.getString('languaje') ?? 'es');
     _currencyCodeInUse =
         APIUtils.getFromList(prefs.getString('currencyCodeInUse') ?? 'EUR')!;
+    //_currencyCodeInUse2 = APIUtils.getFromList(prefs.getString('currencyCodeInUse2') ?? 'EUR')!;
     //Cargar las transacciones desde la base de datos
     await loadTransactions();
     notifyListeners();
@@ -62,8 +76,8 @@ class ConfigurationProvider extends ChangeNotifier {
 
   ///Cargar las transacciones desde la base de datos, ordenadas por fecha
   Future<void> loadTransactions() async {
-    listAllTransactions =
-        await TransactionDao().getTransactionsByDate(userRegistered!, currencyCodeInUse.currencyCode);
+    listAllTransactions = await TransactionDao()
+        .getTransactionsByDate(userRegistered!, currencyCodeInUse.currencyCode);
     listAllTransactions
         .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
 
@@ -75,8 +89,8 @@ class ConfigurationProvider extends ChangeNotifier {
                 t.transactionCurrency.currencyCode);
 
         //reemplazo el importe con el convertido a la moneda en uso
-        t.transactionImport = t.transactionImport *
-            changesRates[currencyCodeInUse.currencyCode]!;
+        t.transactionImport =
+            t.transactionImport * changesRates[currencyCodeInUse.currencyCode]!;
       }
     }
     notifyListeners();
