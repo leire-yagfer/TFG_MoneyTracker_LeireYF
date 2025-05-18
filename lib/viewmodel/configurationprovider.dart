@@ -14,7 +14,7 @@ class ConfigurationProvider extends ChangeNotifier {
   Currency _currencyCodeInUse = APIUtils.getFromList('EUR')!;
   //Currency _currencyCodeInUse2 = APIUtils.getFromList('EUR')!;
   //lista de transacciones
-  List<TransactionModel> listAllTransactions = [];
+  List<TransactionModel> listAllUserTransactions = [];
 
   ///Cargar las preferencias guardadas al iniciar la app
   ConfigurationProvider(UserModel? u) {
@@ -76,12 +76,12 @@ class ConfigurationProvider extends ChangeNotifier {
 
   ///Cargar las transacciones desde la base de datos, ordenadas por fecha
   Future<void> loadTransactions() async {
-    listAllTransactions = await TransactionDao()
+    listAllUserTransactions = await TransactionDao()
         .getTransactionsByDate(userRegistered!, currencyCodeInUse.currencyCode);
-    listAllTransactions
+    listAllUserTransactions
         .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
 
-    for (var t in listAllTransactions) {
+    for (var t in listAllUserTransactions) {
       if (t.transactionCurrency.currencyCode != currencyCodeInUse) {
         //obtengo las tasas de cambio desde la moneda original de la transacción en el puntero (es decir por la que me llego)
         Map<String, double> changesRates =

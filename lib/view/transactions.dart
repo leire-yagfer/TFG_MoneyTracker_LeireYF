@@ -53,8 +53,8 @@ class _TransactionsPageState extends State<TransactionsPage> {
     //llamo al DAO para eliminar la transacción de Firestore
     await transactionDao.deleteTransaction(
         context.read<ConfigurationProvider>().userRegistered!,
-        context.read<ConfigurationProvider>().listAllTransactions[index]);
-    context.read<ConfigurationProvider>().listAllTransactions.removeAt(
+        context.read<ConfigurationProvider>().listAllUserTransactions[index]);
+    context.read<ConfigurationProvider>().listAllUserTransactions.removeAt(
         index); //elimino la transacción de la lista local del Provider
     context
         .read<ConfigurationProvider>()
@@ -94,7 +94,10 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   ),
                 )
               : ListView.builder(
-                  itemCount: userTransactions.length,
+                  itemCount: context
+                      .watch<ConfigurationProvider>()
+                      .listAllUserTransactions
+                      .length,
                   itemBuilder: (context, index) {
                     TransactionModel transaccion = userTransactions[index];
 
