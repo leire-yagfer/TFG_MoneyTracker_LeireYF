@@ -119,11 +119,38 @@ class _MyAppState extends State<MyApp> {
           ],
           //En función de si el usuario tiene internet o no (en base a si se han conseguido recopilar las transacciones de firebase)
           home: (context.watch<ConfigurationProvider>().isWifiConnected)
-              ? Scaffold(
-                  body: Center(child: Text("no internet")),
-                  /*ReusableCircleProgressIndicator(
-                  text: AppLocalizations.of(context)!.errorNoInternet,
-                )*/
+              ? StatefulBuilder(
+                  builder: (context, setState) {
+                    return Scaffold(
+                        body: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error,
+                              size: MediaQuery.of(context).size.width * 0.3,
+                              color: context
+                                  .watch<ThemeProvider>()
+                                  .palette()['buttonBlackWhite']!),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.width * 0.05),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.1),
+                            child: Text(
+                              AppLocalizations.of(context)!.errorNoInternet,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context)
+                                      .textScaler
+                                      .scale(20),
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          )
+                        ],
+                      ),
+                    ));
+                  },
                 )
               : //En función de si existe un usuario ya registrado que ha iniciado sesión, se muestra la pantalla principal y sino, la pagina de inicio de sesión/registro
               (context.read<ConfigurationProvider>().userRegistered == null)

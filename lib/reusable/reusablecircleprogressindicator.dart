@@ -21,7 +21,7 @@ class ReusableCircleProgressIndicator extends StatelessWidget {
           ),
           SizedBox(height: MediaQuery.of(context).size.width * 0.05),
           Text(
-            text,
+            text, textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: MediaQuery.of(context).textScaler.scale(20),
                 fontWeight: FontWeight.w600),

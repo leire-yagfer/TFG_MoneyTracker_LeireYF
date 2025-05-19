@@ -420,99 +420,123 @@ class _CategoryCardState extends State<CategoryCard> {
                                       ),
                                       SizedBox(height: 10),
                                       SizedBox(
-  child: GestureDetector(
-    onTap: () {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              AppLocalizations.of(context)!.newCategoryColorTitle,
-              overflow: TextOverflow.ellipsis,
-            ),
-            content: availableColors().isNotEmpty
-                ? SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2, // 20% altura
-                    child: SingleChildScrollView(
-                      child: BlockPicker(
-                        pickerColor: categoryColorSelected,
-                        availableColors: availableColors(),
-                        onColorChanged: (Color color) {
-                          setStateDialog(() {
-                            updatedColor = color;
-                            categoryColorSelected = color;
-                          });
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                  )
-                : Text(AppLocalizations.of(context)!.noColorsAvailable),
-          );
-        },
-      );
-    },
-    child: Container(
-      width: MediaQuery.of(context).size.width * 0.9,
-      padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.02,
-        vertical: MediaQuery.of(context).size.height * 0.02,
-      ),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: context.watch<ThemeProvider>().palette()['textBlackWhite']!,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.05,
-            height: MediaQuery.of(context).size.height * 0.025,
-            decoration: BoxDecoration(
-              color: categoryColorSelected,
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(),
-            ),
-          ),
-          SizedBox(width: 12),
-          Text(
-            AppLocalizations.of(context)!.newCategoryColorLabel,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-          Icon(Icons.arrow_drop_down),
-        ],
-      ),
-    ),
-  ),
-)
-
-
-                                      /*Text(AppLocalizations.of(context)!
-                                          .newCategoryColorTitle),
-                                      SizedBox(height: 10),
-                                      Wrap(
-                                        spacing: 8.0,
-                                        children:
-                                            availableColors().map((color) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              setStateDialog(() {
-                                                updatedColor = color;
-                                              });
-                                            },
-                                            child: CircleAvatar(
-                                              backgroundColor: color,
-                                              child: updatedColor == color
-                                                  ? Icon(Icons.check,
-                                                      color: Colors.white)
-                                                  : null,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .newCategoryColorTitle,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  content: availableColors()
+                                                          .isNotEmpty
+                                                      ? SizedBox(
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.2, // 20% altura
+                                                          child:
+                                                              SingleChildScrollView(
+                                                            child: BlockPicker(
+                                                              pickerColor:
+                                                                  categoryColorSelected,
+                                                              availableColors:
+                                                                  availableColors(),
+                                                              onColorChanged:
+                                                                  (Color
+                                                                      color) {
+                                                                setStateDialog(
+                                                                    () {
+                                                                  updatedColor =
+                                                                      color;
+                                                                  categoryColorSelected =
+                                                                      color;
+                                                                });
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Text(AppLocalizations
+                                                              .of(context)!
+                                                          .noColorsAvailable),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.9,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.02,
+                                              vertical: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.02,
                                             ),
-                                          );
-                                        }).toList(),
-                                      ),*/
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: context
+                                                        .watch<ThemeProvider>()
+                                                        .palette()[
+                                                    'textBlackWhite']!,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.025,
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        categoryColorSelected,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    border: Border.all(),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 12),
+                                                Text(
+                                                  AppLocalizations.of(context)!
+                                                      .newCategoryColorLabel,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.01),
+                                                Icon(Icons.arrow_drop_down),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   );
                                 },
