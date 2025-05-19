@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 //clase reutilizable para cuando se quiera poner un CircularProgressIndicator
 class ReusableCircleProgressIndicator extends StatelessWidget {
@@ -24,7 +26,7 @@ class ReusableCircleProgressIndicator extends StatelessWidget {
             text, textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: MediaQuery.of(context).textScaler.scale(20),
-                fontWeight: FontWeight.w600),
+                fontWeight: FontWeight.w600, color: context.watch<ThemeProvider>().palette()['textBlackWhite']!),
           ),
         ],
       ),

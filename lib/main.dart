@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.error,
+                          Icon(Icons.wifi_off,
                               size: MediaQuery.of(context).size.width * 0.3,
                               color: context
                                   .watch<ThemeProvider>()
