@@ -27,17 +27,7 @@ class IncomeExpenseChart extends StatelessWidget {
             PieChartData(
               //tiene el número de secciones igual al número de categorías
               sections: dataMap.entries.map((categoryPointer) {
-                //obtengo el color de la categoría sobre el que voy a ajustar el color del texto (blanco/negro)
-                Color categoryColorRepresentation =
-                    colorMap[categoryPointer.key]!;
-                //obtengo la luminosidad del fondo de la sección de la categoría
-                double luminance =
-                    categoryColorRepresentation.computeLuminance();
-                Color textColorOverCategoryColorRepresentation = luminance > 0.5 ? context
-                              .watch<ThemeProvider>()
-                              .palette()['textWhiteBlack']! : context
-                              .watch<ThemeProvider>()
-                              .palette()['textBlackWhite']!;
+                
                 return PieChartSectionData(
                   value: categoryPointer.value,
                   title:
@@ -47,7 +37,9 @@ class IncomeExpenseChart extends StatelessWidget {
                   titleStyle: TextStyle(
                     fontSize: MediaQuery.of(context).textScaler.scale(16),
                     fontWeight: FontWeight.w600,
-                    color: textColorOverCategoryColorRepresentation,
+                    color: context
+                              .watch<ThemeProvider>()
+                              .palette()['textBlackWhite']!,
                   ),
                 );
               }).toList(),

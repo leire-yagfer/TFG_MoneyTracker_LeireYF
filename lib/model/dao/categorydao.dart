@@ -66,21 +66,6 @@ class CategoryDao {
         .toMap()); //creo el documento con el nombre de la categoría (doc(c.categoryName)) y le meto los datos propios (.set(c.toMap()))
   }
 
-  /*
-  Future<void> insertarCategoria(UserModel u, Category c) async {
-    //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
-    var userRef = await data.doc(u.userId).get();
-
-    //2. guardar los datos de la categoria
-    await userRef.reference.collection("categories").doc(c.categoryName).set({
-      
-      "isincome": c.categoryIsIncome,
-      "cr": c.categoryColor.red,
-      "cg": c.categoryColor.green,
-      "cb": c.categoryColor.blue
-    });
-  }*/
-
   ///Eliminar categoría
   Future<void> deleteCategory(UserModel u, Category c) async {
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
@@ -100,14 +85,16 @@ class CategoryDao {
     var userRef = await data.doc(uid).get();
 
     //2. guardar los datos de la categoria
+    //Gasto
     await userRef.reference
         .collection("categories")
-        .doc('Housing')
-        .set({"isincome": false, "cr": 242, "cg": 153, "cb": 74});
+        .doc('General')
+        .set({"isincome": false, "cr": 240, "cg": 200, "cb": 195});
+    //Ingreso
     await userRef.reference
         .collection("categories")
-        .doc("Salary")
-        .set({"isincome": true, "cr": 245, "cg": 210, "cb": 85});
+        .doc("General")
+        .set({"isincome": true, "cr": 255, "cg": 221, "cb": 204});
   }
 
   //Actualizar categoría

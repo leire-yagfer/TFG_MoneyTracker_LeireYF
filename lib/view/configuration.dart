@@ -66,8 +66,8 @@ class _ConfigurationPageState extends State<ConfigurationPage>
                             children: <Widget>[
                               //Botón para cambiar entre modo oscuro y modo claro
                               Padding(
-                                padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.height * 0.025),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: MediaQuery.of(context).size.width * 0.01, vertical: MediaQuery.of(context).size.height * 0.02),
                                 child: Row(children: [
                                   IconButton(
                                     icon: Icon(
@@ -269,7 +269,14 @@ class _ConfigurationPageState extends State<ConfigurationPage>
                                   padding: EdgeInsets.all(
                                       MediaQuery.of(context).size.width * 0.05),
                                   child: Row(children: [
-                                    Icon(Icons.logout),
+                                    Icon(Icons.logout,
+                                        color: context
+                                            .watch<ThemeProvider>()
+                                            .palette()["fixedRed"]!),
+                                    SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.05),
                                     GestureDetector(
                                       onTap: () {
                                         showLogOutDialog(context);
@@ -282,7 +289,7 @@ class _ConfigurationPageState extends State<ConfigurationPage>
                                                 .scale(16),
                                             color: context
                                                 .watch<ThemeProvider>()
-                                                .palette()["fixedRed"]),
+                                                .palette()["fixedRed"]!),
                                       ),
                                     ),
                                   ]))

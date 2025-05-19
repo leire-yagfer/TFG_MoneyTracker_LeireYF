@@ -86,6 +86,9 @@ class _BalanceTabState extends State<BalanceTab> {
     //Compruebo si todos los valores de las transacciones de las categorías es 0 para mostrar que no hay transacciones
     bool allZero = showExpense == 0 && showIncome == 0;
 
+    //balance final
+    double balance = showIncome - showExpense;
+
     return _isLoading
         ? ReusableCircleProgressIndicator(
             text: AppLocalizations.of(context)!.loadingData)
@@ -167,7 +170,7 @@ class _BalanceTabState extends State<BalanceTab> {
                                         fontWeight: FontWeight.w600,
                                         color: context
                                             .watch<ThemeProvider>()
-                                            .palette()['fixedBlack']!,
+                                            .palette()['textBlackWhite']!,
                                       ),
                                     ),
                                     PieChartSectionData(
@@ -185,7 +188,7 @@ class _BalanceTabState extends State<BalanceTab> {
                                         fontWeight: FontWeight.w600,
                                         color: context
                                             .watch<ThemeProvider>()
-                                            .palette()['fixedBlack']!,
+                                            .palette()['textBlackWhite']!,
                                       ),
                                     ),
                                   ],
@@ -195,7 +198,45 @@ class _BalanceTabState extends State<BalanceTab> {
                             SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.02),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                  vertical: MediaQuery.of(context).size.width *
+                                      0.025),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: context
+                                    .watch<ThemeProvider>()
+                                    .palette()['scaffoldBackground']!,
+                                border: Border.all(
+                                  color: context
+                                      .watch<ThemeProvider>()
+                                      .palette()['textBlackWhite']!,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Text(
+                                  balance < 0
+                                      ? "${AppLocalizations.of(context)!.balance}: ${balance.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}"
+                                      : balance.toString(),
+                                  style: TextStyle(
+                                      fontSize: MediaQuery.of(context)
+                                          .textScaler
+                                          .scale(20),
+                                      fontWeight: FontWeight.w600,
+                                      color: balance < 0
+                                          ? context
+                                              .watch<ThemeProvider>()
+                                              .palette()['redButton']!
+                                          : context
+                                              .watch<ThemeProvider>()
+                                              .palette()['greenButton']!)),
+                            ),
 
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02),
                             // Leyenda --> diferente a las otras porque solo cuenta con dos
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

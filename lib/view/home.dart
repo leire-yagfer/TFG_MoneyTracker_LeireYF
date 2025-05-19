@@ -220,8 +220,8 @@ class HomePage extends StatelessWidget {
                             DateTime? pickedDate = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(), //muestra el inicial
-                              firstDate: DateTime(2000), //primer día
-                              lastDate: DateTime(2101), //último día
+                              firstDate: DateTime(2020, 1, 1), //1 de enero de 2020
+                              lastDate: DateTime(2025, 12, 31), //31 de diciembre de 2025
                             );
 
                             if (pickedDate != null) {
