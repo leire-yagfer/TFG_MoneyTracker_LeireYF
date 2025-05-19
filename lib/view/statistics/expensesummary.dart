@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
 import 'package:tfg_monetracker_leireyafer/reusable/reusablecircleprogressindicator.dart';
-import 'package:tfg_monetracker_leireyafer/view/statistics/icomeexpensechart.dart';
+import 'package:tfg_monetracker_leireyafer/view/statistics/incomeexpensechart.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 
 ///Clase que muestra los movimientos cuyo tipo es gastos en la base de datos en un gráfico circular divido con los colores de las categorías a las que pertenece
@@ -95,65 +95,68 @@ class _ExpenseTabState extends State<ExpenseTab> {
     //Compruebo si todos los valores de las transacciones de las categorías es 0 para mostrar que no hay transacciones
     bool allZero = categoryTotalMap.values.every((value) => value == 0);
     return _isLoading
-        ? ReusableCircleProgressIndicator(text: AppLocalizations.of(context)!.loadingData)
-        : (allZero || categoryTotalMap.isEmpty)
-            ? Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.05),
-                child: Center(
-                  child: Text(
-                    AppLocalizations.of(context)!.noTransactions,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).textScaler.scale(30),
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              )
-            : SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  //Filtros (ubicados en la parte superior)
+        ? ReusableCircleProgressIndicator(
+            text: AppLocalizations.of(context)!.loadingData)
+        : SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              //Filtros (ubicados en la parte superior)
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Radio<String>(
-                          value: 'all',
-                          groupValue: selectedFilter,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedFilter = value!;
-                              selectedYear = null;
-                            });
-                            _loadData();
-                          },
-                        ),
-                        Text(AppLocalizations.of(context)!.all),
-                        Radio<String>(
-                          value: 'year',
-                          groupValue: selectedFilter,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedFilter = value!;
-                            });
-                            _loadData();
-                          },
-                        ),
-                        Text(AppLocalizations.of(context)!.year),
-                      ],
+                    Radio<String>(
+                      value: 'all',
+                      groupValue: selectedFilter,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedFilter = value!;
+                          selectedYear = null;
+                        });
+                        _loadData();
+                      },
                     ),
-                    if (selectedFilter == 'year') _buildYearPicker(),
-                    SizedBox(
-                      child: IncomeExpenseChart(
-                        dataMap: categoryTotalMap,
-                        colorMap: categoryColorMap,
-                      ),
+                    Text(AppLocalizations.of(context)!.all),
+                    Radio<String>(
+                      value: 'year',
+                      groupValue: selectedFilter,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedFilter = value!;
+                        });
+                        _loadData();
+                      },
                     ),
+                    Text(AppLocalizations.of(context)!.year),
                   ],
                 ),
-              );
+                if (selectedFilter == 'year') _buildYearPicker(),
+                (allZero || categoryTotalMap.isEmpty)
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical:
+                                MediaQuery.of(context).size.height * 0.05),
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.noTransactions,
+                            style: TextStyle(
+                              fontSize:
+                                  MediaQuery.of(context).textScaler.scale(30),
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    : SizedBox(
+                        child: IncomeExpenseChart(
+                          dataMap: categoryTotalMap,
+                          colorMap: categoryColorMap,
+                        ),
+                      ),
+              ],
+            ),
+          );
   }
 
   ///Construir el selector de año

@@ -185,7 +185,7 @@ class TransactionDao {
       for (var t in transactionsInCategory.docs) {
         Map<String, dynamic> transdata = t.data();
         if (filter == 'year' && year != null) {
-          if (transdata['datetime'].year.toString() == year) {
+          if (transdata['datetime'].toDate().year.toString() == year) {
             if (transdata['currency'] != actualCurrency) {
               total = total += (transdata['import'] *
                   (await APIUtils.getChangesBasedOnCurrencyCode(

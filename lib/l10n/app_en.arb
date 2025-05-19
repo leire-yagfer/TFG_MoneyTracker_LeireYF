@@ -112,5 +112,7 @@
 
     "editCategory": "Edit category",
     "changeCategoryName": "New category name",
-    "cannotDeleteCategory": "Categories cannot be reduced to zero"
+    "cannotDeleteCategory": "Categories cannot be reduced to zero",
+
+    "errorNoInternet": "No internet detectived. Reopen de app"
 }

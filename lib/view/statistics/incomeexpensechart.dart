@@ -26,18 +26,28 @@ class IncomeExpenseChart extends StatelessWidget {
           child: PieChart(
             PieChartData(
               //tiene el número de secciones igual al número de categorías
-              sections: dataMap.entries.map((entry) {
+              sections: dataMap.entries.map((categoryPointer) {
+                //obtengo el color de la categoría sobre el que voy a ajustar el color del texto (blanco/negro)
+                Color categoryColorRepresentation =
+                    colorMap[categoryPointer.key]!;
+                //obtengo la luminosidad del fondo de la sección de la categoría
+                double luminance =
+                    categoryColorRepresentation.computeLuminance();
+                Color textColorOverCategoryColorRepresentation = luminance > 0.5 ? context
+                              .watch<ThemeProvider>()
+                              .palette()['textWhiteBlack']! : context
+                              .watch<ThemeProvider>()
+                              .palette()['textBlackWhite']!;
                 return PieChartSectionData(
-                  value: entry.value,
+                  value: categoryPointer.value,
                   title:
-                      "${entry.value.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
-                  color: colorMap[entry.key],
+                      "${categoryPointer.value.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                  color: colorMap[categoryPointer.key],
                   radius: 80,
                   titleStyle: TextStyle(
-                    fontSize: MediaQuery.of(context).textScaler.scale(18),
+                    fontSize: MediaQuery.of(context).textScaler.scale(16),
                     fontWeight: FontWeight.w600,
-                    color:
-                        context.watch<ThemeProvider>().palette()['fixedBlack']!,
+                    color: textColorOverCategoryColorRepresentation,
                   ),
                 );
               }).toList(),
@@ -48,7 +58,8 @@ class IncomeExpenseChart extends StatelessWidget {
         //Leyenda
         Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.1), // margen lateral para que no se aproxime al margen la leyenda
+              horizontal: MediaQuery.of(context).size.width *
+                  0.1), // margen lateral para que no se aproxime al margen la leyenda
           child: Wrap(
             spacing: MediaQuery.of(context).size.height *
                 0.02, //espacio horizontal entre las categorías

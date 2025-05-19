@@ -95,11 +95,11 @@ class _TransactionsPageState extends State<TransactionsPage> {
                       .listAllUserTransactions
                       .length,
                   itemBuilder: (context, index) {
-                    TransactionModel transaccion = userTransactions[index];
+                    TransactionModel transactionPointer = userTransactions[index];
 
-                    //obtengo el color de fondo sobre el que voy a ajustar el color rojo y verde para que se vean de manera correcta
+                    //obtengo el color de fondo de la card sobre el que voy a ajustar el color rojo y verde para que se vean de manera correcta
                     Color transationCardBackgroundColor =
-                        transaccion.transactionCategory.categoryColor;
+                        transactionPointer.transactionCategory.categoryColor;
 
                     Color rowAndImportColor;
                     Icon icono;
@@ -108,7 +108,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                     double luminance =
                         transationCardBackgroundColor.computeLuminance();
 
-                    if (transaccion.transactionCategory.categoryIsIncome) {
+                    if (transactionPointer.transactionCategory.categoryIsIncome) {
                       //si es ingreso --> verde. En función del color de la card será en un tono u otro
                       rowAndImportColor = luminance > 0.5
                           ? context
@@ -134,7 +134,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           : context
                               .watch<ThemeProvider>()
                               .palette()['redButton']!;
-                      icono = Icon(Icons.arrow_upward,
+                      icono = Icon(Icons.arrow_downward,
                           color: luminance > 0.5
                               ? context
                                   .watch<ThemeProvider>()
@@ -148,15 +148,15 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           vertical: MediaQuery.of(context).size.height * 0.012,
                           horizontal:
                               MediaQuery.of(context).size.width * 0.015),
-                      color: transaccion.transactionCategory
+                      color: transactionPointer.transactionCategory
                           .categoryColor, //Color de fondo de la tarjeta según categoría
                       child: ListTile(
-                        onTap: () => _showTransactionDetail(transaccion, index),
+                        onTap: () => _showTransactionDetail(transactionPointer, index),
                         contentPadding: EdgeInsets.all(
                             MediaQuery.of(context).size.width * 0.01),
                         leading: icono, //Flecha hacia arriba o hacia abajo
                         title: Text(
-                          transaccion.transactionTittle,
+                          transactionPointer.transactionTittle,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -169,14 +169,14 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${AppLocalizations.of(context)!.date}: ${_formatearFecha(transaccion.transactionDate)}",
+                              "${AppLocalizations.of(context)!.date}: ${_formatearFecha(transactionPointer.transactionDate)}",
                               style: TextStyle(
                                   color: context
                                       .watch<ThemeProvider>()
                                       .palette()['fixedBlack']!),
                             ),
                             Text(
-                              "${AppLocalizations.of(context)!.category}: ${transaccion.transactionCategory.categoryName}",
+                              "${AppLocalizations.of(context)!.category}: ${transactionPointer.transactionCategory.categoryName}",
                               style: TextStyle(
                                   color: context
                                       .watch<ThemeProvider>()
@@ -195,7 +195,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                          '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
+                                          '${transactionPointer.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: MediaQuery.of(context)
@@ -205,7 +205,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                                 rowAndImportColor, //Importe con color según tipo
                                           )),
                                       Text(
-                                          '${transaccion.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa secundaria en uso
+                                          '${transactionPointer.transactionSecondImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}', //Importe con símbolo de la divisa secundaria en uso
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: MediaQuery.of(context)
@@ -217,7 +217,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                     ],
                                   )
                                 : Text(
-                                    '${transaccion.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
+                                    '${transactionPointer.transactionImport.toStringAsFixed(2)} ${context.watch<ConfigurationProvider>().currencyCodeInUse.currencySymbol}', //Importe con símbolo de la divisa en uso
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: MediaQuery.of(context)

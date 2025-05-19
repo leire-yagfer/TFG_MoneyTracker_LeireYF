@@ -10,10 +10,12 @@ import 'package:tfg_monetracker_leireyafer/model/util/changecurrencyapi.dart';
 
 ///Clase que gestiona el estado global de la app
 class ConfigurationProvider extends ChangeNotifier {
-  Locale _languaje = Locale('es');
-  Currency _currencyCodeInUse = APIUtils.getFromList('EUR')!;
-  Currency _currencyCodeInUse2 = APIUtils.getFromList('EUR')!;
+  Locale _languaje = Locale('es'); //por defecto español
+  Currency _currencyCodeInUse = APIUtils.getFromList('EUR')!; //por defecto en €
+  Currency _currencyCodeInUse2 = APIUtils.getFromList('EUR')!; //por defecto en €
   bool _switchUseSecondCurrency = false;
+  bool isWifiConnected =
+      false; //controla si el dispositivo está conectado a internet
   //lista de transacciones
   List<TransactionModel> listAllUserTransactions = [];
 
@@ -91,32 +93,38 @@ class ConfigurationProvider extends ChangeNotifier {
 
   ///Cargar las transacciones desde la base de datos, ordenadas por fecha
   Future<void> loadTransactions() async {
-    listAllUserTransactions = await TransactionDao().getTransactionsByDate(
-        userRegistered!,
-        currencyCodeInUse.currencyCode,
-        currencyCodeInUse2.currencyCode);
-    //ordeno por fecha --> la más reciente la primera
-    listAllUserTransactions
-        .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
+    //Try-catch para ver si tiene internet el usuario al iniciar la app --> pruebo a ver si se consiguen las transacciones de firebase y si no se consigue (no hay internet) salto al catch
+    try {
+      listAllUserTransactions = await TransactionDao().getTransactionsByDate(
+          userRegistered!,
+          currencyCodeInUse.currencyCode,
+          currencyCodeInUse2.currencyCode);
+      //ordeno por fecha --> la más reciente la primera
+      listAllUserTransactions
+          .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
 
-    for (var t in listAllUserTransactions) {
-      if (t.transactionCurrency.currencyCode != currencyCodeInUse) {
-        //obtengo las tasas de cambio desde la moneda original de la transacción en el puntero (es decir por la que me llego)
-        Map<String, double> changesRates =
-            await APIUtils.getChangesBasedOnCurrencyCode(
-                t.transactionCurrency.currencyCode);
+      for (var t in listAllUserTransactions) {
+        if (t.transactionCurrency.currencyCode != currencyCodeInUse) {
+          //obtengo las tasas de cambio desde la moneda original de la transacción en el puntero (es decir por la que me llego)
+          Map<String, double> changesRates =
+              await APIUtils.getChangesBasedOnCurrencyCode(
+                  t.transactionCurrency.currencyCode);
 
-        //reemplazo el importe con el convertido a la moneda en uso
-        t.transactionImport *= changesRates[currencyCodeInUse.currencyCode]!;
+          //reemplazo el importe con el convertido a la moneda en uso
+          t.transactionImport *= changesRates[currencyCodeInUse.currencyCode]!;
+        }
+        String secondaryCurrencyCode = t.transactionSecondCurrency.currencyCode;
+        Map<String, double> secondaryChangesRates =
+            await APIUtils.getChangesBasedOnCurrencyCode(secondaryCurrencyCode);
+
+        t.transactionSecondImport = t.transactionSecondImport *
+            secondaryChangesRates[t.transactionSecondCurrency.currencyCode]!;
       }
-      String secondaryCurrencyCode = t.transactionSecondCurrency.currencyCode;
-      Map<String, double> secondaryChangesRates =
-          await APIUtils.getChangesBasedOnCurrencyCode(secondaryCurrencyCode);
-
-      t.transactionSecondImport = t.transactionSecondImport *
-          secondaryChangesRates[t.transactionSecondCurrency.currencyCode]!;
+      notifyListeners();
+    } catch (e) {
+      isWifiConnected = true;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   ///Iniciar sesión

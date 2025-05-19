@@ -112,5 +112,7 @@
 
     "editCategory": "Editar categoría",
     "changeCategoryName": "Nuevo nombre de la catgeoría",
-    "cannotDeleteCategory": "No se pueden quedar a 0 las categorías"
+    "cannotDeleteCategory": "No se pueden quedar a 0 las categorías",
+
+    "errorNoInternet": "Internet no detectado. Reabra la app"
 }
