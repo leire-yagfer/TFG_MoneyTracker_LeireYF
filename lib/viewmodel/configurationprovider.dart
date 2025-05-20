@@ -1,6 +1,7 @@
 // ignore_for_file: unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
+//import 'package:logger/web.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/currency.dart';
@@ -14,8 +15,8 @@ class ConfigurationProvider extends ChangeNotifier {
   Currency _currencyCodeInUse = APIUtils.getFromList('EUR')!; //por defecto en €
   Currency _currencyCodeInUse2 = APIUtils.getFromList('EUR')!; //por defecto en €
   bool _switchUseSecondCurrency = false;
-  bool isWifiConnected =
-      false; //controla si el dispositivo está conectado a internet
+  //bool isWifiConnected = true; //controla si el dispositivo está conectado a internet
+  
   //lista de transacciones
   List<TransactionModel> listAllUserTransactions = [];
 
@@ -94,7 +95,7 @@ class ConfigurationProvider extends ChangeNotifier {
   ///Cargar las transacciones desde la base de datos, ordenadas por fecha
   Future<void> loadTransactions() async {
     //Try-catch para ver si tiene internet el usuario al iniciar la app --> pruebo a ver si se consiguen las transacciones de firebase y si no se consigue (no hay internet) salto al catch
-    try {
+    //try {
       listAllUserTransactions = await TransactionDao().getTransactionsByDate(
           userRegistered!,
           currencyCodeInUse.currencyCode,
@@ -121,10 +122,11 @@ class ConfigurationProvider extends ChangeNotifier {
             secondaryChangesRates[t.transactionSecondCurrency.currencyCode]!;
       }
       notifyListeners();
-    } catch (e) {
-      isWifiConnected = true;
+    /*} catch (e) {
+      Logger().e('Error al cargar transacciones: $e');
+      isWifiConnected = false;
       notifyListeners();
-    }
+    }*/
   }
 
   ///Iniciar sesión

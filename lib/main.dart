@@ -118,7 +118,7 @@ class _MyAppState extends State<MyApp> {
             Locale('en'),
           ],
           //En función de si el usuario tiene internet o no (en base a si se han conseguido recopilar las transacciones de firebase)
-          home: (context.watch<ConfigurationProvider>().isWifiConnected)
+          home: /*(context.watch<ConfigurationProvider>().isWifiConnected)
               ? StatefulBuilder(
                   builder: (context, setState) {
                     return Scaffold(
@@ -152,7 +152,8 @@ class _MyAppState extends State<MyApp> {
                     ));
                   },
                 )
-              : //En función de si existe un usuario ya registrado que ha iniciado sesión, se muestra la pantalla principal y sino, la pagina de inicio de sesión/registro
+              :*/
+              //En función de si existe un usuario ya registrado que ha iniciado sesión, se muestra la pantalla principal y sino, la pagina de inicio de sesión/registro
               (context.read<ConfigurationProvider>().userRegistered == null)
                   ? LoginSignupPage()
                   : MainApp(),

@@ -88,7 +88,7 @@ class CategoryDao {
     //Gasto
     await userRef.reference
         .collection("categories")
-        .doc('General')
+        .doc('Personal')
         .set({"isincome": false, "cr": 240, "cg": 200, "cb": 195});
     //Ingreso
     await userRef.reference
