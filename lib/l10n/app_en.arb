@@ -97,6 +97,7 @@
     "scholarship": "Scholarship",
     "others": "Others",
 
+    "newcategoryTitle": "New category",
     "newCategoryNameLabel": "Nombre de la categoría",
     "newCategoryNameLabelHint": "Introduzca el nombre de la categoría",
     "newCategoryNameLabelError": "Introduzca valores válidos",
@@ -114,5 +115,6 @@
     "changeCategoryName": "New category name",
     "cannotDeleteCategory": "Categories cannot be reduced to zero",
 
-    "errorNoInternet": "No internet detectived. Reopen de app"
+    "errorNoInternet": "No internet detectived. Reopen de app",
+    "categoryNameAlreadyExists": "Error. That name is allready in use"
 }

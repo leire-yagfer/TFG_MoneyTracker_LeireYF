@@ -7,11 +7,15 @@ class ReusableTxtFormFieldShowDetailsTransactionAndEditCategory extends Stateles
   final TextEditingController text;
   final String labelText;
   final bool readOnly;
+  final String? Function(String?)? validator;
+  
+
 
   const ReusableTxtFormFieldShowDetailsTransactionAndEditCategory({
     required this.text,
     required this.labelText,
     this.readOnly = true,
+    this.validator,
     super.key,
   });
 
@@ -28,6 +32,7 @@ class ReusableTxtFormFieldShowDetailsTransactionAndEditCategory extends Stateles
         ),
       ),
       readOnly: readOnly,
+      validator: validator,
     );
   }
 }

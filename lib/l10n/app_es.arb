@@ -97,6 +97,7 @@
     "scholarship": "Becas",
     "others": "Otros",
 
+    "newcategoryTitle": "Nueva categoría",
     "newCategoryNameLabel": "Nombre de la categoría",
     "newCategoryNameLabelHint": "Introduzca el nombre de la categoría",
     "newCategoryNameLabelError": "Introduzca valores válidos",
@@ -114,5 +115,6 @@
     "changeCategoryName": "Nuevo nombre de la catgeoría",
     "cannotDeleteCategory": "No se pueden quedar a 0 las categorías",
 
-    "errorNoInternet": "Internet no detectado. Reabra la app"
+    "errorNoInternet": "Internet no detectado. Reabra la app",
+    "categoryNameAlreadyExists": "Error. Ese nombre ya está en uso"
 }

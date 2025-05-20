@@ -57,37 +57,379 @@ class _CategoryCardState extends State<CategoryCard> {
     Color categoryColorSelected = availableColors()
         .first; //Color seleccionado por el usuario para la categoría --> lo inicializo en el primer color libre disponible del mapa de colores del tipo seleccionado
 
-    return Column(
-      children: [
-        //Row para el titulo y el icono de añadir categoría
-        Padding(
-            padding:
-                EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.04),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.title,
-                  style: TextStyle(
-                      fontSize: MediaQuery.of(context).textScaler.scale(20),
-                      fontWeight: FontWeight.w600),
-                ),
-                //he puesto que máximo puede haber 6 categorías por tipo y si es inferior se muestra un icono de añadir y si no, un icono de info que informa sobre que no se pueden añadir nuevas categorías pq se ha superado el límite
-                (widget.categoriesList.length < 6)
-                    ? IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          //Dialog para añadir una nueva categoría en funión del tipo
-                          showDialog(
-                            barrierDismissible:
-                                true, //Permitir cerrar el diálogo al hacer clic fuera de él
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
+    return Column(children: [
+      //Row para el titulo y el icono de añadir categoría
+      Padding(
+          padding:
+              EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.04),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.title,
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).textScaler.scale(20),
+                    fontWeight: FontWeight.w600),
+              ),
+              //he puesto que máximo puede haber 6 categorías por tipo y si es inferior se muestra un icono de añadir y si no, un icono de info que informa sobre que no se pueden añadir nuevas categorías pq se ha superado el límite
+              (widget.categoriesList.length < 6)
+                  ? IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                        //Dialog para añadir una nueva categoría en funión del tipo
+                        showDialog(
+                          barrierDismissible:
+                              true, //Permitir cerrar el diálogo al hacer clic fuera de él
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
+                                  color: context
+                                      .watch<ThemeProvider>()
+                                      .palette()['backgroundDialog']!,
                                 ),
-                                child: Container(
+                                child: SingleChildScrollView(
+                                  padding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.height *
+                                          0.02),
+                                  child: Center(
+                                    child: Form(
+                                      key: _formKey,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .newcategoryTitle,
+                                          ),
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.02),
+                                          ReusableTxtFormFieldNewTransactionCategory(
+                                            controller:
+                                                _newCategoryNameController,
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .newCategoryNameLabel,
+                                            hintText:
+                                                AppLocalizations.of(context)!
+                                                    .newCategoryNameLabelHint,
+                                            //compruebo que no se haya dejado vacío el campo
+                                            validator: (x) {
+                                              if (x == null || x.isEmpty) {
+                                                return AppLocalizations.of(
+                                                        context)!
+                                                    .newCategoryNameLabelError;
+                                              }
+                                              if (checkNameUniqueness(x,
+                                                  widget.listAllCategories)) {
+                                                return AppLocalizations.of(
+                                                        context)!
+                                                    .categoryNameAlreadyExists;
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.02),
+                                          //color picker para seleccionar el color de la categoría
+                                          SizedBox(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .newCategoryColorTitle,
+                                                          style: TextStyle(
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis)),
+                                                      content: availableColors()
+                                                              .isNotEmpty
+                                                          ? SingleChildScrollView(
+                                                              child:
+                                                                  ConstrainedBox(
+                                                                constraints:
+                                                                    BoxConstraints(
+                                                                  //restrinjo el ancho del selector de colores
+                                                                  maxWidth: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.8,
+                                                                  maxHeight: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.4,
+                                                                ),
+                                                                child:
+                                                                    ConstrainedBox(
+                                                                        constraints:
+                                                                            BoxConstraints(
+                                                                          //restrinjo el ancho del selector de colores
+                                                                          maxWidth:
+                                                                              MediaQuery.of(context).size.width * 0.8,
+                                                                          maxHeight:
+                                                                              MediaQuery.of(context).size.width * 0.4,
+                                                                        ),
+                                                                        child:
+                                                                            BlockPicker(
+                                                                          pickerColor:
+                                                                              categoryColorSelected,
+                                                                          availableColors:
+                                                                              availableColors(),
+                                                                          onColorChanged:
+                                                                              (Color color) {
+                                                                            setState(() {
+                                                                              categoryColorSelected = color;
+                                                                            });
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                        )),
+                                                              ),
+                                                            )
+                                                          : Text(AppLocalizations
+                                                                  .of(context)!
+                                                              .noColorsAvailable),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.9,
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.02,
+                                                  vertical:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                          0.02,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: context
+                                                            .watch<ThemeProvider>()
+                                                            .palette()[
+                                                        'textBlackWhite']!,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.05,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.025,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            categoryColorSelected,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        border: Border.all(),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.02),
+                                                    Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .newCategoryColorLabel,
+                                                        style: TextStyle(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis)),
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.01),
+                                                    Icon(Icons.arrow_drop_down),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.02),
+                                          //Botón para agregar la categoría
+                                          ReusableButton(
+                                              onClick: () async {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  //Si el formulario es válido, procedo a añadir la categoría
+                                                  //Recoger los datos
+                                                  String newCategoryName =
+                                                      _newCategoryNameController
+                                                          .text;
+                                                  //Crear la categoría --> el id es el nombre
+                                                  Category newCategory = Category(
+                                                      categoryName:
+                                                          newCategoryName,
+                                                      categoryIsIncome: widget
+                                                          .newCategoryIsIncome,
+                                                      categoryColor:
+                                                          categoryColorSelected);
+
+                                                  //Insertar la nueva categoría en la base de datos
+                                                  await CategoryDao()
+                                                      .insertCategory(
+                                                          context
+                                                              .read<
+                                                                  ConfigurationProvider>()
+                                                              .userRegistered!,
+                                                          newCategory);
+                                                  //Borro lo escrito en el controller
+                                                  _newCategoryNameController
+                                                      .clear();
+                                                  //Cerrar el diálogo
+                                                  Navigator.of(context).pop();
+                                                  //añado la categoría a la lista de la interfaz
+                                                  setState(() {
+                                                    widget.categoriesList.add(
+                                                        newCategory); //añado la nueva categoría a la UI
+                                                    widget.listAllCategories.add(
+                                                        newCategory); //añado la nueva categoría a la lista de todas las categorías para que se actualicen los colores
+                                                  });
+                                                  //Mostrar SnackBar de confirmación
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .correctCategoryAdding),
+                                                      duration: Duration(
+                                                          seconds:
+                                                              1), //duración del SnackBar
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              colorButton: 'buttonWhiteBlack',
+                                              textButton:
+                                                  AppLocalizations.of(context)!
+                                                      .add,
+                                              colorTextButton:
+                                                  'buttonBlackWhite',
+                                              buttonHeight: 0.075,
+                                              buttonWidth: 0.3),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    )
+                  : IconButton(
+                      //si las categorías de los tipos superan el máximo, 6, no se permite añadir nuevas categorías por loq ue se muestra un mensaje informativo
+                      icon: Icon(Icons.info),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          barrierDismissible:
+                              true, //Permitir cerrar el diálogo al hacer clic fuera de él
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(AppLocalizations.of(context)!
+                                  .maxLimitExceeded),
+                              content: Text(AppLocalizations.of(context)!
+                                  .maxLimitExceededLabel),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(
+                                      AppLocalizations.of(context)!.accept),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      })
+            ],
+          )),
+      (widget.categoriesList.isEmpty)
+          ? SizedBox()
+          : ListView.builder(
+              shrinkWrap:
+                  true, //Permite que la lista ocupe el espacio necesario
+              physics:
+                  const NeverScrollableScrollPhysics(), //Desactiva el scroll para que no se superponga con el scroll del dialog
+              itemCount: widget.categoriesList.length,
+              itemBuilder: (context, index) {
+                var categoryPointer = widget.categoriesList[index];
+                return Card(
+                  color: categoryPointer.categoryColor,
+                  margin: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.008,
+                      horizontal: MediaQuery.of(context).size.width * 0.015),
+                  child: ListTile(
+                    onTap: () async {
+                      //controlador con el nombre actual
+                      TextEditingController editCategoryNameController =
+                          TextEditingController(
+                              text: categoryPointer.categoryName);
+                      //color actual
+                      Color updatedColor = categoryPointer.categoryColor;
+
+                      //abrir diálogo para editar
+                      await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: StatefulBuilder(
+                              builder: (context, setStateDialog) {
+                                return Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: context
@@ -102,32 +444,45 @@ class _CategoryCardState extends State<CategoryCard> {
                                       child: Form(
                                         key: _formKey,
                                         child: Column(
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            ReusableTxtFormFieldNewTransactionCategory(
-                                              controller:
-                                                  _newCategoryNameController,
-                                              labelText:
-                                                  AppLocalizations.of(context)!
-                                                      .newCategoryNameLabel,
-                                              hintText:
-                                                  AppLocalizations.of(context)!
-                                                      .newCategoryNameLabelHint,
-                                              //compruebo que no se haya dejado vacío el campo
-                                              validator: (x) {
-                                                if (x == null || x.isEmpty) {
-                                                  return AppLocalizations.of(
-                                                          context)!
-                                                      .newCategoryNameLabelError;
-                                                }
-                                                return null;
-                                              },
-                                            ),
+                                            Text(AppLocalizations.of(context)!
+                                                .editCategory),
                                             SizedBox(
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height *
                                                     0.02),
-                                            //color picker para seleccionar el color de la categoría
+                                            ReusableTxtFormFieldShowDetailsTransactionAndEditCategory(
+                                                text:
+                                                    editCategoryNameController,
+                                                labelText: AppLocalizations.of(
+                                                        context)!
+                                                    .changeCategoryName,
+                                                readOnly: false,
+                                                validator: (x) {
+                                                  //no se pued edejar vacío
+                                                  if (x == null || x.isEmpty) {
+                                                    return AppLocalizations.of(
+                                                            context)!
+                                                        .newCategoryNameLabelError;
+                                                  }
+                                                  //no puede tener el mismo nombre que otra categoría ya existente
+                                                  if (x!=categoryPointer.categoryName && checkNameUniqueness(
+                                                      x,
+                                                      widget
+                                                          .listAllCategories)) {
+                                                    return AppLocalizations.of(
+                                                            context)!
+                                                        .categoryNameAlreadyExists;
+                                                  }
+                                                  return null;
+                                                }),
+                                            SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.02),
                                             SizedBox(
                                               child: GestureDetector(
                                                 onTap: () {
@@ -137,53 +492,44 @@ class _CategoryCardState extends State<CategoryCard> {
                                                         (BuildContext context) {
                                                       return AlertDialog(
                                                         title: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .newCategoryColorTitle,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .newCategoryColorTitle,
+                                                            style: TextStyle(
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis)),
                                                         content: availableColors()
                                                                 .isNotEmpty
-                                                            ? SingleChildScrollView(
+                                                            ? SizedBox(
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height *
+                                                                    0.2,
                                                                 child:
-                                                                    ConstrainedBox(
-                                                                  constraints:
-                                                                      BoxConstraints(
-                                                                    //restrinjo el ancho del selector de colores
-                                                                    maxWidth: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        0.8,
-                                                                    maxHeight: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        0.4,
-                                                                  ),
+                                                                    SingleChildScrollView(
                                                                   child:
-                                                                      ConstrainedBox(
-                                                                          constraints:
-                                                                              BoxConstraints(
-                                                                            //restrinjo el ancho del selector de colores
-                                                                            maxWidth:
-                                                                                MediaQuery.of(context).size.width * 0.8,
-                                                                            maxHeight:
-                                                                                MediaQuery.of(context).size.width * 0.4,
-                                                                          ),
-                                                                          child:
-                                                                              BlockPicker(
-                                                                            pickerColor:
-                                                                                categoryColorSelected,
-                                                                            availableColors:
-                                                                                availableColors(),
-                                                                            onColorChanged:
-                                                                                (Color color) {
-                                                                              setState(() {
-                                                                                categoryColorSelected = color;
-                                                                              });
-                                                                              Navigator.of(context).pop();
-                                                                            },
-                                                                          )),
+                                                                      BlockPicker(
+                                                                    pickerColor:
+                                                                        categoryColorSelected = categoryPointer.categoryColor,
+                                                                    availableColors:
+                                                                        availableColors() + [categoryPointer.categoryColor],
+                                                                    onColorChanged:
+                                                                        (Color
+                                                                            color) {
+                                                                      setStateDialog(
+                                                                          () {
+                                                                        updatedColor =
+                                                                            color;
+                                                                        categoryColorSelected =
+                                                                            color;
+                                                                      });
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  ),
                                                                 ),
                                                               )
                                                             : Text(AppLocalizations
@@ -240,7 +586,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                                         decoration:
                                                             BoxDecoration(
                                                           color:
-                                                              categoryColorSelected,
+                                                              categoryColorSelected = categoryPointer.categoryColor,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(5),
@@ -249,12 +595,13 @@ class _CategoryCardState extends State<CategoryCard> {
                                                       ),
                                                       SizedBox(width: 12),
                                                       Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .newCategoryColorLabel,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .newCategoryColorLabel,
+                                                          style: TextStyle(
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis)),
                                                       SizedBox(
                                                           width: MediaQuery.of(
                                                                       context)
@@ -273,65 +620,85 @@ class _CategoryCardState extends State<CategoryCard> {
                                                         .size
                                                         .height *
                                                     0.02),
-                                            //Botón para agregar la categoría
                                             ReusableButton(
                                                 onClick: () async {
                                                   if (_formKey.currentState!
                                                       .validate()) {
-                                                    //Si el formulario es válido, procedo a añadir la categoría
-                                                    //Recoger los datos
-                                                    String newCategoryName =
-                                                        _newCategoryNameController
-                                                            .text;
-                                                    //Crear la categoría --> el id es el nombre
-                                                    Category newCategory = Category(
-                                                        categoryName:
-                                                            newCategoryName,
-                                                        categoryIsIncome: widget
-                                                            .newCategoryIsIncome,
-                                                        categoryColor:
-                                                            categoryColorSelected);
+                                                    //Si el formulario es válido, llevo a cabo la edición
+                                                    String updatedName =
+                                                        editCategoryNameController
+                                                            .text
+                                                            .trim();
 
-                                                    //Insertar la nueva categoría en la base de datos
-                                                    await CategoryDao()
-                                                        .insertCategory(
-                                                            context
-                                                                .read<
-                                                                    ConfigurationProvider>()
-                                                                .userRegistered!,
-                                                            newCategory);
-                                                    //Borro lo escrito en el controller
-                                                    _newCategoryNameController
-                                                        .clear();
-                                                    //Cerrar el diálogo
-                                                    Navigator.of(context).pop();
-                                                    //añado la categoría a la lista de la interfaz
-                                                    setState(() {
-                                                      widget.categoriesList.add(
-                                                          newCategory); //añado la nueva categoría a la UI
-                                                      widget.listAllCategories.add(
-                                                          newCategory); //añado la nueva categoría a la lista de todas las categorías para que se actualicen los colores
-                                                    });
-                                                    //Mostrar SnackBar de confirmación
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .correctCategoryAdding),
-                                                        duration: Duration(
-                                                            seconds:
-                                                                1), //duración del SnackBar
-                                                      ),
-                                                    );
+                                                    if (updatedName
+                                                        .isNotEmpty) {
+                                                      //crear nueva categoría con los datos actualizados
+                                                      Category updatedCategory =
+                                                          Category(
+                                                        categoryName:
+                                                            updatedName,
+                                                        categoryIsIncome:
+                                                            categoryPointer
+                                                                .categoryIsIncome,
+                                                        categoryColor:
+                                                            updatedColor,
+                                                      );
+
+                                                      //actualizar en la base de datos
+                                                      await CategoryDao()
+                                                          .updateCategory(
+                                                        u: context
+                                                            .read<
+                                                                ConfigurationProvider>()
+                                                            .userRegistered!,
+                                                        oldCategory:
+                                                            categoryPointer,
+                                                        newCategory:
+                                                            updatedCategory,
+                                                      );
+
+                                                      //actualizar en la UI
+                                                      setState(() {
+                                                        widget.categoriesList[
+                                                                index] =
+                                                            updatedCategory;
+                                                        //opcionalmente también actualizar listAllCategories si la usas
+                                                        int allIndex = widget
+                                                            .listAllCategories
+                                                            .indexWhere(
+                                                          (cat) =>
+                                                              cat.categoryName ==
+                                                              categoryPointer
+                                                                  .categoryName,
+                                                        );
+                                                        if (allIndex != -1) {
+                                                          widget.listAllCategories[
+                                                                  allIndex] =
+                                                              updatedCategory;
+                                                        }
+                                                      });
+
+                                                      Navigator.of(context)
+                                                          .pop(); //cerrar el diálogo
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .correctEditingCategory),
+                                                          duration: Duration(
+                                                              seconds: 1),
+                                                        ),
+                                                      );
+                                                    }
                                                   }
                                                 },
                                                 colorButton: 'buttonWhiteBlack',
                                                 textButton: AppLocalizations.of(
                                                         context)!
-                                                    .add,
+                                                    .saveChanges,
                                                 colorTextButton:
                                                     'buttonBlackWhite',
                                                 buttonHeight: 0.075,
@@ -341,347 +708,90 @@ class _CategoryCardState extends State<CategoryCard> {
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           );
                         },
-                      )
-                    : IconButton(
-                        //si las categorías de los tipos superan el máximo, 6, no se permite añadir nuevas categorías por loq ue se muestra un mensaje informativo
-                        icon: Icon(Icons.info),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible:
-                                true, //Permitir cerrar el diálogo al hacer clic fuera de él
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text(AppLocalizations.of(context)!
-                                    .maxLimitExceeded),
-                                content: Text(AppLocalizations.of(context)!
-                                    .maxLimitExceededLabel),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text(
-                                        AppLocalizations.of(context)!.accept),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        })
-              ],
-            )),
-        (widget.categoriesList.isEmpty)
-            ? SizedBox()
-            : ListView.builder(
-                shrinkWrap:
-                    true, //Permite que la lista ocupe el espacio necesario
-                physics:
-                    const NeverScrollableScrollPhysics(), //Desactiva el scroll para que no se superponga con el scroll del dialog
-                itemCount: widget.categoriesList.length,
-                itemBuilder: (context, index) {
-                  var categoryPointer = widget.categoriesList[index];
-                  return Card(
-                    color: categoryPointer.categoryColor,
-                    margin: EdgeInsets.symmetric(
-                        vertical: MediaQuery.of(context).size.height * 0.008,
-                        horizontal: MediaQuery.of(context).size.width * 0.015),
-                    child: ListTile(
-                      onTap: () async {
-                        //controlador con el nombre actual
-                        TextEditingController editCategoryNameController =
-                            TextEditingController(
-                                text: categoryPointer.categoryName);
-                        //color actual
-                        Color updatedColor = categoryPointer.categoryColor;
-
-                        //abrir diálogo para editar
-                        await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(
-                                  AppLocalizations.of(context)!.editCategory),
-                              content: StatefulBuilder(
-                                builder: (context, setStateDialog) {
-                                  return Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ReusableTxtFormFieldShowDetailsTransactionAndEditCategory(
-                                        text: editCategoryNameController,
-                                        labelText: AppLocalizations.of(context)!
-                                            .changeCategoryName,
-                                        readOnly: false,
-                                      ),
-                                      SizedBox(height: 10),
-                                      SizedBox(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .newCategoryColorTitle,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                  content: availableColors()
-                                                          .isNotEmpty
-                                                      ? SizedBox(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.2, // 20% altura
-                                                          child:
-                                                              SingleChildScrollView(
-                                                            child: BlockPicker(
-                                                              pickerColor:
-                                                                  categoryColorSelected,
-                                                              availableColors:
-                                                                  availableColors(),
-                                                              onColorChanged:
-                                                                  (Color
-                                                                      color) {
-                                                                setStateDialog(
-                                                                    () {
-                                                                  updatedColor =
-                                                                      color;
-                                                                  categoryColorSelected =
-                                                                      color;
-                                                                });
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                              },
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : Text(AppLocalizations
-                                                              .of(context)!
-                                                          .noColorsAvailable),
-                                                );
-                                              },
-                                            );
-                                          },
-                                          child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.9,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.02,
-                                              vertical: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.02,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: context
-                                                        .watch<ThemeProvider>()
-                                                        .palette()[
-                                                    'textBlackWhite']!,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.05,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.025,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        categoryColorSelected,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    border: Border.all(),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 12),
-                                                Text(
-                                                  AppLocalizations.of(context)!
-                                                      .newCategoryColorLabel,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                                SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.01),
-                                                Icon(Icons.arrow_drop_down),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                },
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); //cancelar edición
-                                  },
-                                  child: Text(
-                                      AppLocalizations.of(context)!.cancel),
-                                ),
-                                TextButton(
-                                  onPressed: () async {
-                                    String updatedName =
-                                        editCategoryNameController.text.trim();
-
-                                    if (updatedName.isNotEmpty) {
-                                      //crear nueva categoría con los datos actualizados
-                                      Category updatedCategory = Category(
-                                        categoryName: updatedName,
-                                        categoryIsIncome:
-                                            categoryPointer.categoryIsIncome,
-                                        categoryColor: updatedColor,
-                                      );
-
-                                      //actualizar en la base de datos
-                                      await CategoryDao().updateCategory(
-                                        u: context
-                                            .read<ConfigurationProvider>()
-                                            .userRegistered!,
-                                        oldCategory: categoryPointer,
-                                        newCategory: updatedCategory,
-                                      );
-
-                                      //actualizar en la UI
-                                      setState(() {
-                                        widget.categoriesList[index] =
-                                            updatedCategory;
-                                        //opcionalmente también actualizar listAllCategories si la usas
-                                        int allIndex =
-                                            widget.listAllCategories.indexWhere(
-                                          (cat) =>
-                                              cat.categoryName ==
-                                              categoryPointer.categoryName,
-                                        );
-                                        if (allIndex != -1) {
-                                          widget.listAllCategories[allIndex] =
-                                              updatedCategory;
-                                        }
-                                      });
-
-                                      Navigator.of(context)
-                                          .pop(); //cerrar el diálogo
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                              AppLocalizations.of(context)!
-                                                  .correctEditingCategory),
-                                          duration: Duration(seconds: 1),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  child: Text(AppLocalizations.of(context)!
-                                      .saveChanges),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      contentPadding: EdgeInsets.all(
-                          MediaQuery.of(context).size.width * 0.01),
-                      title: Text(
-                        categoryPointer.categoryName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: context
-                              .watch<ThemeProvider>()
-                              .palette()['fixedBlack']!,
-                        ),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete,
-                            color: context
-                                .watch<ThemeProvider>()
-                                .palette()['fixedBlack']!),
-                        iconSize: MediaQuery.of(context).size.width * 0.1,
-                        onPressed: () async {
-                          //SOLO QUIERO QUE SE BORRE LA CATEGORÍA SI LA LISTA DE INGRESOS/GASTOS NO ES INFERIOR A 1. ES DECIR QUE SI SOLO HAY UNA CATEGORÍA Y SE QUIERE ELIMINAR QUE NO SE PUEDA
-                          bool canDelete =
-                              true; //comprueba si se permite la eliminación o no
-                          //comprueba de que tipo de categoría es (ingreso o gasto) y mira ela longitud de la lista --> si es superior a 1 no hay problema, sino muetsro Scaffold con mensaje
-                          if (categoryPointer.categoryIsIncome) {
-                            canDelete = widget.categoriesList
-                                    .where((cat) => cat.categoryIsIncome)
-                                    .length >
-                                1;
-                          } else {
-                            canDelete = widget.categoriesList
-                                    .where((cat) => !cat.categoryIsIncome)
-                                    .length >
-                                1;
-                          }
-
-                          if (canDelete) {
-                            //llamo al método del DAO para eliminar la categoría de Firestore
-                            await CategoryDao().deleteCategory(
-                              context
-                                  .read<ConfigurationProvider>()
-                                  .userRegistered!,
-                              categoryPointer,
-                            );
-                            //muestro un mensaje de confirmación
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(AppLocalizations.of(context)!
-                                    .correctCategoryDeleting),
-                                duration: Duration(seconds: 1),
-                              ),
-                            );
-                            //elimino la categoría también de la lista local
-                            setState(() {
-                              widget.categoriesList.removeAt(index);
-                            });
-                          } else {
-                            //Si no se puede eliminar, mostrar mensaje
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(AppLocalizations.of(context)!
-                                    .cannotDeleteCategory),
-                                duration: Duration(seconds: 1),
-                              ),
-                            );
-                          }
-                        },
+                      );
+                    },
+                    contentPadding: EdgeInsets.all(
+                        MediaQuery.of(context).size.width * 0.01),
+                    title: Text(
+                      categoryPointer.categoryName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: context
+                            .watch<ThemeProvider>()
+                            .palette()['fixedBlack']!,
                       ),
                     ),
-                  );
-                },
-              ),
-      ],
-    );
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete,
+                          color: context
+                              .watch<ThemeProvider>()
+                              .palette()['fixedBlack']!),
+                      iconSize: MediaQuery.of(context).size.width * 0.1,
+                      onPressed: () async {
+                        //SOLO QUIERO QUE SE BORRE LA CATEGORÍA SI LA LISTA DE INGRESOS/GASTOS NO ES INFERIOR A 1. ES DECIR QUE SI SOLO HAY UNA CATEGORÍA Y SE QUIERE ELIMINAR QUE NO SE PUEDA
+                        bool canDelete =
+                            true; //comprueba si se permite la eliminación o no
+                        //comprueba de que tipo de categoría es (ingreso o gasto) y mira ela longitud de la lista --> si es superior a 1 no hay problema, sino muetsro Scaffold con mensaje
+                        if (categoryPointer.categoryIsIncome) {
+                          canDelete = widget.categoriesList
+                                  .where((cat) => cat.categoryIsIncome)
+                                  .length >
+                              1;
+                        } else {
+                          canDelete = widget.categoriesList
+                                  .where((cat) => !cat.categoryIsIncome)
+                                  .length >
+                              1;
+                        }
+
+                        if (canDelete) {
+                          //llamo al método del DAO para eliminar la categoría de Firestore
+                          await CategoryDao().deleteCategory(
+                            context
+                                .read<ConfigurationProvider>()
+                                .userRegistered!,
+                            categoryPointer,
+                          );
+                          //muestro un mensaje de confirmación
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .correctCategoryDeleting),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                          //elimino la categoría también de la lista local
+                          setState(() {
+                            widget.categoriesList.removeAt(index);
+                          });
+                        } else {
+                          //Si no se puede eliminar, mostrar mensaje
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .cannotDeleteCategory),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                );
+              },
+            )
+    ]);
+  }
+
+  //Comprobar si el nombre de la categoría ya existe, ya que el nombre d ela categoría en FireBase es el id
+  bool checkNameUniqueness(String cname, List categorieslist) {
+    return (categorieslist
+        .where((cat) => cat.categoryName.toLowerCase() == cname.toLowerCase())
+        .isNotEmpty);
   }
 }
