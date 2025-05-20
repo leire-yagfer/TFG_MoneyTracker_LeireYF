@@ -34,110 +34,126 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
 
   bool _isLoading = false;
 
+  bool isSigningIn = false;
+
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-        child: _isLoading
-            ? ReusableCircleProgressIndicator(text: AppLocalizations.of(context)!.signingIn)
-            : Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: context
-                      .watch<ThemeProvider>()
-                      .palette()['backgroundDialog']!,
-                ),
-                child: SingleChildScrollView(
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.height * 0.02),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        //Campo de correo electrónico
-                        ReusableTxtFormFieldLoginRegister(
-                          keyboardType: TextInputType.emailAddress,
-                          controller: _usernameController,
-                          labelText: AppLocalizations.of(context)!.email,
-                          hintText: AppLocalizations.of(context)!.emailhint,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!.emailerror;
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.02),
-                        //Campo de contraseña
-                        ReusableTxtFormFieldLoginRegister(
-                          controller: _passwordController,
-                          labelText: AppLocalizations.of(context)!.passwordsi,
-                          hintText:
-                              AppLocalizations.of(context)!.passwordhintsi,
-                          obscureText: true,
-                          passwordIcon: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!
-                                  .passworderror;
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.02),
-                        ReusableRowLoginSignup(
-                          text1: AppLocalizations.of(context)!.singupinsignin1,
-                          text2: AppLocalizations.of(context)!.singupinsignin2,
-                          onClick: () {
-                            Navigator.pop(context);
-                            showRegisterDialog(context);
-                          },
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        ReusableButton(
-                          onClick: () async {
-                            await _signIn();
-                            if (_errorMessage == null) {
-                              Navigator.pop(context);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MainApp()));
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(_errorMessage!),
-                                    content: Text(_errorMessage!),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(AppLocalizations.of(context)!.accept),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          },
-                          textButton: AppLocalizations.of(context)!.signin,
-                          colorButton: 'buttonWhiteBlack',
-                          colorTextButton: 'buttonBlackWhite',
-                          buttonHeight: 0.08,
-                          buttonWidth: 0.5,
-                        )
-                      ],
+    return _isLoading
+        ? Scaffold(
+            body: Center(
+                child: ReusableCircleProgressIndicator(
+                    text: AppLocalizations.of(context)!.signingIn)),
+          )
+        : Dialog(
+            child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color:
+                  context.watch<ThemeProvider>().palette()['backgroundDialog']!,
+            ),
+            child: SingleChildScrollView(
+              padding:
+                  EdgeInsets.all(MediaQuery.of(context).size.height * 0.02),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    //Campo de correo electrónico
+                    ReusableTxtFormFieldLoginRegister(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _usernameController,
+                      labelText: AppLocalizations.of(context)!.email,
+                      hintText: AppLocalizations.of(context)!.emailhint,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppLocalizations.of(context)!.emailerror;
+                        }
+                        return null;
+                      },
                     ),
-                  ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                    //Campo de contraseña
+                    ReusableTxtFormFieldLoginRegister(
+                      controller: _passwordController,
+                      labelText: AppLocalizations.of(context)!.passwordsi,
+                      hintText: AppLocalizations.of(context)!.passwordhintsi,
+                      obscureText: true,
+                      passwordIcon: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppLocalizations.of(context)!.passworderror;
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                    ReusableRowLoginSignup(
+                      text1: AppLocalizations.of(context)!.singupinsignin1,
+                      text2: AppLocalizations.of(context)!.singupinsignin2,
+                      onClick: () {
+                        Navigator.pop(context);
+                        showRegisterDialog(context);
+                      },
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    ReusableButton(
+                        onClick: () async {
+                          setState(() {
+                            isSigningIn = true;
+                          });
+                          await _signIn();
+                          if (_errorMessage == null) {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MainApp()));
+                          } else {
+                            setState(() {
+                              isSigningIn = false;
+                            });
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(_errorMessage!),
+                                  content: Text(_errorMessage!),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                          AppLocalizations.of(context)!.accept),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        textButton: isSigningIn
+                            ? null
+                            : AppLocalizations.of(context)!.signin,
+                        colorButton: 'buttonWhiteBlack',
+                        colorTextButton: 'buttonBlackWhite',
+                        buttonHeight: 0.08,
+                        buttonWidth: 0.5,
+                        colorBorderButton: 'buttonBlackWhite',
+                        child: isSigningIn
+                            ? CircularProgressIndicator(
+                                color: context
+                                    .watch<ThemeProvider>()
+                                    .palette()['textBlackWhite']!)
+                            : null)
+                  ],
                 ),
-              ));
+              ),
+            ),
+          ));
   }
 
   Future<void> _signIn() async {

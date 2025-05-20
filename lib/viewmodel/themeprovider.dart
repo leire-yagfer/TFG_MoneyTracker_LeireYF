@@ -23,6 +23,9 @@ class ThemeProvider extends ChangeNotifier {
         "textBlackWhite": (isLightModeActive)
             ? Color.fromARGB(222, 0, 0, 0)
             : Color.fromARGB(255, 229, 229, 234),
+        "textBlackGrey": (isLightModeActive)
+            ? Color.fromARGB(222, 0, 0, 0)
+            : Color.fromARGB(255, 160, 160, 165),
         "textWhiteBlack": (isLightModeActive)
             ? Color.fromARGB(255, 229, 229, 234)
             : Color.fromARGB(222, 0, 0, 0),
@@ -48,10 +51,14 @@ class ThemeProvider extends ChangeNotifier {
             : Color.fromARGB(255, 229, 229, 234),
         "labelColor": Colors.pink,
         //Botones
-        "greenButton": Color.fromARGB(255, 116, 212, 148),
-        "greenButtonIsDark": Color.fromARGB(255, 60, 130, 80),
-        "redButton": Color.fromARGB(255, 212, 103, 103),
-        "redButtonIsDark": Color.fromARGB(255, 130, 60, 60),
+        "greenButton": (isLightModeActive)
+            ? Color.fromARGB(255, 116, 212, 148)
+            : Color.fromARGB(255, 60, 150, 85),
+        "greenButtonIsDark": Color.fromARGB(255, 60, 150, 85),
+        "redButton": (isLightModeActive)
+            ? Color.fromARGB(255, 212, 103, 103)
+            : Color.fromARGB(255, 150, 50, 50),
+        "redButtonIsDark": Color.fromARGB(255, 150, 50, 50),
       };
 
   //cambiar modo claro/oscuro
@@ -59,6 +66,7 @@ class ThemeProvider extends ChangeNotifier {
     isLightModeActive = !isLightModeActive;
     notifyListeners();
     final prefs = SharedPreferences.getInstance();
-    prefs.then((value) => value.setBool('isLightModeActive', isLightModeActive));
+    prefs
+        .then((value) => value.setBool('isLightModeActive', isLightModeActive));
   }
 }

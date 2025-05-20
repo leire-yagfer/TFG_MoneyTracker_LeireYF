@@ -20,7 +20,9 @@ class BalanceTab extends StatefulWidget {
 class _BalanceTabState extends State<BalanceTab> {
   final TransactionDao transaccionDao = TransactionDao();
   double totalIncome = 0;
+  double totalIncomeSecondaryCurrency = 0;
   double totalExpense = 0;
+  double totalExpenseSecondaryCurrency = 0;
   String? selectedYear;
   String selectedFilter = 'all';
 
@@ -69,10 +71,39 @@ class _BalanceTabState extends State<BalanceTab> {
       actualCurrency:
           context.read<ConfigurationProvider>().currencyCodeInUse.currencyCode,
     );
+    if (context.read<ConfigurationProvider>().switchUseSecondCurrency) {
+      final totalIncomeSecondaryCurrencRes =
+          await transaccionDao.getTotalByType(
+        isIncome: true,
+        u: context.read<ConfigurationProvider>().userRegistered!,
+        filter: selectedFilter,
+        year: selectedYear,
+        actualCurrency: context
+            .read<ConfigurationProvider>()
+            .currencyCodeInUse2
+            .currencyCode,
+      );
+      final totalExpenseSecondaryCurrencyRes =
+          await transaccionDao.getTotalByType(
+        isIncome: false,
+        u: context.read<ConfigurationProvider>().userRegistered!,
+        filter: selectedFilter,
+        year: selectedYear,
+        actualCurrency: context
+            .read<ConfigurationProvider>()
+            .currencyCodeInUse2
+            .currencyCode,
+      );
+      setState(() {
+        totalIncomeSecondaryCurrency = totalIncomeSecondaryCurrencRes;
+        totalExpenseSecondaryCurrency = totalExpenseSecondaryCurrencyRes;
+      });
+    }
 
     setState(() {
       totalIncome = totalIncomeResult; //Actualizo el total de ingresos
       totalExpense = totalExpenseResult; //Actualizo el total de gastos
+
       _isLoading = false;
     });
   }
@@ -83,11 +114,17 @@ class _BalanceTabState extends State<BalanceTab> {
     double showIncome = totalIncome; //> 0 ? totalIncome : 0.01;
     double showExpense = totalExpense; //> 0 ? totalExpense : 0.01;
 
+    double showIncomeSecondaryCurrency = totalIncomeSecondaryCurrency;
+    double showExpenseSecondaryCurrency = totalExpenseSecondaryCurrency;
+
     //Compruebo si todos los valores de las transacciones de las categorías es 0 para mostrar que no hay transacciones
     bool allZero = showExpense == 0 && showIncome == 0;
 
     //balance final
     double balance = showIncome - showExpense;
+
+    double balanceSecondCurrency =
+        showIncomeSecondaryCurrency - showExpenseSecondaryCurrency;
 
     return _isLoading
         ? ReusableCircleProgressIndicator(
@@ -150,89 +187,134 @@ class _BalanceTabState extends State<BalanceTab> {
                       Column(
                           children: [
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.45,
-                              child: PieChart(
-                                PieChartData(
-                                  //Solo cuenta con dos secciones: Ingresos y Gastos
-                                  sections: [
-                                    PieChartSectionData(
-                                      value: showIncome,
-                                      title:
-                                          "${totalIncome.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
-                                      color: context
-                                          .watch<ThemeProvider>()
-                                          .palette()['greenButton']!,
-                                      radius: 80, //ancho de la línea
-                                      titleStyle: TextStyle(
-                                        fontSize: MediaQuery.of(context)
-                                            .textScaler
-                                            .scale(16),
-                                        fontWeight: FontWeight.w600,
-                                        color: context
-                                            .watch<ThemeProvider>()
-                                            .palette()['textBlackWhite']!,
-                                      ),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.45,
+                                child: Padding(
+                                  padding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.width * 0.05),
+                                  child: PieChart(
+                                    PieChartData(
+                                      //Solo cuenta con dos secciones: Ingresos y Gastos
+                                      sections: [
+                                        PieChartSectionData(
+                                          value: showIncome,
+                                          title: (context
+                                                  .read<ConfigurationProvider>()
+                                                  .switchUseSecondCurrency)
+                                              ? "${totalIncome.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol} \n ${totalIncomeSecondaryCurrency.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}"
+                                              : "${totalIncome.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                                          color: context
+                                              .watch<ThemeProvider>()
+                                              .palette()['greenButton']!,
+                                          radius: 80, //ancho de la línea
+                                          titleStyle: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                .textScaler
+                                                .scale(16),
+                                            fontWeight: FontWeight.w600,
+                                            color: context
+                                                .watch<ThemeProvider>()
+                                                .palette()['textBlackWhite']!,
+                                          ),
+                                        ),
+                                        PieChartSectionData(
+                                          value: showExpense,
+                                          title: (context
+                                                  .read<ConfigurationProvider>()
+                                                  .switchUseSecondCurrency)
+                                              ? "${totalExpense.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol} \n ${totalExpenseSecondaryCurrency.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}"
+                                              : "${totalExpense.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                                          color: context
+                                              .watch<ThemeProvider>()
+                                              .palette()['redButton']!,
+                                          radius: 80,
+                                          titleStyle: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                .textScaler
+                                                .scale(16),
+                                            fontWeight: FontWeight.w600,
+                                            color: context
+                                                .watch<ThemeProvider>()
+                                                .palette()['textBlackWhite']!,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    PieChartSectionData(
-                                      value: showExpense,
-                                      title:
-                                          "${totalExpense.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
-                                      color: context
-                                          .watch<ThemeProvider>()
-                                          .palette()['redButton']!,
-                                      radius: 80,
-                                      titleStyle: TextStyle(
-                                        fontSize: MediaQuery.of(context)
-                                            .textScaler
-                                            .scale(16),
-                                        fontWeight: FontWeight.w600,
-                                        color: context
-                                            .watch<ThemeProvider>()
-                                            .palette()['textBlackWhite']!,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  ),
+                                )),
                             SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.02),
                             Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      MediaQuery.of(context).size.width * 0.05,
-                                  vertical: MediaQuery.of(context).size.width *
-                                      0.025),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: context
-                                    .watch<ThemeProvider>()
-                                    .palette()['scaffoldBackground']!,
-                                border: Border.all(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                    vertical:
+                                        MediaQuery.of(context).size.width *
+                                            0.025),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
                                   color: context
                                       .watch<ThemeProvider>()
-                                      .palette()['textBlackWhite']!,
-                                  width: 2,
+                                      .palette()['scaffoldBackground']!,
+                                  border: Border.all(
+                                    color: context
+                                        .watch<ThemeProvider>()
+                                        .palette()['textBlackWhite']!,
+                                    width: 2,
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                  balance < 0
-                                      ? "${AppLocalizations.of(context)!.balance}: ${balance.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}"
-                                      : balance.toString(),
-                                  style: TextStyle(
-                                      fontSize: MediaQuery.of(context)
-                                          .textScaler
-                                          .scale(20),
-                                      fontWeight: FontWeight.w600,
-                                      color: balance < 0
-                                          ? context
-                                              .watch<ThemeProvider>()
-                                              .palette()['redButton']!
-                                          : context
-                                              .watch<ThemeProvider>()
-                                              .palette()['greenButton']!)),
-                            ),
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                          "${AppLocalizations.of(context)!.balance}: ",
+                                          style: TextStyle(
+                                              fontSize: MediaQuery.of(context)
+                                                  .textScaler
+                                                  .scale(20),
+                                              fontWeight: FontWeight.w600,
+                                              color: balance < 0
+                                                  ? context
+                                                      .watch<ThemeProvider>()
+                                                      .palette()['redButton']!
+                                                  : context
+                                                          .watch<ThemeProvider>()
+                                                          .palette()[
+                                                      'greenButton']!)),
+                                      SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05),
+                                      (context
+                                              .read<ConfigurationProvider>()
+                                              .switchUseSecondCurrency)
+                                          ? Text((balance < 0 && balanceSecondCurrency < 0) ? "${balance.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol} \n ${balanceSecondCurrency.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}" : "+${balance.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol} \n +${balanceSecondCurrency.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: MediaQuery.of(context)
+                                                      .textScaler
+                                                      .scale(20),
+                                                  fontWeight: FontWeight.w600,
+                                                  color: balance < 0
+                                                      ? context.watch<ThemeProvider>().palette()[
+                                                          'redButton']!
+                                                      : context.watch<ThemeProvider>().palette()[
+                                                          'greenButton']!))
+                                          : Text("${balance.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
+                                              style: TextStyle(
+                                                  fontSize: MediaQuery.of(context)
+                                                      .textScaler
+                                                      .scale(20),
+                                                  fontWeight: FontWeight.w600,
+                                                  color: balance < 0
+                                                      ? context
+                                                          .watch<ThemeProvider>()
+                                                          .palette()['redButton']!
+                                                      : context.watch<ThemeProvider>().palette()['greenButton']!))
+                                    ])),
 
                             SizedBox(
                                 height:
@@ -256,6 +338,7 @@ class _BalanceTabState extends State<BalanceTab> {
                                         .palette()['redButton']!),
                               ],
                             ),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                           ],
                         ),
                 ])),

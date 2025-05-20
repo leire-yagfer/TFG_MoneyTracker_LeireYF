@@ -40,6 +40,8 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
 
   bool _isLoading = false;
 
+  bool isRegistering = false;
+
   //añado listeners a los controller de los campos de contraseñas para comprobar en tiempo real que coincidan --> para ello llamo al método que comprueba que se cumpla
   @override
   void initState() {
@@ -90,120 +92,129 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Dialog(
-          child: _isLoading
-              ? ReusableCircleProgressIndicator(
-                  text: AppLocalizations.of(context)!.signingIn,
-              )
-              : Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: context
-                        .watch<ThemeProvider>()
-                        .palette()['backgroundDialog']!,
-                  ),
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height * 0.02),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ReusableTxtFormFieldLoginRegister(
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _emailController,
-                            labelText: AppLocalizations.of(context)!.email,
-                            hintText: AppLocalizations.of(context)!.emailhint,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return AppLocalizations.of(context)!
-                                    .invalidemail;
-                              }
-                              String emailPattern =
-                                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-                              RegExp regex = RegExp(emailPattern);
-                              if (!regex.hasMatch(value)) {
-                                return AppLocalizations.of(context)!
-                                    .invalidemail;
-                              }
-                              return null;
-                            },
-                          ),
-
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.02),
-                          //EL KEY LO USO PARA VALIDAR EL CAMPO Y QUE SEAN IGUALES LAS CONSTRASEÑAS --> MIRAR CÓMO HACER PARA QUE NO DE ERROR EN EL REUSABLE
-                          ReusableTxtFormFieldLoginRegister(
-                            key: _passwordKey,
-                            controller: _passwordController,
-                            labelText: AppLocalizations.of(context)!.passwordr,
-                            hintText:
-                                AppLocalizations.of(context)!.passwordhintr,
-                            obscureText: true, // empieza oculto
-                            passwordIcon:
-                                true, // muestra el icono para ver/ocultar
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.length < 6) {
-                                return AppLocalizations.of(context)!
-                                    .newpassworderror;
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.02),
-                          ReusableTxtFormFieldLoginRegister(
-                            key: _repeatedPasswordKey,
-                            controller: _repeatedpasswordController,
-                            labelText:
-                                AppLocalizations.of(context)!.repeatpassword,
-                            hintText: AppLocalizations.of(context)!
-                                .repeatpasswordhint,
-                            obscureText: true,
-                            passwordIcon: true,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value != _passwordController.text) {
-                                return AppLocalizations.of(context)!
-                                    .nocoincidencedpasswords;
-                              }
-                              return null;
-                            },
-                          ),
-                          if (_passwordMismatchError != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                _passwordMismatchError!,
-                                style:
-                                    TextStyle(color: Colors.red, fontSize: 12),
-                              ),
+    return _isLoading
+        ? Scaffold(
+            body: Center(
+                child: ReusableCircleProgressIndicator(
+                    text: AppLocalizations.of(context)!.signingIn)),
+          )
+        : Dialog(
+            child: _isLoading
+                ? ReusableCircleProgressIndicator(
+                    text: AppLocalizations.of(context)!.signingIn,
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: context
+                          .watch<ThemeProvider>()
+                          .palette()['backgroundDialog']!,
+                    ),
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.height * 0.02),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ReusableTxtFormFieldLoginRegister(
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _emailController,
+                              labelText: AppLocalizations.of(context)!.email,
+                              hintText: AppLocalizations.of(context)!.emailhint,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .invalidemail;
+                                }
+                                String emailPattern =
+                                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                                RegExp regex = RegExp(emailPattern);
+                                if (!regex.hasMatch(value)) {
+                                  return AppLocalizations.of(context)!
+                                      .invalidemail;
+                                }
+                                return null;
+                              },
                             ),
-                          SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.02),
-                          ReusableRowLoginSignup(
-                            text1:
-                                AppLocalizations.of(context)!.signininsignup1,
-                            text2:
-                                AppLocalizations.of(context)!.signininsignup2,
-                            onClick: () {
-                              Navigator.pop(context);
-                              showLoginDialog(context);
-                            },
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.02,
-                          ),
-                          ReusableButton(
+
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02),
+                            //EL KEY LO USO PARA VALIDAR EL CAMPO Y QUE SEAN IGUALES LAS CONSTRASEÑAS --> MIRAR CÓMO HACER PARA QUE NO DE ERROR EN EL REUSABLE
+                            ReusableTxtFormFieldLoginRegister(
+                              key: _passwordKey,
+                              controller: _passwordController,
+                              labelText:
+                                  AppLocalizations.of(context)!.passwordr,
+                              hintText:
+                                  AppLocalizations.of(context)!.passwordhintr,
+                              obscureText: true, // empieza oculto
+                              passwordIcon:
+                                  true, // muestra el icono para ver/ocultar
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.length < 6) {
+                                  return AppLocalizations.of(context)!
+                                      .newpassworderror;
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02),
+                            ReusableTxtFormFieldLoginRegister(
+                              key: _repeatedPasswordKey,
+                              controller: _repeatedpasswordController,
+                              labelText:
+                                  AppLocalizations.of(context)!.repeatpassword,
+                              hintText: AppLocalizations.of(context)!
+                                  .repeatpasswordhint,
+                              obscureText: true,
+                              passwordIcon: true,
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value != _passwordController.text) {
+                                  return AppLocalizations.of(context)!
+                                      .nocoincidencedpasswords;
+                                }
+                                return null;
+                              },
+                            ),
+                            if (_passwordMismatchError != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  _passwordMismatchError!,
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 12),
+                                ),
+                              ),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.02),
+                            ReusableRowLoginSignup(
+                              text1:
+                                  AppLocalizations.of(context)!.signininsignup1,
+                              text2:
+                                  AppLocalizations.of(context)!.signininsignup2,
+                              onClick: () {
+                                Navigator.pop(context);
+                                showLoginDialog(context);
+                              },
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            ReusableButton(
                               onClick: () async {
+                                setState(() {
+                                  isRegistering = true;
+                                });
                                 await _register();
                                 if (_errorMessage == null) {
                                   Navigator.pop(context);
@@ -212,6 +223,9 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                                       MaterialPageRoute(
                                           builder: (context) => MainApp()));
                                 } else {
+                                  setState(() {
+                                    isRegistering = false;
+                                  });
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -223,24 +237,34 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                                             Navigator.of(context).pop();
                                           },
                                           child: Text(
-                                              AppLocalizations.of(context)!.accept),
+                                              AppLocalizations.of(context)!
+                                                  .accept),
                                         ),
                                       ],
                                     ),
                                   );
                                 }
                               },
-                              textButton:
-                                  AppLocalizations.of(context)!.register,
+                              textButton: isRegistering
+                                  ? null
+                                  : AppLocalizations.of(context)!.register,
                               colorButton: 'buttonWhiteBlack',
                               colorTextButton: 'buttonBlackWhite',
                               buttonHeight: 0.08,
-                              buttonWidth: 0.5),
-                        ],
+                              buttonWidth: 0.5,
+                              colorBorderButton: 'buttonBlackWhite',
+                              child: isRegistering
+                                  ? CircularProgressIndicator(
+                                      color: context
+                                          .watch<ThemeProvider>()
+                                          .palette()['textBlackWhite']!)
+                                  : null,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ))),
-    );
+                    )),
+          );
   }
 
   Future<void> _register() async {

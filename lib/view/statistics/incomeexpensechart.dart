@@ -6,7 +6,7 @@ import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
 ///Gráfico circular de transacciones de tipo ingresos
 class IncomeExpenseChart extends StatelessWidget {
-  final Map<String, double> dataMap;
+  final Map<String, List<double>> dataMap;
   final Map<String, Color> colorMap;
 
   const IncomeExpenseChart({
@@ -17,35 +17,41 @@ class IncomeExpenseChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isSecondaryCurrencyInUse =
+        context.read<ConfigurationProvider>().switchUseSecondCurrency;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.45,
-          child: PieChart(
-            PieChartData(
-              //tiene el número de secciones igual al número de categorías
-              sections: dataMap.entries.map((categoryPointer) {
-                
-                return PieChartSectionData(
-                  value: categoryPointer.value,
-                  title:
-                      "${categoryPointer.value.toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}",
-                  color: colorMap[categoryPointer.key],
-                  radius: 80,
-                  titleStyle: TextStyle(
-                    fontSize: MediaQuery.of(context).textScaler.scale(16),
-                    fontWeight: FontWeight.w600,
-                    color: context
-                              .watch<ThemeProvider>()
-                              .palette()['textBlackWhite']!,
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
+            height: MediaQuery.of(context).size.height * 0.45,
+            child: Padding(
+              padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
+              child: PieChart(
+                PieChartData(
+                  //tiene el número de secciones igual al número de categorías
+                  sections: dataMap.entries.map((categoryPointer) {
+                    return PieChartSectionData(
+                      value: categoryPointer.value[
+                          0], //claculo el valor de la representación d ela categoría con la moneda prinicpal
+                      title: !isSecondaryCurrencyInUse
+                          ? "${categoryPointer.value[0].toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}"
+                          : "${categoryPointer.value[0].toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol} \n ${categoryPointer.value[1].toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}",
+                      color: colorMap[categoryPointer.key],
+                      radius: 80,
+                      titleStyle: TextStyle(
+                        fontSize: MediaQuery.of(context).textScaler.scale(16),
+                        fontWeight: FontWeight.w600,
+                        color: context
+                            .watch<ThemeProvider>()
+                            .palette()['textBlackGrey']!,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            )),
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         //Leyenda
         Padding(

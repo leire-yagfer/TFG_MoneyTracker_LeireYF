@@ -13,6 +13,7 @@ class ReusableButton extends StatelessWidget {
   String colorTextButton;
   double buttonHeight;
   double buttonWidth;
+  String colorBorderButton;
   Widget? child;
 
   ReusableButton(
@@ -23,6 +24,7 @@ class ReusableButton extends StatelessWidget {
       required this.colorTextButton,
       required this.buttonHeight,
       required this.buttonWidth,
+      required this.colorBorderButton,
       this.child});
 
   @override
@@ -38,6 +40,11 @@ class ReusableButton extends StatelessWidget {
               context.watch<ThemeProvider>().palette()[colorButton]!,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
+            side: BorderSide(
+              color: context
+                  .watch<ThemeProvider>()
+                  .palette()[colorBorderButton]!,
+            )
           ),
         ),
         onPressed: onClick,
@@ -52,6 +59,6 @@ class ReusableButton extends StatelessWidget {
                     fontWeight: FontWeight.w500),
                 maxLines: isSmallScreen ? 2 : null,
               )
-            : child!);
+            : child);
   }
 }

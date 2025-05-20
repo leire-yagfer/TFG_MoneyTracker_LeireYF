@@ -40,6 +40,8 @@ class _CategoryCardState extends State<CategoryCard> {
   final TextEditingController _newCategoryNameController =
       TextEditingController();
 
+  bool isCtegoryUpdatingOrCreating = false;
+
   //variables declaradas como "funciones getter" que me permiten cuando las llame tener los colores actualizados
   //colores ya usados por categorías de un tipo (va en función del + seleccionado que coge si es ingreso o gasto)
   Set<Color> usedColorsByType() => widget.listAllCategories
@@ -128,7 +130,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                                         context)!
                                                     .newCategoryNameLabelError;
                                               }
-                                              if (checkNameUniqueness(x,
+                                              if (checkNameUniqueness(x.trim(),
                                                   widget.listAllCategories)) {
                                                 return AppLocalizations.of(
                                                         context)!
@@ -295,66 +297,84 @@ class _CategoryCardState extends State<CategoryCard> {
                                                   0.02),
                                           //Botón para agregar la categoría
                                           ReusableButton(
-                                              onClick: () async {
-                                                if (_formKey.currentState!
-                                                    .validate()) {
-                                                  //Si el formulario es válido, procedo a añadir la categoría
-                                                  //Recoger los datos
-                                                  String newCategoryName =
-                                                      _newCategoryNameController
-                                                          .text;
-                                                  //Crear la categoría --> el id es el nombre
-                                                  Category newCategory = Category(
-                                                      categoryName:
-                                                          newCategoryName,
-                                                      categoryIsIncome: widget
-                                                          .newCategoryIsIncome,
-                                                      categoryColor:
-                                                          categoryColorSelected);
+                                            onClick: () async {
+                                              setState(() {
+                                                isCtegoryUpdatingOrCreating =
+                                                    true;
+                                              });
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                //Si el formulario es válido, procedo a añadir la categoría
+                                                //Recoger los datos
+                                                String newCategoryName =
+                                                    _newCategoryNameController
+                                                        .text.trim();
+                                                //Crear la categoría --> el id es el nombre
+                                                Category newCategory = Category(
+                                                    categoryName:
+                                                        newCategoryName,
+                                                    categoryIsIncome: widget
+                                                        .newCategoryIsIncome,
+                                                    categoryColor:
+                                                        categoryColorSelected);
 
-                                                  //Insertar la nueva categoría en la base de datos
-                                                  await CategoryDao()
-                                                      .insertCategory(
-                                                          context
-                                                              .read<
-                                                                  ConfigurationProvider>()
-                                                              .userRegistered!,
-                                                          newCategory);
-                                                  //Borro lo escrito en el controller
-                                                  _newCategoryNameController
-                                                      .clear();
-                                                  //Cerrar el diálogo
-                                                  Navigator.of(context).pop();
-                                                  //añado la categoría a la lista de la interfaz
-                                                  setState(() {
-                                                    widget.categoriesList.add(
-                                                        newCategory); //añado la nueva categoría a la UI
-                                                    widget.listAllCategories.add(
-                                                        newCategory); //añado la nueva categoría a la lista de todas las categorías para que se actualicen los colores
-                                                  });
-                                                  //Mostrar SnackBar de confirmación
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .correctCategoryAdding),
-                                                      duration: Duration(
-                                                          seconds:
-                                                              1), //duración del SnackBar
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              colorButton: 'buttonWhiteBlack',
-                                              textButton:
-                                                  AppLocalizations.of(context)!
-                                                      .add,
-                                              colorTextButton:
-                                                  'buttonBlackWhite',
-                                              buttonHeight: 0.075,
-                                              buttonWidth: 0.3),
+                                                //Insertar la nueva categoría en la base de datos
+                                                await CategoryDao().insertCategory(
+                                                    context
+                                                        .read<
+                                                            ConfigurationProvider>()
+                                                        .userRegistered!,
+                                                    newCategory);
+                                                //Borro lo escrito en el controller
+                                                _newCategoryNameController
+                                                    .clear();
+                                                //Cerrar el diálogo
+                                                Navigator.of(context).pop();
+                                                //añado la categoría a la lista de la interfaz
+                                                setState(() {
+                                                  widget.categoriesList.add(
+                                                      newCategory); //añado la nueva categoría a la UI
+                                                  widget.listAllCategories.add(
+                                                      newCategory); //añado la nueva categoría a la lista de todas las categorías para que se actualicen los colores
+                                                });
+                                                //Mostrar SnackBar de confirmación
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(AppLocalizations
+                                                            .of(context)!
+                                                        .correctCategoryAdding),
+                                                    duration: Duration(
+                                                        seconds:
+                                                            1), //duración del SnackBar
+                                                  ),
+                                                );
+                                              }
+                                              setState(() {
+                                                isCtegoryUpdatingOrCreating =
+                                                    false;
+                                              });
+                                            },
+                                            colorButton: 'buttonWhiteBlack',
+                                            textButton:
+                                                isCtegoryUpdatingOrCreating
+                                                    ? null
+                                                    : AppLocalizations.of(
+                                                            context)!
+                                                        .add,
+                                            colorTextButton: 'buttonBlackWhite',
+                                            buttonHeight: 0.075,
+                                            buttonWidth: 0.3,
+                                            colorBorderButton:
+                                                'buttonBlackWhite',
+                                            child: isCtegoryUpdatingOrCreating
+                                                ? CircularProgressIndicator(
+                                                    color: context
+                                                            .watch<ThemeProvider>()
+                                                            .palette()[
+                                                        'textBlackWhite']!)
+                                                : null,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -406,6 +426,7 @@ class _CategoryCardState extends State<CategoryCard> {
               itemBuilder: (context, index) {
                 var categoryPointer = widget.categoriesList[index];
                 return Card(
+                  elevation: 0,
                   color: categoryPointer.categoryColor,
                   margin: EdgeInsets.symmetric(
                       vertical: MediaQuery.of(context).size.height * 0.008,
@@ -468,10 +489,13 @@ class _CategoryCardState extends State<CategoryCard> {
                                                         .newCategoryNameLabelError;
                                                   }
                                                   //no puede tener el mismo nombre que otra categoría ya existente
-                                                  if (x!=categoryPointer.categoryName && checkNameUniqueness(
-                                                      x,
-                                                      widget
-                                                          .listAllCategories)) {
+                                                  if (x !=
+                                                          categoryPointer
+                                                              .categoryName &&
+                                                      checkNameUniqueness(
+                                                          x.trim(),
+                                                          widget
+                                                              .listAllCategories)) {
                                                     return AppLocalizations.of(
                                                             context)!
                                                         .categoryNameAlreadyExists;
@@ -512,9 +536,13 @@ class _CategoryCardState extends State<CategoryCard> {
                                                                   child:
                                                                       BlockPicker(
                                                                     pickerColor:
-                                                                        categoryColorSelected = categoryPointer.categoryColor,
+                                                                        categoryColorSelected =
+                                                                            categoryPointer.categoryColor,
                                                                     availableColors:
-                                                                        availableColors() + [categoryPointer.categoryColor],
+                                                                        availableColors() +
+                                                                            [
+                                                                              categoryPointer.categoryColor
+                                                                            ],
                                                                     onColorChanged:
                                                                         (Color
                                                                             color) {
@@ -585,8 +613,9 @@ class _CategoryCardState extends State<CategoryCard> {
                                                             0.025,
                                                         decoration:
                                                             BoxDecoration(
-                                                          color:
-                                                              categoryColorSelected = categoryPointer.categoryColor,
+                                                          color: categoryColorSelected =
+                                                              categoryPointer
+                                                                  .categoryColor,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(5),
@@ -621,88 +650,107 @@ class _CategoryCardState extends State<CategoryCard> {
                                                         .height *
                                                     0.02),
                                             ReusableButton(
-                                                onClick: () async {
-                                                  if (_formKey.currentState!
-                                                      .validate()) {
-                                                    //Si el formulario es válido, llevo a cabo la edición
-                                                    String updatedName =
-                                                        editCategoryNameController
-                                                            .text
-                                                            .trim();
+                                              onClick: () async {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  setStateDialog(() {
+                                                    isCtegoryUpdatingOrCreating =
+                                                        true;
+                                                  });
+                                                  //Si el formulario es válido, llevo a cabo la edición
+                                                  String updatedName =
+                                                      editCategoryNameController
+                                                          .text;
 
-                                                    if (updatedName
-                                                        .isNotEmpty) {
-                                                      //crear nueva categoría con los datos actualizados
-                                                      Category updatedCategory =
-                                                          Category(
-                                                        categoryName:
-                                                            updatedName,
-                                                        categoryIsIncome:
+                                                  if (updatedName.isNotEmpty) {
+                                                    //crear nueva categoría con los datos actualizados
+                                                    Category updatedCategory =
+                                                        Category(
+                                                      categoryName: updatedName,
+                                                      categoryIsIncome:
+                                                          categoryPointer
+                                                              .categoryIsIncome,
+                                                      categoryColor:
+                                                          updatedColor,
+                                                    );
+
+                                                    //actualizar en la base de datos
+                                                    await CategoryDao()
+                                                        .updateCategory(
+                                                      u: context
+                                                          .read<
+                                                              ConfigurationProvider>()
+                                                          .userRegistered!,
+                                                      oldCategory:
+                                                          categoryPointer,
+                                                      newCategory:
+                                                          updatedCategory,
+                                                    );
+
+                                                    //actualizar en la UI
+                                                    setState(() {
+                                                      widget.categoriesList[
+                                                              index] =
+                                                          updatedCategory;
+                                                      //opcionalmente también actualizar listAllCategories si la usas
+                                                      int allIndex = widget
+                                                          .listAllCategories
+                                                          .indexWhere(
+                                                        (cat) =>
+                                                            cat.categoryName ==
                                                             categoryPointer
-                                                                .categoryIsIncome,
-                                                        categoryColor:
-                                                            updatedColor,
+                                                                .categoryName,
                                                       );
-
-                                                      //actualizar en la base de datos
-                                                      await CategoryDao()
-                                                          .updateCategory(
-                                                        u: context
-                                                            .read<
-                                                                ConfigurationProvider>()
-                                                            .userRegistered!,
-                                                        oldCategory:
-                                                            categoryPointer,
-                                                        newCategory:
-                                                            updatedCategory,
-                                                      );
-
-                                                      //actualizar en la UI
-                                                      setState(() {
-                                                        widget.categoriesList[
-                                                                index] =
+                                                      if (allIndex != -1) {
+                                                        widget.listAllCategories[
+                                                                allIndex] =
                                                             updatedCategory;
-                                                        //opcionalmente también actualizar listAllCategories si la usas
-                                                        int allIndex = widget
-                                                            .listAllCategories
-                                                            .indexWhere(
-                                                          (cat) =>
-                                                              cat.categoryName ==
-                                                              categoryPointer
-                                                                  .categoryName,
-                                                        );
-                                                        if (allIndex != -1) {
-                                                          widget.listAllCategories[
-                                                                  allIndex] =
-                                                              updatedCategory;
-                                                        }
-                                                      });
+                                                      }
+                                                    });
 
-                                                      Navigator.of(context)
-                                                          .pop(); //cerrar el diálogo
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .correctEditingCategory),
-                                                          duration: Duration(
-                                                              seconds: 1),
-                                                        ),
-                                                      );
-                                                    }
+                                                    Navigator.of(context)
+                                                        .pop(); //cerrar el diálogo
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .correctEditingCategory),
+                                                        duration: Duration(
+                                                            seconds: 1),
+                                                      ),
+                                                    );
                                                   }
-                                                },
-                                                colorButton: 'buttonWhiteBlack',
-                                                textButton: AppLocalizations.of(
-                                                        context)!
-                                                    .saveChanges,
-                                                colorTextButton:
-                                                    'buttonBlackWhite',
-                                                buttonHeight: 0.075,
-                                                buttonWidth: 0.3),
+                                                }
+                                                setStateDialog(() {
+                                                  isCtegoryUpdatingOrCreating =
+                                                      false;
+                                                });
+                                              },
+                                              colorButton: 'buttonWhiteBlack',
+                                              textButton:
+                                                  isCtegoryUpdatingOrCreating
+                                                      ? null
+                                                      : AppLocalizations.of(
+                                                              context)!
+                                                          .saveChanges,
+                                              colorTextButton:
+                                                  'buttonBlackWhite',
+                                              buttonHeight: 0.075,
+                                              buttonWidth: 0.3,
+                                              colorBorderButton:
+                                                  'buttonBlackWhite',
+                                              child: isCtegoryUpdatingOrCreating
+                                                  ? CircularProgressIndicator(
+                                                      color: context
+                                                              .watch<
+                                                                  ThemeProvider>()
+                                                              .palette()[
+                                                          'textBlackWhite']!)
+                                                  : null,
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -791,7 +839,7 @@ class _CategoryCardState extends State<CategoryCard> {
   //Comprobar si el nombre de la categoría ya existe, ya que el nombre d ela categoría en FireBase es el id
   bool checkNameUniqueness(String cname, List categorieslist) {
     return (categorieslist
-        .where((cat) => cat.categoryName.toLowerCase() == cname.toLowerCase())
+        .where((c) => c.categoryName.toLowerCase() == cname.toLowerCase())
         .isNotEmpty);
   }
 }

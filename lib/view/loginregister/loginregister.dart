@@ -36,7 +36,8 @@ class _LoginSignupPageState extends State<LoginSignupPage>
               colorButton: 'buttonWhiteBlack',
               colorTextButton: 'buttonBlackWhite',
               buttonHeight: 0.1,
-              buttonWidth: 0.4),
+              buttonWidth: 0.4,
+              colorBorderButton: 'buttonBlackWhite',),
           SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           ReusableButton(
               onClick: () {
@@ -46,7 +47,8 @@ class _LoginSignupPageState extends State<LoginSignupPage>
               colorButton: 'buttonBlackWhite',
               colorTextButton: 'buttonWhiteBlack',
               buttonHeight: 0.1,
-              buttonWidth: 0.4),
+              buttonWidth: 0.4,
+              colorBorderButton: 'buttonWhiteBlack',),
         ],
       ),
     ));

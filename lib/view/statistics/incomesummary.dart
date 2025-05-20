@@ -16,8 +16,8 @@ class IncomeTab extends StatefulWidget {
 
 class _IncomeTabState extends State<IncomeTab> {
   final TransactionDao transactionDao = TransactionDao();
-  Map<String, double> categoryTotalMap =
-      {}; //Almacena las categorías como clave y como valor el total por categoría
+  Map<String, List<double>> categoryTotalMap =
+      {}; //Almacena las categorías como clave y como valor el total por categoría en las dos monedas
   Map<String, Color> categoryColorMap =
       {}; //Almacena los colores de las categorías, como clave la categoría y como valor el color
   String? selectedYear; //Almacena el año seleccionado en el DropDownButton
@@ -69,18 +69,22 @@ class _IncomeTabState extends State<IncomeTab> {
       isIncome: true,
     );
 
-    Map<String, double> tempData = {};
+    Map<String, List<double>> tempData = {};
     Map<String, Color> tempColor = {};
 
     for (var row in result.entries) {
       String categoria = row.key.categoryName;
       double total = 0;
+      double totalSecondCurrency = 0;
       row.value.forEach((transaccion) {
         total += transaccion.transactionImport;
+        if (context.read<ConfigurationProvider>().switchUseSecondCurrency) {
+          totalSecondCurrency += transaccion.transactionSecondImport;
+        }
       });
       Color color = row.key.categoryColor;
 
-      tempData[categoria] = total;
+      tempData[categoria] = [total, totalSecondCurrency];
       tempColor[categoria] = color;
     }
 
