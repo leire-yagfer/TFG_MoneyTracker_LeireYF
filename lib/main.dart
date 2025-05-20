@@ -9,7 +9,6 @@ import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:tfg_monetracker_leireyafer/firebase_options.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/user.dart';
 import 'package:tfg_monetracker_leireyafer/model/util/changecurrencyapi.dart';
@@ -104,7 +103,7 @@ class _MyAppState extends State<MyApp> {
                     .palette()['scaffoldBackground']!,
                 elevation: 0,
               ),
-              textTheme: TextTheme(bodyMedium: GoogleFonts.notoSans())),
+              ),
 
           localizationsDelegates: const [
             AppLocalizations.delegate,
