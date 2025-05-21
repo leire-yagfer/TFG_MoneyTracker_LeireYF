@@ -1,16 +1,1 @@
-{
-  "es": [
-    "firebaseNotInitialized",
-    "authenticationFailed",
-    "noUserFound",
-    "incorrectPassword",
-    "invalidEmailPassword",
-    "invalidEmailFormat",
-    "accountDisabled",
-    "errorSigningIn",
-    "blankSpace",
-    "registrationFailed",
-    "errorRegistering",
-    "weakPassword"
-  ]
-}
+{}
