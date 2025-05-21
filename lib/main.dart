@@ -24,6 +24,7 @@ FirebaseFirestore?
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
+    //inicializo Firebase con la configuración por plataforma
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -31,7 +32,7 @@ void main() async {
     //Cargo el archivo interno que contiene las divisas para saber cuáles se pueden usar
     await APIUtils.getAllCurrencies();
 
-    // Inicializa Firebase Firestore
+    //Inicializo Firebase Firestore
     firestore = FirebaseFirestore.instance;
 
     User? user = await _tryAutoLogin();
@@ -42,7 +43,7 @@ void main() async {
       u = UserModel(userId: user.uid, userEmail: user.email!);
     }
 
-    //MultiProvider para los cambios
+    //inicializo los providers de configuración y tema
     runApp(
       MultiProvider(
         providers: [
@@ -57,6 +58,7 @@ void main() async {
   }
 }
 
+//función que intenta recuperar la sesión de usuario guardada con SharedPreferences
 Future<User?> _tryAutoLogin() async {
   final _authService = AuthService();
 
