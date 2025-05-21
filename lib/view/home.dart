@@ -7,8 +7,8 @@ import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
-import 'package:tfg_monetracker_leireyafer/viewmodel/reusable/reusablebutton.dart';
-import 'package:tfg_monetracker_leireyafer/viewmodel/reusable/reusabletxtformfield.dart';
+import 'package:tfg_monetracker_leireyafer/view/reusable/reusablebutton.dart';
+import 'package:tfg_monetracker_leireyafer/view/reusable/reusabletxtformfield.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 

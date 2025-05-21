@@ -4,8 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/categorydao.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/category.dart';
 import 'package:tfg_monetracker_leireyafer/model/models/staticdata.dart';
-import 'package:tfg_monetracker_leireyafer/viewmodel/reusable/categorycard.dart';
-import 'package:tfg_monetracker_leireyafer/viewmodel/reusable/reusablecircleprogressindicator.dart';
+import 'package:tfg_monetracker_leireyafer/view/reusable/categorycard.dart';
+import 'package:tfg_monetracker_leireyafer/view/reusable/reusablecircleprogressindicator.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 
 ///Clase que muestra las categorías almacenadas en la base de datos de cada usuario separadas pòr ingresos y gastos

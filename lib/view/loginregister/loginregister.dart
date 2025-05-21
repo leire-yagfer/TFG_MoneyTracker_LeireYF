@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:tfg_monetracker_leireyafer/viewmodel/reusable/reusablebutton.dart';
+import 'package:tfg_monetracker_leireyafer/view/reusable/reusablebutton.dart';
 import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregisterlogout.dart';
 
 

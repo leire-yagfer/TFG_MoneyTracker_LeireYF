@@ -5,7 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/model/dao/transactiondao.dart';
-import 'package:tfg_monetracker_leireyafer/viewmodel/reusable/reusablecircleprogressindicator.dart';
+import 'package:tfg_monetracker_leireyafer/view/reusable/reusablecircleprogressindicator.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
