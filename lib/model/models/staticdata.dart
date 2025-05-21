@@ -1,22 +1,23 @@
-//Clase estática para almacenar un mapa de iconos y colores
-
 import 'package:flutter/material.dart';
 
-///Clase de colores disponibles para el color único representativo de las categorías
+///Clase estática de colores disponibles para el color único representativo de las categorías
 class StaticData {
   static const Map<String, Color> incomeCategoriesColorMap = {
-    "peachBlush": Color.fromARGB(255, 255, 221, 204), // melocotón suave cálido
-    "coolLavender": Color.fromARGB(255, 214, 202, 255), // lavanda fría elegante
-    "skyMistMedium": Color.fromARGB(255, 189, 224, 252) // celeste equilibrado
-,
-    "mintFog": Color.fromARGB(
-        255, 210, 250, 235), // verde menta muy claro, no compite con el tuyo
-    "butteryCream":
-        Color.fromARGB(255, 255, 245, 204), // crema amarillento claro
-    "paleCoral": Color.fromARGB(255, 255, 204, 204), // coral pálido amigable
-    "teaRose": Color.fromARGB(255, 245, 215, 220), // rosa té elegante
-    "softDenim":
-        Color.fromARGB(255, 190, 210, 245), // azul jeans suave y tranquilo
+    "warmClay":
+        Color.fromARGB(255, 202, 160, 130), // terracota suave pero con peso
+    "graphiteMist":
+        Color.fromARGB(255, 150, 160, 170), // gris azulado con carácter
+    "mutedIndigo": Color.fromARGB(
+        255, 140, 150, 190), // índigo apagado, complementa bien el verde
+    "blushTerracotta":
+        Color.fromARGB(255, 210, 150, 140), // mezcla entre coral y barro rosado
+    "cinnamonDust":
+        Color.fromARGB(255, 190, 140, 100), // canela empolvada, cálida y otoñal
+    "dustyLilac":
+        Color.fromARGB(255, 190, 160, 190), // lila empolvado más profundo
+    "stormyBlue": Color.fromARGB(255, 135, 160, 185), // azul tormentoso apagado
+    "smokyRose":
+        Color.fromARGB(255, 200, 150, 155), // rosa apagado grisáceo, elegante
   };
 
   static const Map<String, Color> expenseCategoriesColorMap = {

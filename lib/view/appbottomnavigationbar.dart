@@ -10,7 +10,7 @@ import 'package:tfg_monetracker_leireyafer/view/statistics/statistics.dart';
 import 'package:tfg_monetracker_leireyafer/view/transactions.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-//Clase que define la distribución de la app
+///Clase que define la distribución de la app con el bottomNavigation y con la barra de navegación
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-//clase reutilizable para cuando se quiera poner un CircularProgressIndicator
+///clase reutilizable para cuando se quiera utilizar un CircularProgressIndicator en una pantalla completa
 class ReusableCircleProgressIndicator extends StatelessWidget {
   final String text;
 

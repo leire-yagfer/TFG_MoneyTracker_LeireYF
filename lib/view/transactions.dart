@@ -110,7 +110,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
                     if (transactionPointer.transactionCategory.categoryIsIncome) {
                       //si es ingreso --> verde. En función del color de la card será en un tono u otro
-                      rowAndImportColor = luminance > 0.5
+                      rowAndImportColor = luminance > 0.3
                           ? context
                               .watch<ThemeProvider>()
                               .palette()['greenButton']!

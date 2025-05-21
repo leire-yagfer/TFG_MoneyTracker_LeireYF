@@ -8,6 +8,8 @@ import 'package:tfg_monetracker_leireyafer/view/loginregister/logindialog.dart';
 import 'package:tfg_monetracker_leireyafer/view/loginregister/loginregister.dart';
 import 'package:tfg_monetracker_leireyafer/view/loginregister/registerdialog.dart';
 
+
+///Clase que define las funciones de inicio de sesión, registro y cierre de sesión
 mixin LoginLogoutDialog {
   //función para iniciar sesión
   void showLoginDialog(BuildContext context) {

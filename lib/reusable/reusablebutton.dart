@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-//clase reutilizable para los botones de inicio de sesión y registro, al igual que para los de agregar ingreso/gasto
+///clase reutilizable para los botones de inicio de sesión y registro, al igual que para los de agregar ingreso/gasto
 class ReusableButton extends StatelessWidget {
   final VoidCallback onClick;
   String?

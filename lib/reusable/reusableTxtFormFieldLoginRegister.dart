@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-//clase que crea un TextFormField reutilizable para login y registro
+///clase que crea un TextFormField reutilizable para login y registro
 class ReusableTxtFormFieldLoginRegister extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
@@ -10,7 +10,7 @@ class ReusableTxtFormFieldLoginRegister extends StatefulWidget {
   final bool obscureText; //para determinar si es un campo de contraseña
   final TextInputType keyboardType;
   final bool passwordIcon; //para mostrar el icono de visibilidad
-  final String? Function(String?)? validator;
+  final String? Function(String?)? validator; //especial para las contraseñas
 
   ReusableTxtFormFieldLoginRegister({
     super.key,
@@ -19,7 +19,7 @@ class ReusableTxtFormFieldLoginRegister extends StatefulWidget {
     required this.hintText,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
-    this.validator,
+    this.validator = null,
     this.passwordIcon = false,
   });
 

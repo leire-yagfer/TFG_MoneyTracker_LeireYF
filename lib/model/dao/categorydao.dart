@@ -79,7 +79,7 @@ class CategoryDao {
   }
 
   ///Insertar varias categorías de primeras al registrarse un usuario
-  Future<void> insertarCategoriasRegistro(String uid) async {
+  Future<void> categoriesInRegistration(String uid) async {
     //le paso el uid del usuario proporcionaod por firebase que se genera al registrarse
     //1. sacar el docuemnto del user --> d eun usuario en concreto pq se lo paso por parametro
     var userRef = await data.doc(uid).get();

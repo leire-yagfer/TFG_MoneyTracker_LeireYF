@@ -18,7 +18,7 @@ import 'package:tfg_monetracker_leireyafer/view/loginregister/mixinloginregister
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-//clase que implementa el dopDownButton de selección de país, ya que es de tipo stateful
+///Clase que muestra el cuadro de dialogo de registro
 class SignupDialog extends StatefulWidget {
   @override
   _SignupDialogState createState() => _SignupDialogState();
@@ -124,16 +124,11 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                               labelText: AppLocalizations.of(context)!.email,
                               hintText: AppLocalizations.of(context)!.emailhint,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value != _passwordController.text) {
                                   return AppLocalizations.of(context)!
-                                      .invalidemail;
-                                }
-                                String emailPattern =
-                                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-                                RegExp regex = RegExp(emailPattern);
-                                if (!regex.hasMatch(value)) {
-                                  return AppLocalizations.of(context)!
-                                      .invalidemail;
+                                      .nocoincidencedpasswords;
                                 }
                                 return null;
                               },
@@ -153,15 +148,6 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                               obscureText: true, // empieza oculto
                               passwordIcon:
                                   true, // muestra el icono para ver/ocultar
-                              validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty ||
-                                    value.length < 6) {
-                                  return AppLocalizations.of(context)!
-                                      .newpassworderror;
-                                }
-                                return null;
-                              },
                             ),
                             SizedBox(
                                 height:
@@ -175,15 +161,6 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                                   .repeatpasswordhint,
                               obscureText: true,
                               passwordIcon: true,
-                              validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty ||
-                                    value != _passwordController.text) {
-                                  return AppLocalizations.of(context)!
-                                      .nocoincidencedpasswords;
-                                }
-                                return null;
-                              },
                             ),
                             if (_passwordMismatchError != null)
                               Padding(
@@ -191,7 +168,7 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                                 child: Text(
                                   _passwordMismatchError!,
                                   style: TextStyle(
-                                      color: Colors.red, fontSize: 12),
+                                      color: context.watch<ThemeProvider>().palette()['fixedRed']!, fontSize: 12),
                                 ),
                               ),
                             SizedBox(
@@ -268,6 +245,7 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
   }
 
   Future<void> _register() async {
+    //verificar que el formulario sea válido antes de continuar
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -275,68 +253,68 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
       });
 
       try {
-        // Check if Firestore is available
+        //verificar si firestore está correctamente inicializado
         if (firestore == null) {
-          throw Exception(
-              "Firebase is not properly initialized. Please restart the app.");
+          throw Exception(AppLocalizations.of(context)!.firebaseNotInitialized);
         }
 
-        // Create the user account
+        //registrar al usuario con email y contraseña usando firebase auth
         final UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
-        // Save credentials for auto-login (always enabled)
+        //guardar credenciales para el inicio automático
         await _authService.saveCredentials(_emailController.text.trim(),
-            _passwordController.text.trim(), false // No biometrics by default
-            );
+            _passwordController.text.trim(), false);
 
-        // Get the user's UID
+        //obtener el uid del usuario recién creado
         final String uid = userCredential.user!.uid;
 
-        //Create a user document in Firestore
+        //crear un documento de usuario en firestore
         try {
           await firestore!.collection('users').doc(uid).set({
             'email': _emailController.text.trim(),
           });
+          //realizar login en el provider de configuración y crear categorías
           context.read<ConfigurationProvider>().logIn(
               UserModel(userId: uid, userEmail: _emailController.text.trim()));
-          await CategoryDao().insertarCategoriasRegistro(uid);
+          await CategoryDao().categoriesInRegistration(uid);
         } catch (firestoreError) {
           Logger().e(firestoreError);
-          // Continue with registration even if Firestore fails
+          //continuar el registro aunque falle firestore
         }
       } on FirebaseAuthException catch (e) {
-        String errorMsg = 'Registration failed';
+        String errorMsg = AppLocalizations.of(context)!.registrationFailed;
 
-        // More user-friendly error messages
+        //errores de firebase auth más corrientes
         switch (e.code) {
           case 'email-already-in-use':
-            errorMsg = 'An account already exists with this email';
+            errorMsg = AppLocalizations.of(context)!.emailalreadyused;
             break;
           case 'invalid-email':
-            errorMsg = 'Invalid email format';
+            errorMsg = AppLocalizations.of(context)!.invalidemail;
             break;
           case 'weak-password':
-            errorMsg = 'Password is too weak, please use a stronger password';
-            break;
-          case 'operation-not-allowed':
-            errorMsg = 'Email/password registration is not enabled';
+            errorMsg = AppLocalizations.of(context)!.weakPassword;
             break;
           default:
-            errorMsg = e.message ?? 'Registration failed';
+            errorMsg =
+                e.message ?? AppLocalizations.of(context)!.registrationFailed;
         }
-
+        //actualizar estado con el mensaje de error
         setState(() {
           _errorMessage = errorMsg;
         });
       } catch (e) {
+        //manejar cualquier otro tipo de error inesperado
         setState(() {
-          _errorMessage = 'Error creating account: $e';
+          _errorMessage =
+              '${AppLocalizations.of(context)!.errorRegistering} $e';
         });
       } finally {
+        //desactivar el indicador de carga si el widget está montado
         if (mounted) {
           setState(() {
             _isLoading = false;
@@ -345,8 +323,9 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
       }
     } else {
       setState(() {
+        //mostrar error si hay campos vacíos
         setState(() {
-          _errorMessage = "Can't leave any blank space";
+          _errorMessage = AppLocalizations.of(context)!.blankSpace;
         });
       });
     }

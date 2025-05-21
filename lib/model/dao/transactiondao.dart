@@ -5,14 +5,6 @@ import 'package:tfg_monetracker_leireyafer/model/models/transaction.dart';
 import 'package:tfg_monetracker_leireyafer/model/util/changecurrencyapi.dart';
 import 'package:tfg_monetracker_leireyafer/model/util/firebasedb.dart';
 
-/* ---------------------------------------------------------- */
-//Explicación de lo que he hecho
-// He creado al final un método que, en función de la moneda actual, convierto las transacciones a la moneda actual
-// Se llama a esa función desde todas las demás funciones
-// En la del total, simplemente lo he re creado para sacar el total de todas las monedas.
-// Dará un par de errores en el código, por lo que en todos esos lados tienes que añadir actualCurrency : context.read<ConfigurationProvider>().actualCurrency.currencyCode
-/* ---------------------------------------------------------- */
-
 ///Clase que gestiona transacciones en la base de datos
 class TransactionDao {
   CollectionReference data = Firebasedb.data;
@@ -46,7 +38,7 @@ class TransactionDao {
           .collection('transactions')
           .orderBy('datetime',
               descending:
-                  true) //ordenar por fecha en cada categoría en FireBase --> se ve más ordenado en la BD
+                  true) //ordenar por fecha en cada categoría en FireBase --> se ve ordenado en la BD
           .get();
       for (var t in transactionsInCategory.docs) {
         var transactionPonter = t.data();
@@ -61,40 +53,12 @@ class TransactionDao {
     //ordenar todas las transacciones globalmente por fecha (de más reciente a más antigua) a la hora de la representación en la interfaz
     allTransacciones
         .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
-
+    
+    //convertir todas las transacciones a la moneda primaria
     allTransacciones = await getTransactionsOnCurrency(
         allTransacciones, primaryCurrencyCode, secondaryCurrencyCode);
     return allTransacciones;
   }
-
-  //por si necesito recurrir a este metódo para ordenar por fecha y sin separar por categorias
-  /*
-  Future<List<Transaccion>> getTransactionsByDate(Usuario u) async {
-    List<Transaccion> allTransacciones = [];
-    var userdata = await Firebasedb.data.doc(u.id).get(); //obtengo el usuario
-
-    var categories = await userdata.reference
-        .collection('categories')
-        .get(); //obtengo las categorias
-
-    //obtengo las transacciones de cada categoria
-    for (var c in categories.docs) {
-      var transacciones = await c.reference.collection('transactions').get();
-      for (var t in transacciones.docs) {
-        var transaccion = t.data();
-        transaccion["id"] =
-            t.id; //le paso el ID de la transacción pq no lo pasa directamente
-        transaccion["categoria"] = c
-            .data(); //le paso todos los datos que implica la categoria a la que pertenece dicha transacción
-        transaccion["categoria"]["id"] =
-            c.id; //le paso el ID de la categoria pq no lo pasa directamente --> id = nombre
-
-        allTransacciones.add(Transaccion.fromMap(
-            transaccion)); //método transacción que se encarga de crear la transacción a partir del mapa
-      }
-    }
-    return allTransacciones;
-  }*/
 
   ///Eliminar una transacción por ID
   Future<void> deleteTransaction(UserModel u, TransactionModel t) async {
@@ -143,6 +107,7 @@ class TransactionDao {
         //añadir la transacción a la lista
         transacciones.add(transaccion);
       }
+      //convertir todas las transacciones a la moneda primaria
       transacciones = await getTransactionsOnCurrency(
           transacciones, primaryCurrencyCode, secondaryCurrencyCode);
       //añadir la categoría y sus transacciones a la lista
@@ -223,7 +188,7 @@ class TransactionDao {
       transaction.transactionSecondImport *=
           (await APIUtils.getChangesBasedOnCurrencyCode(transaction
               .transactionSecondCurrency.currencyCode))[secondaryCurrency]!;
-        }
+    }
     return transactions;
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-//Clase que crea un TextFormField reutilizable para el formulario de nueva transacción
+///Clase que crea un TextFormField reutilizable para el formulario de nueva transacción
 class ReusableTxtFormFieldShowDetailsTransactionAndEditCategory extends StatelessWidget {
   final TextEditingController text;
   final String labelText;

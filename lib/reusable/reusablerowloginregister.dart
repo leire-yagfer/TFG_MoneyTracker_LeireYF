@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-//clase reutilizable para el inicio sesión o registro en el inicio
+///clase reutilizable para el inicio sesión o registro en el inicio
 class ReusableRowLoginSignup extends StatelessWidget {
   final String text1;
   final String text2;

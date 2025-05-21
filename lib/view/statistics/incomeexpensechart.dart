@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/configurationprovider.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 
-///Gráfico circular de transacciones de tipo ingresos
+///Gráfico circular ara ingresos/gastos
 class IncomeExpenseChart extends StatelessWidget {
   final Map<String, List<double>> dataMap;
   final Map<String, Color> colorMap;

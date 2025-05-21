@@ -14,6 +14,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tfg_monetracker_leireyafer/viewmodel/themeprovider.dart';
 import '../../main.dart' show firestore;
 
+///clase que muestra el diálogo de inicio de sesión
 class LogInDialog extends StatefulWidget {
   LogInDialog({super.key});
 
@@ -65,12 +66,6 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
                       controller: _usernameController,
                       labelText: AppLocalizations.of(context)!.email,
                       hintText: AppLocalizations.of(context)!.emailhint,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return AppLocalizations.of(context)!.emailerror;
-                        }
-                        return null;
-                      },
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     //Campo de contraseña
@@ -80,12 +75,6 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
                       hintText: AppLocalizations.of(context)!.passwordhintsi,
                       obscureText: true,
                       passwordIcon: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return AppLocalizations.of(context)!.passworderror;
-                        }
-                        return null;
-                      },
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     ReusableRowLoginSignup(
@@ -157,6 +146,7 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
   }
 
   Future<void> _signIn() async {
+    //Verificar que el formulario sea correcto antes de continuar
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -164,73 +154,74 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
       });
 
       try {
-        // Check if Firestore is available
+        //verificar si firestore está correctamente inicializado
         if (firestore == null) {
           throw Exception(
-              "Firebase is not properly initialized. Please restart the app.");
+              AppLocalizations.of(context)!.firebaseNotInitialized);
         }
 
-        // Sign in the user
+        //iniciar sesión con email y contraseña usando firebase auth
         final UserCredential userCredential =
             await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _usernameController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
-        // Save credentials for auto-login (always enabled)
+        //guardar las credenciales para el autoLogin
         await _authService.saveCredentials(_usernameController.text.trim(),
-            _passwordController.text.trim(), false // No biometrics by default
+            _passwordController.text.trim(), false 
             );
 
         if (mounted) {
-          // Use Future.microtask to avoid navigation during build
+          //realizar login en la configuración y cargar las transacciones
           context.read<ConfigurationProvider>().logIn(UserModel(
               userId: userCredential.user!.uid,
               userEmail: _usernameController.text));
           await context.read<ConfigurationProvider>().loadTransactions();
         }
       } on FirebaseAuthException catch (e) {
-        String errorMsg = 'Authentication failed';
+        String errorMsg = AppLocalizations.of(context)!.authenticationFailed;
 
-        // More user-friendly error messages
+        //errores de firebase auth más corrientes
         switch (e.code) {
           case 'user-not-found':
-            errorMsg = 'No user found with this email';
+            errorMsg = AppLocalizations.of(context)!.noUserFound;
             break;
           case 'wrong-password':
-            errorMsg = 'Incorrect password';
+            errorMsg = AppLocalizations.of(context)!.incorrectPassword;
             break;
           case 'invalid-credential':
-            errorMsg = 'Invalid email or password';
+            errorMsg = AppLocalizations.of(context)!.invalidEmailPassword;
             break;
           case 'invalid-email':
-            errorMsg = 'Invalid email format';
+            errorMsg = AppLocalizations.of(context)!.invalidEmailFormat;
             break;
           case 'user-disabled':
-            errorMsg = 'This account has been disabled';
-            break;
-          case 'too-many-requests':
-            errorMsg = 'Too many failed login attempts. Try again later.';
+            errorMsg = AppLocalizations.of(context)!.accountDisabled;
             break;
           default:
-            errorMsg = e.message ?? 'Authentication failed';
+            errorMsg = e.message ?? AppLocalizations.of(context)!.authenticationFailed;
         }
 
         setState(() {
+          //actualizar estado con el mensaje de error
           _errorMessage = errorMsg;
         });
       } catch (e) {
         setState(() {
-          _errorMessage = 'Error signing in: $e';
+          //manejar cualquier otro tipo de error
+          _errorMessage = '${AppLocalizations.of(context)!.errorSigningIn} $e';
         });
       } finally {
         if (mounted) {
+          //forzar reconstrucción del widget si está montado
           setState(() {});
         }
       }
     } else {
+      //mostrar error si hay campos vacíos
       setState(() {
-        _errorMessage = "Can't leave any blank space";
+        _errorMessage = AppLocalizations.of(context)!.blankSpace;
       });
     }
     setState(() {

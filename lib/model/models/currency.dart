@@ -1,3 +1,4 @@
+///Clase que representa una divisa
 class Currency {
   String currencyName;
   String currencyCode;
