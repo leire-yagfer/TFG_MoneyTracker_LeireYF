@@ -328,6 +328,10 @@ class _CategoryCardState extends State<CategoryCard> {
                                                 //Borro lo escrito en el controller
                                                 _newCategoryNameController
                                                     .clear();
+                                                    setState(() {
+                                                isCtegoryUpdatingOrCreating =
+                                                    true;
+                                              });
                                                 //Cerrar el diálogo
                                                 Navigator.of(context).pop();
                                                 //añado la categoría a la lista de la interfaz

@@ -10,7 +10,7 @@ class ReusableTxtFormFieldLoginRegister extends StatefulWidget {
   final bool obscureText; //para determinar si es un campo de contraseña
   final TextInputType keyboardType;
   final bool passwordIcon; //para mostrar el icono de visibilidad
-  final String? Function(String?)? validator; //especial para las contraseñas
+    final String? Function(String?)? validator;
 
   ReusableTxtFormFieldLoginRegister({
     super.key,
@@ -19,7 +19,7 @@ class ReusableTxtFormFieldLoginRegister extends StatefulWidget {
     required this.hintText,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
-    this.validator = null,
+    this.validator,
     this.passwordIcon = false,
   });
 

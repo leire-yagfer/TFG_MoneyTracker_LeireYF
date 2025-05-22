@@ -66,6 +66,12 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
                       controller: _usernameController,
                       labelText: AppLocalizations.of(context)!.email,
                       hintText: AppLocalizations.of(context)!.emailhint,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppLocalizations.of(context)!.emailerror;
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     //Campo de contraseña
@@ -75,6 +81,12 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
                       hintText: AppLocalizations.of(context)!.passwordhintsi,
                       obscureText: true,
                       passwordIcon: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppLocalizations.of(context)!.passworderror;
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     ReusableRowLoginSignup(
@@ -156,8 +168,7 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
       try {
         //verificar si firestore está correctamente inicializado
         if (firestore == null) {
-          throw Exception(
-              AppLocalizations.of(context)!.firebaseNotInitialized);
+          throw Exception(AppLocalizations.of(context)!.firebaseNotInitialized);
         }
 
         //iniciar sesión con email y contraseña usando firebase auth
@@ -169,8 +180,7 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
 
         //guardar las credenciales para el autoLogin
         await _authService.saveCredentials(_usernameController.text.trim(),
-            _passwordController.text.trim(), false 
-            );
+            _passwordController.text.trim(), false);
 
         if (mounted) {
           //realizar login en la configuración y cargar las transacciones
@@ -200,7 +210,8 @@ class _LogInDialogState extends State<LogInDialog> with LoginLogoutDialog {
             errorMsg = AppLocalizations.of(context)!.accountDisabled;
             break;
           default:
-            errorMsg = e.message ?? AppLocalizations.of(context)!.authenticationFailed;
+            errorMsg =
+                e.message ?? AppLocalizations.of(context)!.authenticationFailed;
         }
 
         setState(() {

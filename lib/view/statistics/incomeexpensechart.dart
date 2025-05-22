@@ -37,7 +37,7 @@ class IncomeExpenseChart extends StatelessWidget {
                           0], //claculo el valor de la representación d ela categoría con la moneda prinicpal
                       title: !isSecondaryCurrencyInUse
                           ? "${categoryPointer.value[0].toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol}"
-                          : "${categoryPointer.value[0].toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol} \n ${categoryPointer.value[1].toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}",
+                          : "${categoryPointer.value[0].toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse.currencySymbol} \n ${categoryPointer.value[1].toStringAsFixed(2)} ${context.read<ConfigurationProvider>().currencyCodeInUse2.currencySymbol}",
                       color: colorMap[categoryPointer.key],
                       radius: 80,
                       titleStyle: TextStyle(

@@ -124,11 +124,21 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                               labelText: AppLocalizations.of(context)!.email,
                               hintText: AppLocalizations.of(context)!.emailhint,
                               validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty ||
-                                    value != _passwordController.text) {
+                                if (value == null || value.isEmpty) {
                                   return AppLocalizations.of(context)!
-                                      .nocoincidencedpasswords;
+                                      .invalidemail;
+                                }
+                                String emailPattern =
+                                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                                RegExp regex = RegExp(emailPattern);
+                                if (!regex.hasMatch(value)) {
+                                  if (value.isEmpty ||
+                                      value.isEmpty ||
+                                      value != _passwordController.text) {
+                                    return AppLocalizations.of(context)!
+                                        .invalidemail;
+                                  }
+                                  return null;
                                 }
                                 return null;
                               },
@@ -148,6 +158,15 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                               obscureText: true, // empieza oculto
                               passwordIcon:
                                   true, // muestra el icono para ver/ocultar
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value != _passwordController.text) {
+                                  return AppLocalizations.of(context)!
+                                      .nocoincidencedpasswords;
+                                }
+                                return null;
+                              },
                             ),
                             SizedBox(
                                 height:
@@ -168,7 +187,10 @@ class _SignupDialogState extends State<SignupDialog> with LoginLogoutDialog {
                                 child: Text(
                                   _passwordMismatchError!,
                                   style: TextStyle(
-                                      color: context.watch<ThemeProvider>().palette()['fixedRed']!, fontSize: 12),
+                                      color: context
+                                          .watch<ThemeProvider>()
+                                          .palette()['fixedRed']!,
+                                      fontSize: 12),
                                 ),
                               ),
                             SizedBox(
