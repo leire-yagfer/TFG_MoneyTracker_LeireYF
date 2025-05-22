@@ -42,6 +42,16 @@ class _CategoryCardState extends State<CategoryCard> {
 
   bool isCtegoryUpdatingOrCreating = false;
 
+  List<Category> categoriesList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      categoriesList = widget.categoriesList;
+    });
+  }
+
   //variables declaradas como "funciones getter" que me permiten cuando las llame tener los colores actualizados
   //colores ya usados por categorías de un tipo (va en función del + seleccionado que coge si es ingreso o gasto)
   Set<Color> usedColorsByType() => widget.listAllCategories
@@ -74,7 +84,7 @@ class _CategoryCardState extends State<CategoryCard> {
                     fontWeight: FontWeight.w600),
               ),
               //he puesto que máximo puede haber 6 categorías por tipo y si es inferior se muestra un icono de añadir y si no, un icono de info que informa sobre que no se pueden añadir nuevas categorías pq se ha superado el límite
-              (widget.categoriesList.length < 6)
+              (categoriesList.length < 6)
                   ? IconButton(
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -308,7 +318,8 @@ class _CategoryCardState extends State<CategoryCard> {
                                                 //Recoger los datos
                                                 String newCategoryName =
                                                     _newCategoryNameController
-                                                        .text.trim();
+                                                        .text
+                                                        .trim();
                                                 //Crear la categoría --> el id es el nombre
                                                 Category newCategory = Category(
                                                     categoryName:
@@ -328,15 +339,15 @@ class _CategoryCardState extends State<CategoryCard> {
                                                 //Borro lo escrito en el controller
                                                 _newCategoryNameController
                                                     .clear();
-                                                    setState(() {
-                                                isCtegoryUpdatingOrCreating =
-                                                    true;
-                                              });
+                                                setState(() {
+                                                  isCtegoryUpdatingOrCreating =
+                                                      true;
+                                                });
                                                 //Cerrar el diálogo
                                                 Navigator.of(context).pop();
                                                 //añado la categoría a la lista de la interfaz
                                                 setState(() {
-                                                  widget.categoriesList.add(
+                                                  categoriesList.add(
                                                       newCategory); //añado la nueva categoría a la UI
                                                   widget.listAllCategories.add(
                                                       newCategory); //añado la nueva categoría a la lista de todas las categorías para que se actualicen los colores
@@ -419,16 +430,16 @@ class _CategoryCardState extends State<CategoryCard> {
                       })
             ],
           )),
-      (widget.categoriesList.isEmpty)
+      (categoriesList.isEmpty)
           ? SizedBox()
           : ListView.builder(
               shrinkWrap:
                   true, //Permite que la lista ocupe el espacio necesario
               physics:
                   const NeverScrollableScrollPhysics(), //Desactiva el scroll para que no se superponga con el scroll del dialog
-              itemCount: widget.categoriesList.length,
+              itemCount: categoriesList.length,
               itemBuilder: (context, index) {
-                var categoryPointer = widget.categoriesList[index];
+                var categoryPointer = categoriesList[index];
                 return Card(
                   elevation: 0,
                   color: categoryPointer.categoryColor,
@@ -693,7 +704,7 @@ class _CategoryCardState extends State<CategoryCard> {
 
                                                     //actualizar en la UI
                                                     setState(() {
-                                                      widget.categoriesList[
+                                                      categoriesList[
                                                               index] =
                                                           updatedCategory;
                                                       //opcionalmente también actualizar listAllCategories si la usas
@@ -790,12 +801,12 @@ class _CategoryCardState extends State<CategoryCard> {
                             true; //comprueba si se permite la eliminación o no
                         //comprueba de que tipo de categoría es (ingreso o gasto) y mira ela longitud de la lista --> si es superior a 1 no hay problema, sino muetsro Scaffold con mensaje
                         if (categoryPointer.categoryIsIncome) {
-                          canDelete = widget.categoriesList
+                          canDelete = categoriesList
                                   .where((cat) => cat.categoryIsIncome)
                                   .length >
                               1;
                         } else {
-                          canDelete = widget.categoriesList
+                          canDelete = categoriesList
                                   .where((cat) => !cat.categoryIsIncome)
                                   .length >
                               1;
@@ -819,7 +830,7 @@ class _CategoryCardState extends State<CategoryCard> {
                           );
                           //elimino la categoría también de la lista local
                           setState(() {
-                            widget.categoriesList.removeAt(index);
+                            categoriesList.removeAt(index);
                           });
                         } else {
                           //Si no se puede eliminar, mostrar mensaje
