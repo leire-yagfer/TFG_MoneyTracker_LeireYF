@@ -51,13 +51,13 @@ class _TransactionsPageState extends State<TransactionsPage> {
   bool _isLoading = true;
 
   ///Eliminar una transacción desde la interfaz de usuario
-  Future<void> _deleteUITransaction(int index) async {
+  Future<void> _deleteUITransaction(TransactionModel transaction) async {
     //llamo al DAO para eliminar la transacción de Firestore
     await transactionDao.deleteTransaction(
         context.read<ConfigurationProvider>().userRegistered!,
-        context.read<ConfigurationProvider>().listAllUserTransactions[index]);
-    context.read<ConfigurationProvider>().listAllUserTransactions.removeAt(
-        index); //elimino la transacción de la lista local del Provider
+        transaction);
+    context.read<ConfigurationProvider>().listAllUserTransactions.remove(
+        transaction); //elimino la transacción de la lista local del Provider
     context
         .read<ConfigurationProvider>()
         .notifyListeners(); //notifico a los listeners para que se actualice la interfaz
@@ -90,9 +90,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   ),
                 )
               : ListView.builder(
-                  itemCount: context
-                      .watch<ConfigurationProvider>()
-                      .listAllUserTransactions
+                  itemCount: userTransactions
                       .length,
                   itemBuilder: (context, index) {
                     TransactionModel transactionPointer = userTransactions[index];
@@ -236,7 +234,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                                       .palette()['fixedBlack']!),
                               iconSize: MediaQuery.of(context).size.width * 0.1,
                               onPressed: () {
-                                _deleteUITransaction(index);
+                                _deleteUITransaction(transactionPointer);
                                 //Muestro SnackBar indicando que se ha eliminado correctamente
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(

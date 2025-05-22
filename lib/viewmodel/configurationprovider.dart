@@ -105,7 +105,7 @@ class ConfigurationProvider extends ChangeNotifier {
           .sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
 
       for (var t in listAllUserTransactions) {
-        if (t.transactionCurrency.currencyCode != currencyCodeInUse) {
+        if (t.transactionCurrency.currencyCode != currencyCodeInUse.currencyCode) {
           //obtengo las tasas de cambio desde la moneda original de la transacción en el puntero (es decir por la que me llego)
           Map<String, double> changesRates =
               await APIUtils.getChangesBasedOnCurrencyCode(
